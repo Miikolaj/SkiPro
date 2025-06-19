@@ -1,0 +1,23 @@
+plugins {
+    id 'application'
+    id 'org.openjfx.javafxplugin' version '0.0.14'
+}
+
+repositories {
+    mavenCentral()
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+application {
+    mainClass = 'frontend.Main' // ← pełna ścieżka do Twojej klasy startowej
+}
+
+javafx {
+    version = '21.0.2'
+    modules = [ 'javafx.controls' ] // dodaj więcej jeśli używasz (e.g. 'javafx.fxml')
+}
