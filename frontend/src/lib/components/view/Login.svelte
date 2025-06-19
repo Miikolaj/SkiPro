@@ -1,147 +1,71 @@
 <script lang="ts">
+	import { Button } from '$lib/components';
 
+	let email = '';
+	let password = '';
+
+	const handleSubmit = () => {
+		// TODO: Implement login logic
+		console.log({ email, password });
+	};
 </script>
 
 <div class="login">
-	<div class="log-in-with-email-and-password"><span class="loginwithemailandpassword_span">Log in with email and password</span></div>
-	<div class="frame-41">
-		<div><span class="egexamplemailcom_span">e.g., example@mail.com</span></div>
+	<div class="title">Log in with full name and password</div>
+	<div class="inputs">
+		<input class="input gap" type="email" placeholder="e.g., john.doe" bind:value={email} required />
+		<input class="input" type="password" placeholder="Enter your password" bind:value={password} required />
 	</div>
-	<div class="frame-42">
-		<div><span class="enteryourpassword_span">Enter your password</span></div>
+	<a href="/#" class="forgot-password">I forgot my password</a>
+	<Button type="login-page">Log in</Button>
+	<div class="signup">
+		Don't have an account?
+		<a href="#" class="signup-href">Sign up</a>
 	</div>
-	<div class="i-forgot-my-password"><span class="iforgotmypassword_span">I forgot my password</span></div>
-	<div class="frame-43">
-		<div><span class="login_span">Log in</span></div>
-	</div>
-	<div class="dont-have-an-account-sign-up"><span class="donthaveanaccountsignup_span">Don't have an account? Sign up</span></div>
 </div>
 
 <style lang="scss">
-    .loginwithemailandpassword_span {
-        color: black;
-        font-size: 14px;
-        font-family: Helvetica Neue;
-        font-weight: 400;
-        word-wrap: break-word;
-    }
+  .login {
+    display: flex;
+    flex-direction: column;
+    max-width: 20rem;
+  }
 
-    .log-in-with-email-and-password {
-        width: 266px;
-        left: 0.50px;
-        top: 0px;
-        position: absolute;
-    }
+  .title {
+    margin-bottom: 30px;
+  }
 
-    .egexamplemailcom_span {
-        color: #D6D6D6;
-        font-size: 14px;
-        font-family: Helvetica Neue;
-        font-weight: 400;
-        word-wrap: break-word;
-    }
+  .gap {
+    margin-bottom: 5px;
+  }
 
-    .enteryourpassword_span {
-        color: #D6D6D6;
-        font-size: 14px;
-        font-family: Helvetica Neue;
-        font-weight: 400;
-        word-wrap: break-word;
-    }
+  .input {
+    padding: 10px;
+    font-size: 0.875rem;
+    border: 1px solid #d6d6d6;
+    border-radius: 5px;
+    width: 100%;
+    margin-bottom: 10px;
 
-    .iforgotmypassword_span {
-        color: #4C4C4C;
-        font-size: 12px;
-        font-family: Helvetica Neue;
-        font-weight: 400;
-        text-decoration: underline;
-        word-wrap: break-word;
+    &::placeholder {
+      color: #d6d6d6;
     }
+  }
 
-    .i-forgot-my-password {
-        left: 76.50px;
-        top: 149px;
-        position: absolute;
-    }
+  .forgot-password {
+    text-align: center;
+    font-size: 0.75rem;
+    color: #4c4c4c;
+    text-decoration: underline;
+    margin-bottom: 30px;
+  }
 
-    .login_span {
-        color: white;
-        font-size: 14px;
-        font-family: Helvetica Neue;
-        font-weight: 500;
-        word-wrap: break-word;
-    }
+  .signup {
+    font-size: 0.75rem;
+    text-align: center;
+  }
 
-    .donthaveanaccountsignup_span {
-        color: black;
-        font-size: 12px;
-        font-family: Helvetica Neue;
-        font-weight: 300;
-        word-wrap: break-word;
-    }
-
-    .dont-have-an-account-sign-up {
-        left: 50px;
-        top: 243px;
-        position: absolute;
-    }
-
-    .frame-41 {
-        width: 267px;
-        height: 40px;
-        padding: 10px;
-        left: 0px;
-        top: 44px;
-        position: absolute;
-        overflow: hidden;
-        border-radius: 5px;
-        outline: 1px #D6D6D6 solid;
-        outline-offset: -1px;
-        justify-content: flex-start;
-        align-items: center;
-        gap: 10px;
-        display: inline-flex;
-    }
-
-    .frame-42 {
-        width: 267px;
-        height: 40px;
-        padding: 10px;
-        left: 0px;
-        top: 99px;
-        position: absolute;
-        overflow: hidden;
-        border-radius: 5px;
-        outline: 1px #D6D6D6 solid;
-        outline-offset: -1px;
-        justify-content: flex-start;
-        align-items: center;
-        gap: 10px;
-        display: inline-flex;
-    }
-
-    .frame-43 {
-        width: 266px;
-        padding-left: 92px;
-        padding-right: 92px;
-        padding-top: 9px;
-        padding-bottom: 9px;
-        left: 0.50px;
-        top: 191px;
-        position: absolute;
-        background: #0086BF;
-        overflow: hidden;
-        border-radius: 5px;
-        justify-content: center;
-        align-items: center;
-        gap: 10px;
-        display: inline-flex;
-    }
-
-    .login {
-        width: 100%;
-        height: 100%;
-        position: relative;
-        border-radius: 5px;
-    }
+  .signup-href {
+    text-decoration: underline;
+  }
 </style>

@@ -15,14 +15,17 @@
 	<style lang="scss">
     .navbar-contents {
       display: flex;
-      justify-content: space-between;
+      justify-content: flex-end;
       align-items: center;
       width: 100%;
-      padding: 5px 50px;
+      padding: 15px 50px;
+      position: relative;
     }
 
     .name {
-      margin: 0 auto;
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
       font-family: $font-logo;
       font-size: 3rem;
     }

@@ -7,8 +7,8 @@ import java.util.*;
 public class EquipmentService {
     private final List<Equipment> equipmentList = new ArrayList<>();
 
-    public Equipment addEquipment(String name, String size) {
-        Equipment equipment = new Equipment(name, size);
+    public Equipment addEquipment(String name, String size, int cost) {
+        Equipment equipment = new Equipment(name, size, cost);
         equipmentList.add(equipment);
         return equipment;
     }

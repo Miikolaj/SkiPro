@@ -13,5 +13,11 @@
 </div>
 
 <style lang="scss">
+	.login{
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		padding-top: 150px;
 
+	}
 </style>

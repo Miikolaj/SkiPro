@@ -41,4 +41,19 @@
 		font-size: 1.25rem;
 		padding: 6px 15px;
 	}
+
+	.login-page {
+    background: #0086bf;
+    color: #fff;
+    font-size: 0.875rem;
+    padding: 0.625rem 0;
+    border-radius: 5px;
+    cursor: pointer;
+    justify-content: center;
+    margin-bottom: 20px;
+
+    &:hover {
+      background: darken(#0086bf, 5%);
+    }
+	}
 </style>
