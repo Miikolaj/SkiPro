@@ -1,13 +1,15 @@
 <script lang="ts">
 	import { Navbar } from '$components';
 	import { Dashboard } from '$components';
+	import type { PageData } from './$types';
 
-	let activeUser: string = 'John Doe';
+	export let data: PageData;
+	$: activeUser = data.activeUser;
 </script>
 
 <div class="main">
 	<div class="start">
-		<Navbar />
+		<Navbar activeUser={activeUser} />
 	</div>
 	<div class="dashboard">
 		<Dashboard activeUser={activeUser} />

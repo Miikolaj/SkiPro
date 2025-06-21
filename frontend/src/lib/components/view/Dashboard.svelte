@@ -64,6 +64,11 @@
 		]
 	};
 
+	function handleSignOut() {
+		document.cookie = 'token=; Max-Age=0; path=/;';
+		window.location.reload();
+	}
+
 	$: lessons = lessonsBySection[activeSection] || [];
 </script>
 
@@ -78,7 +83,7 @@
 				<Button
 					prefixIcon={section.icon}
 					type={section.type ? section.type : (activeSection === section.key ? 'active' : 'inactive')}
-					on:click={() => !section.type && (activeSection = section.key)}
+					on:click={section.type === 'sign-out' ? handleSignOut : () => !section.type && (activeSection = section.key)}
 				>
 					{section.label}
 				</Button>

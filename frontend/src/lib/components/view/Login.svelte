@@ -13,7 +13,6 @@
 			const isAuthenticated = await oathRepository.oath(fullName, password);
 			if (isAuthenticated) {
 				document.cookie = `token=${isAuthenticated}; path=/;`;
-				const decoded: any = getSubFromToken(isAuthenticated);
 				window.location.href = '/dashboard';
 			} else {
 				alert('Invalid credentials, please try again.');
