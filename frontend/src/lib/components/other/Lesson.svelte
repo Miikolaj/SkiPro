@@ -5,15 +5,14 @@
 
 	export let date: string = '2025-01-12 10:00';
 	export let duration: string = '1h 30min';
-	export let lessonNumber: number = 428;
-	export let currentLesson: number = 2; // current step in the series
-	export let totalLessons: number = 5;
+	export let lessonNumber: string = '428';
+	export let enrolledClients: string = '2';
 	export let instructorName: string = 'Jan Kowalski';
 	export let qualificationLevel: string = 'Advanced';
-	export let rating: number = 4.7;
+	export let rating: string = '4.7';
+	let maxClients: string = '5';
 
-	// Derived values
-	const progress = `${currentLesson}/${totalLessons}`;
+	const progress = `${enrolledClients}/${maxClients}`;
 </script>
 
 <div class="lesson-card">
@@ -57,7 +56,9 @@
   .top-section {
     display: flex;
     flex-direction: row;
-    gap: 140px;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0;
 
     .lesson-title {
       font-size: 1rem;
