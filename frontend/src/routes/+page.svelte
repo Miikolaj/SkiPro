@@ -1,6 +1,5 @@
 <script lang="ts">
-	import { Navbar } from '$components';
-	import Login from '$components/view/Login.svelte';
+	import { LoginView, Navbar } from '$components';
 </script>
 
 <div class="main">
@@ -8,7 +7,7 @@
 		<Navbar />
 	</div>
 	<div class="login">
-		<Login/>
+		<LoginView/>
 	</div>
 </div>
 
@@ -18,6 +17,5 @@
 		justify-content: center;
 		align-items: center;
 		padding-top: 150px;
-
 	}
 </style>

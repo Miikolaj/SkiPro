@@ -56,4 +56,18 @@
       background: darken(#0086bf, 5%);
     }
 	}
+
+	.lesson-tile{
+    align-self: flex-start;
+    padding: 0.3125rem 0.625rem;
+    background: rgba(58, 156, 198, 0.5);
+    border: none;
+    border-radius: 5px;
+    font-size: 0.875rem;
+    cursor: pointer;
+
+    &:hover {
+      background: rgba(58, 156, 198, 0.7);
+    }
+	}
 </style>

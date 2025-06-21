@@ -1,0 +1,103 @@
+<script lang="ts">
+	import { Button } from '$lib/components';
+	import { faStopwatch, faCalendarDays } from '@fortawesome/free-solid-svg-icons';
+	import { Fa } from 'svelte-fa';
+
+	export let date: string = '2025-01-12 10:00';
+	export let duration: string = '1h 30min';
+	export let lessonNumber: number = 428;
+	export let currentLesson: number = 2; // current step in the series
+	export let totalLessons: number = 5;
+	export let instructorName: string = 'Jan Kowalski';
+	export let qualificationLevel: string = 'Advanced';
+	export let rating: number = 4.7;
+
+	// Derived values
+	const progress = `${currentLesson}/${totalLessons}`;
+</script>
+
+<div class="lesson-card">
+	<div class="top-section">
+		<div class="lesson-title">Lesson #{lessonNumber}</div>
+		<div class="lesson-description">
+			<div class="icons">
+				<Fa icon={faCalendarDays} size="0.75x" /> {date}
+			</div>
+			<div class="icons">
+				<Fa icon={faStopwatch} size="0.75x" />{duration}
+			</div>
+		</div>
+	</div>
+	<div class="bottom-section">
+		<div class="left-bottom">
+			<div><strong>Instructor:</strong> {instructorName}</div>
+			<div class="qualification">Qualification level: {qualificationLevel}</div>
+			<div class="rating">Rating: {rating}/5 ⭐</div>
+		</div>
+
+		<div class="right-bottom">
+			<div class="count">{progress}</div>
+			<div class="spacer" />
+			<Button type="lesson-tile">Enroll</Button>
+		</div>
+	</div>
+</div>
+
+<style lang="scss">
+  .lesson-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 10px;
+    border: 1px solid #000;
+    border-radius: 5px;
+    font-weight: 300;
+  }
+
+  .top-section {
+    display: flex;
+    flex-direction: row;
+    gap: 140px;
+
+    .lesson-title {
+      font-size: 1rem;
+      margin: 0;
+    }
+
+    .lesson-description {
+      display: flex;
+      gap: 15px
+    }
+
+		.icons{
+			display: flex;
+			align-items: center;
+			gap: 5px
+		}
+  }
+
+  .bottom-section {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    .right-bottom {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 0.5rem;
+
+      .spacer {
+        flex: 1;
+      }
+    }
+
+    .left-bottom {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 10px;
+      font-size: 0.875rem;
+    }
+  }
+</style>
