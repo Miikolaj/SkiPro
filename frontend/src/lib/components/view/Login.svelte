@@ -1,23 +1,38 @@
 <script lang="ts">
 	import { Button } from '$lib/components';
+	import {OathRepository} from '$lib/repositories/oath.repository';
+	import { getSubFromToken } from '$lib/utils/jwt';
 
-	let email = '';
+	let fullName = '';
 	let password = '';
 
-	const handleSubmit = () => {
-		// TODO: Implement login logic
-		console.log({ email, password });
+	const oathRepository = new OathRepository();
+
+	const handleSubmit = async () => {
+		try {
+			const isAuthenticated = await oathRepository.oath(fullName, password);
+			if (isAuthenticated) {
+				document.cookie = `token=${isAuthenticated}; path=/;`;
+				const decoded: any = getSubFromToken(isAuthenticated);
+				window.location.href = '/dashboard';
+			} else {
+				alert('Invalid credentials, please try again.');
+			}
+		} catch (error) {
+			console.error('Authentication error:', error);
+			alert('An error occurred during authentication. Please try again later.');
+		}
 	};
 </script>
 
 <div class="login">
 	<div class="title">Log in with full name and password</div>
 	<div class="inputs">
-		<input class="input gap" type="email" placeholder="e.g., john.doe" bind:value={email} required />
+		<input class="input gap" type="email" placeholder="e.g., john.doe" bind:value={fullName} required />
 		<input class="input" type="password" placeholder="Enter your password" bind:value={password} required />
 	</div>
 	<a href="/#" class="forgot-password">I forgot my password</a>
-	<Button type="login-page">Log in</Button>
+	<Button type="login-page" on:click={handleSubmit}>Log in</Button>
 	<div class="signup">
 		Don't have an account?
 		<a href="#" class="signup-href">Sign up</a>

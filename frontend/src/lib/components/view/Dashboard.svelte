@@ -8,8 +8,8 @@
 		faArrowRightFromBracket
 	} from '@fortawesome/free-solid-svg-icons';
 
-	let fullname: string = 'John Doe';
 	let activeSection: string = 'available';
+	export let activeUser: string;
 
 	const sections = [
 		{ key: 'available', icon: faList, label: 'Available Lessons' },
@@ -71,7 +71,7 @@
 	<div class="options">
 		<div class="title">
 			<p class="hello">Hello,</p>
-			{fullname}
+			{activeUser}
 		</div>
 		<div class="sections">
 			{#each sections as section}

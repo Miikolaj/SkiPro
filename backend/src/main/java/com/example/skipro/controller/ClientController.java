@@ -12,7 +12,7 @@ public class ClientController {
     private final ClientService clientService = new ClientService();
 
     @PostMapping("/login")
-    public boolean login(@RequestParam String fullName, @RequestParam String password) {
+    public String login(@RequestParam String fullName, @RequestParam String password) {
         return clientService.authenticate(fullName, password);
     }
 }

@@ -1,6 +1,8 @@
-<script>
+<script lang="ts">
 	import { Navbar } from '$components';
-	import { DashboardView } from '$components';
+	import { Dashboard } from '$components';
+
+	let activeUser: string = 'John Doe';
 </script>
 
 <div class="main">
@@ -8,7 +10,7 @@
 		<Navbar />
 	</div>
 	<div class="dashboard">
-			<DashboardView />
+		<Dashboard activeUser={activeUser} />
 	</div>
 </div>
 
