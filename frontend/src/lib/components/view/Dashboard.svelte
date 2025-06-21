@@ -9,6 +9,15 @@
 	} from '@fortawesome/free-solid-svg-icons';
 
 	let fullname: string = 'John Doe';
+	let activeSection: string = 'available';
+
+	const sections = [
+		{ key: 'available', icon: faList, label: 'Available Lessons' },
+		{ key: 'enrolled', icon: faPersonSkiing, label: 'Enrolled Lessons' },
+		{ key: 'finished', icon: faFlagCheckered, label: 'Finished Lessons' },
+		{ key: 'rentals', icon: faRepeat, label: 'Rentals' },
+		{ key: 'signout', icon: faArrowRightFromBracket, label: 'Sign Out', type: 'sign-out' }
+	];
 </script>
 
 
@@ -19,11 +28,15 @@
 			{fullname}
 		</div>
 		<div class="sections">
-			<Button prefixIcon={faList} type="active">Available Lessons</Button>
-			<Button prefixIcon={faPersonSkiing} type="inactive">Enrolled Lessons</Button>
-			<Button prefixIcon={faFlagCheckered} type="inactive">Finished Lessons</Button>
-			<Button prefixIcon={faRepeat} type="inactive">Rentals</Button>
-			<Button prefixIcon={faArrowRightFromBracket} type="sign-out">Sign Out</Button>
+			{#each sections as section}
+				<Button
+					prefixIcon={section.icon}
+					type={section.type ? section.type : (activeSection === section.key ? 'active' : 'inactive')}
+					on:click={() => !section.type && (activeSection = section.key)}
+				>
+					{section.label}
+				</Button>
+			{/each}
 		</div>
 	</div>
 	<div class="lessons">
