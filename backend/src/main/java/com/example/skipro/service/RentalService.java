@@ -1,9 +1,9 @@
-package service;
+package com.example.skipro.service;
 
-import model.Client;
-import model.Equipment;
-import model.Rental;
-import model.enums.RentalStatus;
+import com.example.skipro.model.Client;
+import com.example.skipro.model.Equipment;
+import com.example.skipro.model.Rental;
+import com.example.skipro.model.enums.RentalStatus;
 
 import java.util.ArrayList;
 import java.util.List;

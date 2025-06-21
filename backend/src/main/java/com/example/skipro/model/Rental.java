@@ -1,6 +1,6 @@
-package model;
+package com.example.skipro.model;
 
-import model.enums.RentalStatus;
+import com.example.skipro.model.enums.RentalStatus;
 
 import java.time.LocalDateTime;
 import java.util.UUID;

@@ -1,8 +1,8 @@
-package service;
+package com.example.skipro.service;
 
-import model.RescueTeam;
-import model.RescueWorker;
-import model.Track;
+import com.example.skipro.model.RescueTeam;
+import com.example.skipro.model.RescueWorker;
+import com.example.skipro.model.Track;
 
 import java.util.ArrayList;
 import java.util.Collections;

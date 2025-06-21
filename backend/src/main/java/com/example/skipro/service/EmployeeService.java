@@ -1,9 +1,9 @@
-package service;
+package com.example.skipro.service;
 
-import model.Employee;
-import model.Instructor;
-import model.RentalClerk;
-import model.RescueWorker;
+import com.example.skipro.model.Employee;
+import com.example.skipro.model.Instructor;
+import com.example.skipro.model.RentalClerk;
+import com.example.skipro.model.RescueWorker;
 
 import java.util.*;
 

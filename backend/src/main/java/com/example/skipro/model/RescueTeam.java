@@ -1,6 +1,6 @@
-package model;
+package com.example.skipro.model;
 
-import model.enums.Status;
+import com.example.skipro.model.enums.Status;
 import java.util.*;
 
 public class RescueTeam {

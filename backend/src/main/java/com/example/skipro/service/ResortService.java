@@ -1,8 +1,8 @@
-package service;
+package com.example.skipro.service;
 
-import model.Employee;
-import model.Employment;
-import model.Resort;
+import com.example.skipro.model.Employee;
+import com.example.skipro.model.Employment;
+import com.example.skipro.model.Resort;
 
 import java.time.LocalDate;
 import java.util.ArrayList;

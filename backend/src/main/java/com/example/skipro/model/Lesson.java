@@ -1,6 +1,6 @@
-package model;
+package com.example.skipro.model;
 
-import model.enums.LessonStatus;
+import com.example.skipro.model.enums.LessonStatus;
 
 import java.time.Duration;
 import java.time.LocalDateTime;

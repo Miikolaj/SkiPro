@@ -1,4 +1,4 @@
-package model;
+package com.example.skipro.model;
 
 import java.time.LocalDate;
 import java.util.*;

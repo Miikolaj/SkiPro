@@ -1,6 +1,6 @@
-package model;
+package com.example.skipro.model;
 
-import model.enums.TrackDifficulty;
+import com.example.skipro.model.enums.TrackDifficulty;
 
 import java.util.Collections;
 import java.util.HashSet;

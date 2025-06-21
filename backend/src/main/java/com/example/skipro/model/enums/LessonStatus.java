@@ -1,4 +1,4 @@
-package model.enums;
+package com.example.skipro.model.enums;
 
 public enum LessonStatus {
     PLANNED,

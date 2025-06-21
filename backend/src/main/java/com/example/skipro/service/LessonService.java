@@ -1,9 +1,9 @@
-package service;
+package com.example.skipro.service;
 
-import model.Client;
-import model.Instructor;
-import model.Lesson;
-import model.enums.LessonStatus;
+import com.example.skipro.model.Client;
+import com.example.skipro.model.Instructor;
+import com.example.skipro.model.Lesson;
+import com.example.skipro.model.enums.LessonStatus;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

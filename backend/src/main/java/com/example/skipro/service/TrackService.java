@@ -1,8 +1,8 @@
-package service;
+package com.example.skipro.service;
 
-import model.Resort;
-import model.Track;
-import model.enums.TrackDifficulty;
+import com.example.skipro.model.Resort;
+import com.example.skipro.model.Track;
+import com.example.skipro.model.enums.TrackDifficulty;
 
 import java.util.ArrayList;
 import java.util.Collections;

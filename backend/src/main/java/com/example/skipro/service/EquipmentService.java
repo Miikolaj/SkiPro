@@ -1,6 +1,6 @@
-package service;
+package com.example.skipro.service;
 
-import model.Equipment;
+import com.example.skipro.model.Equipment;
 
 import java.util.*;
 

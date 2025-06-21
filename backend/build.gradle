@@ -1,23 +1,24 @@
 plugins {
-    id 'application'
-    id 'org.openjfx.javafxplugin' version '0.0.14'
+    id 'org.springframework.boot' version '3.2.6'
+    id 'io.spring.dependency-management' version '1.1.4'
+    id 'java'
 }
+
+group = 'pl.mikolaj.ski'
+version = '0.1.0'
+sourceCompatibility = '21'
 
 repositories {
     mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(21)
     }
-}
-
-application {
-    mainClass = 'frontend.Main' // ← pełna ścieżka do Twojej klasy startowej
-}
-
-javafx {
-    version = '21.0.2'
-    modules = [ 'javafx.controls' ] // dodaj więcej jeśli używasz (e.g. 'javafx.fxml')
 }
