@@ -70,4 +70,21 @@
       background: rgba(58, 156, 198, 0.7);
     }
 	}
+
+	.active {
+    background: rgba(0, 134, 191, 0.60);
+		padding: 5px;
+		border-radius: 5px;
+	}
+
+	.inactive {
+		padding: 5px;
+		border-radius: 5px;
+	}
+
+	.sign-out{
+		font-weight: 300;
+		color: #FF3D3D;
+		padding: 5px;
+	}
 </style>
