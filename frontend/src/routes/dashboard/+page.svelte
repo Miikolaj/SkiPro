@@ -5,11 +5,23 @@
 	import { onDestroy } from 'svelte';
 
 	let modalState: { visible: boolean; lessonNumber?: string | number } | null = null;
+	let modalTimeout: ReturnType<typeof setTimeout> | null = null;
 
 	const unsubscribe = successModal.subscribe(value => {
 		modalState = value;
+		if (modalState?.visible) {
+			clearTimeout(modalTimeout!);
+			modalTimeout = setTimeout(() => {
+				successModal.set({ visible: false, lessonNumber: undefined });
+			}, 5000);
+		} else {
+			clearTimeout(modalTimeout!);
+		}
 	});
-	onDestroy(unsubscribe);
+	onDestroy(() => {
+		unsubscribe();
+		clearTimeout(modalTimeout!);
+	});
 
 	export let data: PageData;
 	$: activeUser = data.activeUser;
@@ -21,7 +33,9 @@
 		<Navbar activeUser={activeUser} />
 	</div>
 	{#if modalState?.visible}
-		<Modal lessonNumber={modalState.lessonNumber} />
+		<div class="modal-overlay">
+			<Modal lessonNumber={modalState.lessonNumber} />
+		</div>
 	{/if}
 	<div class="dashboard">
 		<Dashboard activeUser={activeUser} clientId={clientId} />
@@ -34,5 +48,14 @@
     justify-content: center;
     align-items: center;
     padding-top: 150px;
+  }
+
+  .modal-overlay {
+		width: 100%;
+    position: fixed;
+    top: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
   }
 </style>
