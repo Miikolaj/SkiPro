@@ -2,9 +2,8 @@ package com.example.skipro.controller;
 
 import com.example.skipro.model.Lesson;
 import com.example.skipro.model.Instructor;
-import com.example.skipro.model.Client;
-import com.example.skipro.service.ClientService;
 import com.example.skipro.service.LessonService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Duration;
@@ -30,14 +29,6 @@ public class LessonController {
             avgRating = Math.round(avgRating * 10.0) / 10.0;
         }
         map.put("rating", avgRating);
-        return map;
-    }
-
-    private Map<String, Object> clientToMap(Client client) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("id", client.getId());
-        map.put("firstName", client.getFirstName());
-        map.put("lastName", client.getLastName());
         return map;
     }
 
@@ -81,5 +72,15 @@ public class LessonController {
         return lessonService.getFinishedLessonsForClient(UUID.fromString(clientId)).stream()
                 .map(this::lessonToMap)
                 .toList();
+    }
+
+    @PostMapping("/enroll")
+    public ResponseEntity<Void> enrollClientInLesson(@RequestParam String lessonId, @RequestParam String clientId) {
+        boolean enrolled = lessonService.enrollClientToLesson(UUID.fromString(lessonId), UUID.fromString(clientId));
+        if (enrolled) {
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.status(404).build();
+        }
     }
 }

@@ -8,9 +8,9 @@ import io.jsonwebtoken.security.Keys;
 import javax.crypto.SecretKey;
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 public class ClientService {
     private static final String FILE_NAME = "src/main/java/com/example/skipro/data/clients.ser";
@@ -26,17 +26,11 @@ public class ClientService {
         save();
     }
 
-    public List<Client> getAllClients() {
-        return new ArrayList<>(clients);
-    }
-
-    public Client getClientById(String id) {
-        for (Client client : clients) {
-            if (client.getId().toString().equals(id)) {
-                return client;
-            }
-        }
-        return null;
+    public Client getClientById(UUID id) {
+        return clients.stream()
+                .filter(client -> client.getId().equals(id))
+                .findFirst()
+                .orElse(null);
     }
 
     public String authenticate(String fullName, String password) {

@@ -84,6 +84,7 @@
 		{#if lessons.length > 0}
 			{#each lessons as lesson}
 				<Lesson
+					currentUser={clientId}
 					date={lesson.date}
 					duration={lesson.duration}
 					id={lesson.id}
@@ -92,6 +93,7 @@
 					lastName={lesson.instructor.lastName}
 					qualificationLevel={lesson.instructor.qualificationLevel}
 					rating={lesson.instructor.rating}
+					section={activeSection}
 				/>
 			{/each}
 		{:else}

@@ -33,4 +33,18 @@ export class LessonRepository {
 			throw error?.response?.data || 'An error occurred while fetching lessons';
 		}
 	}
+
+	async enrollLesson(lessonId: string, clientId: string): Promise<boolean> {
+		try {
+			await apiClient.post('/lessons/enroll', null, {
+				params: { lessonId, clientId }
+			});
+			return true;
+		} catch (error: any) {
+			if (error.response?.status === 404) {
+				throw 'Lesson or client not found';
+			}
+			throw 'An error occurred while enrolling in the lesson';
+		}
+	}
 }

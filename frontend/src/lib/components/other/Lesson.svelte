@@ -2,18 +2,34 @@
 	import { Button } from '$lib/components';
 	import { faStopwatch, faCalendarDays } from '@fortawesome/free-solid-svg-icons';
 	import { Fa } from 'svelte-fa';
+	import { LessonRepository } from '$lib/repositories/lesson.repository';
+	const lessonRepository = new LessonRepository();
 
+	export let currentUser: string = 'placeholder';
 	export let date: string = 'placeholder';
 	export let duration: string = 'placeholder';
 	export let id: string = 'placeholder';
-	export let enrolledClients: string = '0';
+	export let enrolledClients: string = 'placeholder';
 	export let firstName: string = 'placeholder';
 	export let lastName: string = 'placeholder';
 	export let qualificationLevel: string = 'placeholder';
 	export let rating: string = 'placeholder';
+	export let section: string = 'available';
 	let maxClients: string = '5';
 
+	function handleEnroll() {
+		lessonRepository.enrollLesson(id, currentUser);
+	}
+
 	$: progress = `${enrolledClients}/${maxClients}`;
+	$: buttonLabel =
+		section === 'available'
+			? 'Enroll'
+			: section === 'enrolled'
+				? 'Cancel Participation'
+				: section === 'finished'
+					? 'Rate Instructor'
+					: 'Action';
 </script>
 
 <div class="lesson-card">
@@ -38,7 +54,8 @@
 		<div class="right-bottom">
 			<div class="count">{progress}</div>
 			<div class="spacer" />
-			<Button type="lesson-tile">Enroll</Button>
+			<Button type="lesson-tile" on:click={section === 'available' ? handleEnroll : undefined}
+							disabled={section !== 'available'}>{buttonLabel}</Button>
 		</div>
 	</div>
 </div>

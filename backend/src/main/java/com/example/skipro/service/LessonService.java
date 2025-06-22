@@ -15,7 +15,6 @@ public class LessonService {
     private static final String LESSONS_FILE = "src/main/java/com/example/skipro/data/lessons.ser";
     private final List<Lesson> lessonRegistry = new ArrayList<>();
     private final ClientService clientService = new ClientService();
-    private final InstructorService instructorService = new InstructorService();
 
     public LessonService() {
         loadLessons();
@@ -45,11 +44,31 @@ public class LessonService {
                 .toList();
     }
 
+    public boolean enrollClientToLesson(UUID lessonId, UUID clientId) {
+        Lesson lesson = getLessonById(lessonId);
+        if (lesson == null) return false;
+        Client client = clientService.getClientById(clientId);
+        if (client == null) return false;
+        try {
+            lesson.enrollClient(client);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     public Lesson createLesson(LocalDateTime time, Duration dur, Instructor instructor) {
         Lesson l = new Lesson(time, dur, instructor);
         lessonRegistry.add(l);
         saveLessons();
         return l;
+    }
+
+    public Lesson getLessonById(UUID id) {
+        return lessonRegistry.stream()
+                .filter(l -> l.getId().equals(id))
+                .findFirst()
+                .orElse(null);
     }
 
     public void saveLessons() {
@@ -76,45 +95,4 @@ public class LessonService {
             e.printStackTrace();
         }
     }
-
-    public void createMockupData() {
-        Client client1 =  clientService.getClientById("d3ce3558-5e91-48ad-8b5c-3e76b488dfb0");
-        Client client2 = clientService.getClientById("c59b8e61-a4af-4ff0-a61f-a92733aa9b76");
-        Instructor instructor1 = instructorService.getInstructorById("8857f83d-7e5a-4125-8cb5-642f3379473d");
-        Instructor instructor2 = instructorService.getInstructorById("b88921a2-0baf-4e7f-86ff-f60567b73f21");
-
-        // 3 planned lessons, no clients
-        Lesson lesson1 = new Lesson(LocalDate.now().atStartOfDay(), Duration.ofMinutes(150),  instructor1);
-        Lesson lesson2 = new Lesson(LocalDate.now().atStartOfDay(), Duration.ofMinutes(100),  instructor2);
-        Lesson lesson3 = new Lesson(LocalDate.now().atStartOfDay(),  Duration.ofMinutes(60), instructor1);
-
-        lesson1.enrollClient(client1);
-
-
-        Lesson lesson4 = new Lesson(LocalDate.now().atStartOfDay(),  Duration.ofMinutes(60), instructor1);
-        Lesson lesson5 = new Lesson(LocalDate.now().atStartOfDay(),  Duration.ofMinutes(60), instructor1);
-        Lesson lesson6 = new Lesson(LocalDate.now().atStartOfDay(),  Duration.ofMinutes(60), instructor1);
-        Lesson lesson7 = new Lesson(LocalDate.now().atStartOfDay(),  Duration.ofMinutes(60), instructor1);
-
-        lesson4.enrollClient(client2);
-        lesson5.enrollClient(client2);
-        lesson6.enrollClient(client2);
-        lesson7.enrollClient(client2);
-
-
-        Lesson lesson8 = new Lesson(LocalDate.now().atStartOfDay(),  Duration.ofMinutes(60), instructor1);
-        Lesson lesson9 = new Lesson(LocalDate.now().atStartOfDay(),  Duration.ofMinutes(60), instructor1);
-
-        lesson8.enrollClient(client1);
-        lesson9.enrollClient(client1);
-
-        lesson8.start();
-        lesson9.start();
-        lesson8.finish();
-        lesson9.finish();
-
-        lessonRegistry.addAll(Arrays.asList(lesson1, lesson2, lesson3, lesson4, lesson5, lesson6, lesson7, lesson8, lesson9));
-    }
-
-
 }
