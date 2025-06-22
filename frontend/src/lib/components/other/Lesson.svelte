@@ -21,7 +21,10 @@
 
 	function handleEnroll() {
 		lessonRepository.enrollLesson(id, currentUser);
-		successModal.set({ visible: true, lessonNumber: id.slice(-3) });
+		localStorage.setItem('showSuccessModal', id.slice(-3));
+		setTimeout(() => {
+			location.reload();
+		}, 1000);
 	}
 
 	$: progress = `${enrolledClients}/${maxClients}`;

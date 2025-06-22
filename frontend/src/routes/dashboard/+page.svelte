@@ -2,7 +2,7 @@
 	import { Navbar, Dashboard, Modal } from '$components';
 	import type { PageData } from './$types';
 	import { successModal } from '$lib/stores/successModal';
-	import { onDestroy } from 'svelte';
+	import { onDestroy, onMount } from 'svelte';
 
 	let modalState: { visible: boolean; lessonNumber?: string | number } | null = null;
 	let modalTimeout: ReturnType<typeof setTimeout> | null = null;
@@ -18,6 +18,15 @@
 			clearTimeout(modalTimeout!);
 		}
 	});
+
+	onMount(() => {
+		const lessonNumber = localStorage.getItem('showSuccessModal');
+		if (lessonNumber) {
+			successModal.set({ visible: true, lessonNumber });
+			localStorage.removeItem('showSuccessModal');
+		}
+	});
+
 	onDestroy(() => {
 		unsubscribe();
 		clearTimeout(modalTimeout!);
