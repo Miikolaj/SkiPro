@@ -99,6 +99,10 @@ public class RescueTeamService {
      */
     public void loadTeamsFromFile() throws IOException, ClassNotFoundException {
         File file = new File(FILE_NAME);
+        File dir = file.getParentFile();
+        if (dir != null && !dir.exists()) {
+            dir.mkdirs();
+        }
         if (!file.exists()) return;
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
             List<RescueTeam> loaded = (List<RescueTeam>) ois.readObject();

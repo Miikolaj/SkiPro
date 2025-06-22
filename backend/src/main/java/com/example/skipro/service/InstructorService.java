@@ -63,6 +63,10 @@ public class InstructorService {
      */
     public void loadInstructors() {
         File file = new File(INSTRUCTORS_FILE);
+        File dir = file.getParentFile();
+        if (dir != null && !dir.exists()) {
+            dir.mkdirs();
+        }
         if (!file.exists()) return;
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
             List<Instructor> loaded = (List<Instructor>) ois.readObject();

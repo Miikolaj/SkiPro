@@ -140,6 +140,10 @@ public class LessonService {
      */
     public void loadLessons() {
         File file = new File(LESSONS_FILE);
+        File dir = file.getParentFile();
+        if (dir != null && !dir.exists()) {
+            dir.mkdirs();
+        }
         if (!file.exists()) return;
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
             List<Lesson> loaded = (List<Lesson>) ois.readObject();

@@ -64,6 +64,10 @@ public class EquipmentService {
      */
     public void loadEquipmentFromFile() throws IOException, ClassNotFoundException {
         File file = new File(FILE_NAME);
+        File dir = file.getParentFile();
+        if (dir != null && !dir.exists()) {
+            dir.mkdirs();
+        }
         if (!file.exists()) return;
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(FILE_NAME))) {
             List<Equipment> loadedList = (List<Equipment>) ois.readObject();

@@ -60,6 +60,10 @@ public class TrackService {
 
     public void loadTracksFromFile() throws IOException, ClassNotFoundException {
         File file = new File(FILE_NAME);
+        File dir = file.getParentFile();
+        if (dir != null && !dir.exists()) {
+            dir.mkdirs();
+        }
         if (!file.exists() || file.length() == 0) return;
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
             Set<Track> loadedSet = (Set<Track>) ois.readObject();
