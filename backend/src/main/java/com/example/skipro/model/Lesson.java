@@ -93,4 +93,16 @@ public class Lesson implements Serializable {
     public Set<Client> getClients() {
         return Collections.unmodifiableSet(clients);
     }
+
+    @Override
+    public String toString() {
+        return "Lesson{" +
+                "id=" + id +
+                ", dateTime=" + dateTime +
+                ", duration=" + duration +
+                ", status=" + status +
+                ", instructor=" + instructor +
+                ", clients=" + clients +
+                '}';
+    }
 }

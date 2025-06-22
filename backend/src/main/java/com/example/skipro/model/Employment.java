@@ -1,9 +1,10 @@
 package com.example.skipro.model;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.UUID;
 
-public class Employment {
+public class Employment implements Serializable {
     private final UUID id = UUID.randomUUID();
     private final Resort resort;
     private final Employee employee;

@@ -1,9 +1,11 @@
 package com.example.skipro.service;
 
+import com.example.skipro.model.RescueWorker;
 import com.example.skipro.model.Resort;
 
 import java.io.*;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -17,7 +19,7 @@ public class ResortService {
     /**
      * Name of the file used for saving resorts.
      */
-    private static final String FILE_NAME = "/data/resorts.ser";
+    private static final String FILE_NAME = "src/main/java/com/example/skipro/data/resorts.ser";
 
     /**
      * Constructs a ResortService and loads resorts from file.
@@ -59,7 +61,9 @@ public class ResortService {
      * Saves the set of resorts to a file.
      */
     public void saveResortsToFile() throws IOException {
-        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(FILE_NAME))) {
+        File file = new File(FILE_NAME);
+        file.getParentFile().mkdirs();
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file))) {
             oos.writeObject(resorts);
         }
     }
@@ -69,9 +73,11 @@ public class ResortService {
      */
     public void loadResortsFromFile() throws IOException, ClassNotFoundException {
         File file = new File(FILE_NAME);
-        if (!file.exists()) return;
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(FILE_NAME))) {
-            resorts = (Set<Resort>) ois.readObject();
+        if (!file.exists() || file.length() == 0) return;
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
+            Set<Resort> loadedSet = (Set<Resort>) ois.readObject();
+            resorts.clear();
+            resorts.addAll(loadedSet);
         }
     }
 }

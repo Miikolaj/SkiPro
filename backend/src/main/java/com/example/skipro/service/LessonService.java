@@ -18,6 +18,9 @@ public class LessonService {
 
     public LessonService() {
         loadLessons();
+        lessonRegistry.removeIf(l -> !(l instanceof Lesson));
+        System.out.println(lessonRegistry);
+
     }
 
     public List<Lesson> getPlannedLessonsWithoutClient(UUID clientId) {

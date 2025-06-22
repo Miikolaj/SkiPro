@@ -1,5 +1,6 @@
 package com.example.skipro.service;
 
+import com.example.skipro.model.RescueWorker;
 import com.example.skipro.model.Resort;
 import com.example.skipro.model.Track;
 import com.example.skipro.model.enums.TrackDifficulty;
@@ -9,7 +10,7 @@ import java.util.*;
 
 public class TrackService {
     private Set<Track> tracks = new HashSet<>();
-    private static final String FILE_NAME = "/data/tracks.ser";
+    private static final String FILE_NAME = "src/main/java/com/example/skipro/data/tracks.ser";
 
     public TrackService() {
         try {
@@ -33,16 +34,20 @@ public class TrackService {
     }
 
     public void saveTracksToFile() throws IOException {
-        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(FILE_NAME))) {
+        File file = new File(FILE_NAME);
+        file.getParentFile().mkdirs();
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file))) {
             oos.writeObject(tracks);
         }
     }
 
     public void loadTracksFromFile() throws IOException, ClassNotFoundException {
         File file = new File(FILE_NAME);
-        if (!file.exists()) return;
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(FILE_NAME))) {
-            tracks = (Set<Track>) ois.readObject();
+        if (!file.exists() || file.length() == 0) return;
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
+            Set<Track> loadedSet = (Set<Track>) ois.readObject();
+            tracks.clear();
+            tracks.addAll(loadedSet);
         }
     }
 }

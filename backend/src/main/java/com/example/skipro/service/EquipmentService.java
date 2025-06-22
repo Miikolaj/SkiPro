@@ -13,7 +13,7 @@ import java.util.Set;
  */
 public class EquipmentService {
     private final List<Equipment> equipmentList = new ArrayList<>();
-    private static final String FILE_NAME = "/data/equipment.ser";
+    private static final String FILE_NAME = "src/main/java/com/example/skipro/data/equipment.ser";
 
     public EquipmentService() {
         try {

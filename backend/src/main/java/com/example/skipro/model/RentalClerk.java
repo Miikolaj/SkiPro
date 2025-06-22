@@ -1,9 +1,10 @@
 package com.example.skipro.model;
 
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
-public class RentalClerk extends Employee {
+public class RentalClerk extends Employee implements Serializable {
     private int rentalsHandled = 0;
 
     public RentalClerk(int yearsOfExperience, LocalDate birthDate, String lastName, String firstName, int rentalsHandled) {

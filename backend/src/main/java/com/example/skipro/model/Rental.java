@@ -2,10 +2,12 @@ package com.example.skipro.model;
 
 import com.example.skipro.model.enums.RentalStatus;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-public class Rental {
+public class Rental implements Serializable {
+    private static final long serialVersionUID = 1L;
     private final UUID ID = UUID.randomUUID();
     private final Equipment equipment;
     private final Client client;

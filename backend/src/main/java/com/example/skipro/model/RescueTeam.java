@@ -1,9 +1,12 @@
 package com.example.skipro.model;
 
 import com.example.skipro.model.enums.Status;
+
+import java.io.Serializable;
 import java.util.*;
 
-public class RescueTeam {
+public class RescueTeam implements Serializable {
+    private static final long serialVersionUID = 1L;
     private final UUID id = UUID.randomUUID();
     private final String name;
     private Track assignedTrack;
