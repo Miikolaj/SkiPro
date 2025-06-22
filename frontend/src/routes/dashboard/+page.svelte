@@ -15,7 +15,7 @@
 		<Navbar activeUser={activeUser} />
 	</div>
 	<div class="dashboard">
-		<Dashboard activeUser={activeUser} />
+		<Dashboard activeUser={activeUser} clientId={clientId} />
 	</div>
 </div>
 

@@ -3,13 +3,14 @@
 	import { faStopwatch, faCalendarDays } from '@fortawesome/free-solid-svg-icons';
 	import { Fa } from 'svelte-fa';
 
-	export let date: string = '2025-01-12 10:00';
-	export let duration: string = '1h 30min';
-	export let lessonNumber: string = '428';
-	export let enrolledClients: string = '2';
-	export let instructorName: string = 'Jan Kowalski';
-	export let qualificationLevel: string = 'Advanced';
-	export let rating: string = '4.7';
+	export let date: string = 'placeholder';
+	export let duration: string = 'placeholder';
+	export let id: string = 'placeholder';
+	export let enrolledClients: string = 'placeholder';
+	export let firstName: string = 'placeholder';
+	export let lastName: string = 'placeholder';
+	export let qualificationLevel: string = 'placeholder';
+	export let rating: string = 'placeholder';
 	let maxClients: string = '5';
 
 	const progress = `${enrolledClients}/${maxClients}`;
@@ -17,7 +18,7 @@
 
 <div class="lesson-card">
 	<div class="top-section">
-		<div class="lesson-title">Lesson #{lessonNumber}</div>
+		<div class="lesson-title">Lesson #{id.slice(-3)}</div>
 		<div class="lesson-description">
 			<div class="icons">
 				<Fa icon={faCalendarDays} size="0.75x" /> {date}
@@ -29,7 +30,7 @@
 	</div>
 	<div class="bottom-section">
 		<div class="left-bottom">
-			<div><strong>Instructor:</strong> {instructorName}</div>
+			<div><strong>Instructor:</strong> {firstName} {lastName}</div>
 			<div class="qualification">Qualification level: {qualificationLevel}</div>
 			<div class="rating">Rating: {rating}/5 ⭐</div>
 		</div>

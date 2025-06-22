@@ -1,9 +1,20 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import { Button, Lesson } from '$components';
 	import { faPersonSkiing, faList, faFlagCheckered, faRepeat, faArrowRightFromBracket } from '@fortawesome/free-solid-svg-icons';
+	import { LessonRepository } from '$lib/repositories/lesson.repository';
 
 	let activeSection: string = 'available';
+	export let clientId: string;
 	export let activeUser: string;
+
+	const lessonRepository = new LessonRepository();
+
+	let lessonsFromApi = [];
+	onMount(async () => {
+		lessonsFromApi = await lessonRepository.getLessonsForClient(clientId);
+		console.log(lessonsFromApi);
+	});
 
 	const sections = [
 		{ key: 'available', icon: faList, label: 'Available Lessons' },
@@ -24,6 +35,7 @@
 		window.location.reload();
 	}
 
+	$: lessonsBySection.available = [...lessonsFromApi];
 	$: lessons = lessonsBySection[activeSection] || [];
 </script>
 
@@ -51,11 +63,12 @@
 				<Lesson
 					date={lesson.date}
 					duration={lesson.duration}
-					lessonNumber={lesson.lessonNumber}
-					enrolledClients={lesson.enrolledClients}
-					instructorName={lesson.instructorName}
-					qualificationLevel={lesson.qualificationLevel}
-					rating={lesson.rating}
+					id={lesson.id}
+					enrolledClients={lesson.clients.length}
+					firstName={lesson.instructor.firstName}
+					lastName={lesson.instructor.lastName}
+					qualificationLevel={lesson.instructor.qualificationLevel}
+					rating={lesson.instructor.rating}
 				/>
 			{/each}
 		{:else}

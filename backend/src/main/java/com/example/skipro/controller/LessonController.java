@@ -7,19 +7,29 @@ import com.example.skipro.service.ClientService;
 import com.example.skipro.service.LessonService;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Duration;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @RestController
 @RequestMapping("/lessons")
 public class LessonController {
     private final LessonService lessonService = new LessonService();
-    private final ClientService clientService = new ClientService();
+    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
     private Map<String, Object> instructorToMap(Instructor instructor) {
         Map<String, Object> map = new HashMap<>();
+        map.put("firstName", instructor.getFirstName());
+        map.put("lastName", instructor.getLastName());
         map.put("id", instructor.getId());
         map.put("qualificationLevel", instructor.getQualificationLevel());
-        map.put("ratings", instructor.getRatings());
+        List<Integer> ratings = instructor.getRatings();
+        double avgRating = 0.0;
+        if (ratings != null && !ratings.isEmpty()) {
+            avgRating = ratings.stream().mapToInt(Integer::intValue).average().orElse(0.0);
+            avgRating = Math.round(avgRating * 10.0) / 10.0;
+        }
+        map.put("rating", avgRating);
         return map;
     }
 
@@ -34,8 +44,8 @@ public class LessonController {
     private Map<String, Object> lessonToMap(Lesson lesson) {
         Map<String, Object> lessonMap = new HashMap<>();
         lessonMap.put("id", lesson.getId());
-        lessonMap.put("dateTime", lesson.getDateTime());
-        lessonMap.put("duration", lesson.getDuration());
+        lessonMap.put("date", lesson.getDateTime().format(DATE_TIME_FORMATTER));
+        lessonMap.put("duration", formatDuration(lesson.getDuration()));
         lessonMap.put("status", lesson.getStatus());
         lessonMap.put("instructor", instructorToMap(lesson.getInstructor()));
         lessonMap.put("clients", lesson.getClients().stream()
@@ -43,6 +53,15 @@ public class LessonController {
                 .toList());
         // Add other fields as needed
         return lessonMap;
+    }
+
+    private String formatDuration(Duration duration) {
+        long hours = duration.toHours();
+        long minutes = duration.minusHours(hours).toMinutes();
+        StringBuilder sb = new StringBuilder();
+        if (hours > 0) sb.append(hours).append("h ");
+        if (minutes > 0) sb.append(minutes).append("m");
+        return sb.toString().trim();
     }
 
     @GetMapping
