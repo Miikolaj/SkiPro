@@ -24,7 +24,7 @@
 		localStorage.setItem('showSuccessModal', id.slice(-3));
 		setTimeout(() => {
 			location.reload();
-		}, 1000);
+		}, 100);
 	}
 
 	$: progress = `${enrolledClients}/${maxClients}`;
