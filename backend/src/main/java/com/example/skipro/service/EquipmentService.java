@@ -2,30 +2,49 @@ package com.example.skipro.service;
 
 import com.example.skipro.model.Equipment;
 
-import java.util.*;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 
+/**
+ * Service responsible for managing equipment and serialization.
+ */
 public class EquipmentService {
     private final List<Equipment> equipmentList = new ArrayList<>();
+    private static final String FILE_NAME = "/data/equipment.ser";
 
-    public Equipment addEquipment(String name, String size, int cost) {
-        Equipment equipment = new Equipment(name, size, cost);
+    public EquipmentService() {
+        try {
+            loadEquipmentFromFile();
+        } catch (IOException | ClassNotFoundException e) {
+            System.err.println("Error loading equipment: " + e.getMessage());
+        }
+    }
+
+    public void addEquipment(Equipment equipment) throws IOException {
         equipmentList.add(equipment);
-        return equipment;
+        saveEquipmentToFile();
     }
 
     public List<Equipment> getAllEquipment() {
         return Collections.unmodifiableList(equipmentList);
     }
 
-    public List<Equipment> getAvailableEquipment() {
-        return equipmentList.stream()
-                .filter(e -> !e.isInUse())
-                .toList();
+    public void saveEquipmentToFile() throws IOException {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(FILE_NAME))) {
+            oos.writeObject(equipmentList);
+        }
     }
 
-    public Optional<Equipment> getEquipmentById(UUID id) {
-        return equipmentList.stream()
-                .filter(e -> e.getId().equals(id))
-                .findFirst();
+    public void loadEquipmentFromFile() throws IOException, ClassNotFoundException {
+        File file = new File(FILE_NAME);
+        if (!file.exists()) return;
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(FILE_NAME))) {
+            List<Equipment> loadedList = (List<Equipment>) ois.readObject();
+            equipmentList.clear();
+            equipmentList.addAll(loadedList);
+        }
     }
 }

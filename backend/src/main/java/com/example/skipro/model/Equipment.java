@@ -1,8 +1,10 @@
 package com.example.skipro.model;
 
+import java.io.Serializable;
 import java.util.UUID;
 
-public class Equipment {
+public class Equipment implements Serializable {
+    private static final long serialVersionUID = 1L;
     private final UUID id = UUID.randomUUID();
     private final String name;
     private final String size;
