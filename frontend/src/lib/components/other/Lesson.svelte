@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { Button } from '$lib/components';
-	import { faStopwatch, faCalendarDays } from '@fortawesome/free-solid-svg-icons';
+	import { faStopwatch, faCalendarDays, faStar } from '@fortawesome/free-solid-svg-icons';
 	import { Fa } from 'svelte-fa';
 	import { successModal } from '$lib/stores/successModal';
 	import { LessonRepository } from '$lib/repositories/lesson.repository';
@@ -54,7 +54,7 @@
 		<div class="left-bottom">
 			<div><strong>Instructor:</strong> {firstName} {lastName}</div>
 			<div class="qualification">Qualification level: {qualificationLevel}</div>
-			<div class="rating">Rating: {rating}/5 ⭐</div>
+			<div class="rating">Rating: {rating}/5 <Fa icon={faStar}/></div>
 		</div>
 
 		<div class="right-bottom">

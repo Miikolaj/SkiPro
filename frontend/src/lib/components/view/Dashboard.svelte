@@ -3,6 +3,7 @@
 	import { Button, Lesson } from '$components';
 	import { faPersonSkiing, faList, faFlagCheckered, faRepeat, faArrowRightFromBracket } from '@fortawesome/free-solid-svg-icons';
 	import { LessonRepository } from '$lib/repositories/lesson.repository';
+
 	const lessonRepository = new LessonRepository();
 
 	let loading = true;
@@ -98,7 +99,8 @@
 			{/each}
 		{:else}
 			<div class="no-content">
-				<p>No lessons to di splay.</p>
+				<img src="src/assets/empty.svg" alt="No content" class="svg"/>
+				<p>There isn&#39;t anything here yet.</p>
 			</div>
 		{/if}
 	</div>
@@ -142,4 +144,24 @@
     border-left: 1px solid #000;
     overflow-y: auto;
   }
+
+	.no-content {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+    justify-content: center;
+		gap: 20px;
+		padding: 20px;
+		text-align: center;
+
+		p {
+			font-weight: 300;
+			color: #666;
+		}
+	}
+
+	.svg{
+		width: 150px;
+		height: 150px;
+	}
 </style>
