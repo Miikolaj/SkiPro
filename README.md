@@ -3,23 +3,23 @@
 A Java application for managing ski resort clients, instructors, and employments.
 
 ## Backend
-## Prerequisites
+ Prerequisites
 - Java 17 or newer
 
-## Start-up
+ Start-up
 **in backend directory**
-**Build the project using gradle**
-**Run backend/src/main/java/com/example/skipro/Application.java**
+- Build the project using gradle
+- Run backend/src/main/java/com/example/skipro/Application.java
 
 ## Frontend
-## Prerequisites
+Prerequisites
 - [Node.js]
 - [npm]
 
-## Start-up
+Start-up
 **in frontend directory**
-**npm install**
-**npm run dev**
+- npm install
+- npm run dev
 
 ## License
 MIT
