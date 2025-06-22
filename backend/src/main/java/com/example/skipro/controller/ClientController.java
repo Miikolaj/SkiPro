@@ -1,10 +1,12 @@
 package com.example.skipro.controller;
 
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import com.example.skipro.model.Client;
+import com.example.skipro.model.Instructor;
+import com.example.skipro.service.InstructorService;
+import org.springframework.web.bind.annotation.*;
 import com.example.skipro.service.ClientService;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/auth")

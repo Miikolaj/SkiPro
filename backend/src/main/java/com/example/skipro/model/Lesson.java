@@ -1,7 +1,10 @@
 package com.example.skipro.model;
 
 import com.example.skipro.model.enums.LessonStatus;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import java.io.Serializable;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -9,12 +12,12 @@ import java.util.*;
 /**
  * Represents a ski lesson between one instructor and many clients.
  */
-public class Lesson {
+public class Lesson implements Serializable {
+    private static final long serialVersionUID = 1L;
     private final UUID id = UUID.randomUUID();
     private final LocalDateTime dateTime;
     private final Duration duration;
     private LessonStatus status;
-
     private final Instructor instructor;
     private final Set<Client> clients = new HashSet<>();
 
@@ -89,12 +92,5 @@ public class Lesson {
 
     public Set<Client> getClients() {
         return Collections.unmodifiableSet(clients);
-    }
-
-    @Override
-    public String toString() {
-        return "Lesson on " + dateTime.toLocalDate() +
-                " at " + dateTime.toLocalTime() +
-                " (" + status + ")";
     }
 }

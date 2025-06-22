@@ -1,12 +1,6 @@
 <script lang="ts">
 	import { Button, Lesson } from '$components';
-	import {
-		faPersonSkiing,
-		faList,
-		faFlagCheckered,
-		faRepeat,
-		faArrowRightFromBracket
-	} from '@fortawesome/free-solid-svg-icons';
+	import { faPersonSkiing, faList, faFlagCheckered, faRepeat, faArrowRightFromBracket } from '@fortawesome/free-solid-svg-icons';
 
 	let activeSection: string = 'available';
 	export let activeUser: string;
@@ -20,48 +14,9 @@
 	];
 
 	const lessonsBySection: Record<string, any[]> = {
-		available: [
-			{
-				date: '2025-01-12 10:00',
-				duration: '1h 30min',
-				lessonNumber: '101',
-				enrolledClients: '2',
-				instructorName: 'Anna Nowak',
-				qualificationLevel: 'Advanced',
-				rating: '4.8'
-			},
-			{
-				date: '2025-01-15 14:00',
-				duration: '2h 0min',
-				lessonNumber: '102',
-				enrolledClients: '1',
-				instructorName: 'Piotr Zielinski',
-				qualificationLevel: 'Intermediate',
-				rating: '4.5'
-			}
-		],
-		enrolled: [
-			{
-				date: '2025-01-18 09:00',
-				duration: '1h 0min',
-				lessonNumber: '201',
-				enrolledClients: '3',
-				instructorName: 'Jan Kowalski',
-				qualificationLevel: 'Beginner',
-				rating: '4.7'
-			}
-		],
-		finished: [
-			{
-				date: '2024-12-20 11:00',
-				duration: '1h 30min',
-				lessonNumber: '301',
-				enrolledClients: '5',
-				instructorName: 'Anna Nowak',
-				qualificationLevel: 'Advanced',
-				rating: '4.9'
-			}
-		]
+		available: [],
+		enrolled: [],
+		finished: []
 	};
 
 	function handleSignOut() {

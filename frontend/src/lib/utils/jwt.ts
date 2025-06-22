@@ -9,3 +9,13 @@ export function getSubFromToken(token: string | undefined): string | null {
 		return null;
 	}
 }
+
+export function getClientIdFromToken(token: string | undefined ): string | null {
+	if (!token) return null;
+	try {
+		const payload = JSON.parse(atob(token.split('.')[1]));
+		return payload.id || null;
+	} catch {
+		return null;
+	}
+}

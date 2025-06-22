@@ -26,6 +26,19 @@ public class ClientService {
         save();
     }
 
+    public List<Client> getAllClients() {
+        return new ArrayList<>(clients);
+    }
+
+    public Client getClientById(String id) {
+        for (Client client : clients) {
+            if (client.getId().toString().equals(id)) {
+                return client;
+            }
+        }
+        return null;
+    }
+
     public String authenticate(String fullName, String password) {
         for (Client client : clients) {
             String clientFullName = client.getFirstName() + "." + client.getLastName();
@@ -38,6 +51,7 @@ public class ClientService {
 
     private String generateToken(Client client) {
         return Jwts.builder()
+                .claim("id", client.getId())
                 .claim("firstName", client.getFirstName())
                 .claim("lastName", client.getLastName())
                 .claim("age", client.getAge())

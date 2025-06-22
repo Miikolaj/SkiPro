@@ -5,6 +5,9 @@
 
 	export let data: PageData;
 	$: activeUser = data.activeUser;
+	$: clientId = data.clientId;
+
+
 </script>
 
 <div class="main">

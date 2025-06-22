@@ -1,12 +1,13 @@
 package com.example.skipro.model;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-public abstract class Employee {
+public abstract class Employee implements Serializable {
     protected String firstName;
     protected String lastName;
     protected int age;
@@ -14,6 +15,9 @@ public abstract class Employee {
     protected int yearsOfExperience; // in years
 
     private final Set<Employment> employments = new HashSet<>();
+
+    public Employee() {
+    }
 
     public Employee(int yearsOfExperience, LocalDate birthDate, String lastName, String firstName) {
         this.yearsOfExperience = yearsOfExperience;
