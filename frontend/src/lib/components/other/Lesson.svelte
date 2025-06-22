@@ -6,14 +6,14 @@
 	export let date: string = 'placeholder';
 	export let duration: string = 'placeholder';
 	export let id: string = 'placeholder';
-	export let enrolledClients: string = '99';
+	export let enrolledClients: string = '0';
 	export let firstName: string = 'placeholder';
 	export let lastName: string = 'placeholder';
 	export let qualificationLevel: string = 'placeholder';
 	export let rating: string = 'placeholder';
 	let maxClients: string = '5';
 
-	const progress = `${enrolledClients}/${maxClients}`;
+	$: progress = `${enrolledClients}/${maxClients}`;
 </script>
 
 <div class="lesson-card">
