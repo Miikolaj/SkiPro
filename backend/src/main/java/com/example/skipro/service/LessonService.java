@@ -84,6 +84,7 @@ public class LessonService {
         if (client == null) return false;
         try {
             lesson.enrollClient(client);
+            saveLessons();
             return true;
         } catch (Exception e) {
             return false;
