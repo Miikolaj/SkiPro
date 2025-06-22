@@ -3,3 +3,4 @@ export { default as Button } from './buttons/Button.svelte';
 export { default as LoginView } from './view/Login.svelte';
 export { default as Dashboard } from './view/Dashboard.svelte';
 export { default as Lesson } from './other/Lesson.svelte';
+export { default as Modal } from './other/SuccessModal.svelte';
