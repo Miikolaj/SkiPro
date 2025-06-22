@@ -1,8 +1,15 @@
 <script lang="ts">
-	import { Navbar } from '$components';
-	import { Dashboard } from '$components';
+	import { Navbar, Dashboard, Modal } from '$components';
 	import type { PageData } from './$types';
-	import SuccessModal from '$components/other/SuccessModal.svelte';
+	import { successModal } from '$lib/stores/successModal';
+	import { onDestroy } from 'svelte';
+
+	let modalState: { visible: boolean; lessonNumber?: string | number } | null = null;
+
+	const unsubscribe = successModal.subscribe(value => {
+		modalState = value;
+	});
+	onDestroy(unsubscribe);
 
 	export let data: PageData;
 	$: activeUser = data.activeUser;
@@ -13,7 +20,9 @@
 	<div class="start">
 		<Navbar activeUser={activeUser} />
 	</div>
-	<SuccessModal/>
+	{#if modalState?.visible}
+		<Modal lessonNumber={modalState.lessonNumber} />
+	{/if}
 	<div class="dashboard">
 		<Dashboard activeUser={activeUser} clientId={clientId} />
 	</div>

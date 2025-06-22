@@ -2,7 +2,9 @@
 	import { Button } from '$lib/components';
 	import { faStopwatch, faCalendarDays } from '@fortawesome/free-solid-svg-icons';
 	import { Fa } from 'svelte-fa';
+	import { successModal } from '$lib/stores/successModal';
 	import { LessonRepository } from '$lib/repositories/lesson.repository';
+
 	const lessonRepository = new LessonRepository();
 
 	export let currentUser: string = 'placeholder';
@@ -19,6 +21,7 @@
 
 	function handleEnroll() {
 		lessonRepository.enrollLesson(id, currentUser);
+		successModal.set({ visible: true, lessonNumber: id.slice(-3) });
 	}
 
 	$: progress = `${enrolledClients}/${maxClients}`;

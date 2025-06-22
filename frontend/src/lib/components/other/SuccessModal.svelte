@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { Button } from '$components';
 	import { faXmark } from '@fortawesome/free-solid-svg-icons';
+	import { createEventDispatcher } from 'svelte';
 
 	export let lessonNumber: string | number;
 	export let message: string = 'Successfully enrolled for Lesson';
