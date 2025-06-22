@@ -6,7 +6,7 @@
 	export let date: string = 'placeholder';
 	export let duration: string = 'placeholder';
 	export let id: string = 'placeholder';
-	export let enrolledClients: string = 'placeholder';
+	export let enrolledClients: string = '99';
 	export let firstName: string = 'placeholder';
 	export let lastName: string = 'placeholder';
 	export let qualificationLevel: string = 'placeholder';

@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { Button } from '$lib/components';
 	import {OathRepository} from '$lib/repositories/oath.repository';
-	import { getSubFromToken } from '$lib/utils/jwt';
 
 	let fullName = '';
 	let password = '';

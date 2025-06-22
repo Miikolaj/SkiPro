@@ -48,10 +48,8 @@ public class LessonController {
         lessonMap.put("duration", formatDuration(lesson.getDuration()));
         lessonMap.put("status", lesson.getStatus());
         lessonMap.put("instructor", instructorToMap(lesson.getInstructor()));
-        lessonMap.put("clients", lesson.getClients().stream()
-                .map(this::clientToMap)
-                .toList());
-        // Add other fields as needed
+        int clientsCount = lesson.getClients() == null ? 0 : lesson.getClients().size();
+        lessonMap.put("clientsCount", clientsCount);
         return lessonMap;
     }
 
@@ -64,9 +62,9 @@ public class LessonController {
         return sb.toString().trim();
     }
 
-    @GetMapping
-    public List<Map<String, Object>> getLessons() {
-        return lessonService.getAllPlannedLessons().stream()
+    @PostMapping("/planned")
+    public List<Map<String, Object>> getLessons(@RequestParam String clientId) {
+        return lessonService.getPlannedLessonsWithoutClient(UUID.fromString(clientId)).stream()
                 .map(this::lessonToMap)
                 .toList();
     }
@@ -74,6 +72,13 @@ public class LessonController {
     @PostMapping
     public List<Map<String, Object>> getEnrolledLessons(@RequestParam String clientId) {
         return lessonService.getPlannedLessonsForClient(UUID.fromString(clientId)).stream()
+                .map(this::lessonToMap)
+                .toList();
+    }
+
+    @PostMapping("/finished")
+    public List<Map<String, Object>> getFinishedLessons(@RequestParam String clientId) {
+        return lessonService.getFinishedLessonsForClient(UUID.fromString(clientId)).stream()
                 .map(this::lessonToMap)
                 .toList();
     }

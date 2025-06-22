@@ -3,17 +3,31 @@
 	import { Button, Lesson } from '$components';
 	import { faPersonSkiing, faList, faFlagCheckered, faRepeat, faArrowRightFromBracket } from '@fortawesome/free-solid-svg-icons';
 	import { LessonRepository } from '$lib/repositories/lesson.repository';
+	const lessonRepository = new LessonRepository();
 
+	let loading = true;
 	let activeSection: string = 'available';
+	let enrolledLessons: any[] = [];
+	let plannedLessons: any[] = [];
+	let finishedLessons: any[] = [];
 	export let clientId: string;
 	export let activeUser: string;
 
-	const lessonRepository = new LessonRepository();
+	function normalizeLessons(lessons: any[]): any[] {
+		return lessons.map(lesson => ({
+			...lesson,
+			clients: Array.isArray(lesson.clients) ? lesson.clients : []
+		}));
+	}
 
-	let lessonsFromApi = [];
 	onMount(async () => {
-		lessonsFromApi = await lessonRepository.getLessonsForClient(clientId);
-		console.log(lessonsFromApi);
+		enrolledLessons = normalizeLessons(await lessonRepository.getLessonsForClient(clientId));
+		plannedLessons = normalizeLessons(await lessonRepository.getLessons(clientId));
+		finishedLessons = normalizeLessons(await lessonRepository.getFinishedLessons(clientId));
+		console.log(enrolledLessons);
+		console.log(plannedLessons);
+		console.log(finishedLessons);
+		loading = false;
 	});
 
 	const sections = [
@@ -35,11 +49,20 @@
 		window.location.reload();
 	}
 
-	$: lessonsBySection.available = [...lessonsFromApi];
-	$: lessons = lessonsBySection[activeSection] || [];
+	$: lessons =
+		activeSection === 'available'
+			? plannedLessons
+			: activeSection === 'enrolled'
+				? enrolledLessons
+				: activeSection === 'finished'
+					? finishedLessons
+					: [];
 </script>
 
 <div class="dashboard">
+	{#if loading}
+		<div class="loading">Loading...</div>
+	{:else}
 	<div class="options">
 		<div class="title">
 			<p class="hello">Hello,</p>
@@ -64,7 +87,7 @@
 					date={lesson.date}
 					duration={lesson.duration}
 					id={lesson.id}
-					enrolledClients={lesson.clients.length}
+					enrolledClients={lesson.clientsCount}
 					firstName={lesson.instructor.firstName}
 					lastName={lesson.instructor.lastName}
 					qualificationLevel={lesson.instructor.qualificationLevel}
@@ -77,6 +100,7 @@
 			</div>
 		{/if}
 	</div>
+	{/if}
 </div>
 
 <style lang="scss">
@@ -114,5 +138,6 @@
     height: 500px;
     padding: 10px 0 10px 10px;
     border-left: 1px solid #000;
+    overflow-y: auto;
   }
 </style>

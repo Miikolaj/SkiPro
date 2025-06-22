@@ -8,11 +8,8 @@ import com.example.skipro.model.enums.LessonStatus;
 import java.io.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.time.Duration;
-import java.util.UUID;
 
 public class LessonService {
     private static final String LESSONS_FILE = "src/main/java/com/example/skipro/data/lessons.ser";
@@ -24,9 +21,11 @@ public class LessonService {
         loadLessons();
     }
 
-    public List<Lesson> getAllPlannedLessons() {
+    public List<Lesson> getPlannedLessonsWithoutClient(UUID clientId) {
         return lessonRegistry.stream()
                 .filter(l -> l.getStatus() == LessonStatus.PLANNED)
+                .filter(l -> l.getClients().stream()
+                        .noneMatch(c -> c.getId().equals(clientId)))
                 .toList();
     }
 
@@ -35,6 +34,14 @@ public class LessonService {
                 .filter(l -> l.getClients().stream()
                         .anyMatch(c -> c.getId().equals(clientId)))
                 .filter(l -> l.getStatus() == LessonStatus.PLANNED)
+                .toList();
+    }
+
+    public List<Lesson> getFinishedLessonsForClient(UUID clientId) {
+        return lessonRegistry.stream()
+                .filter(l -> l.getClients().stream()
+                        .anyMatch(c -> c.getId().equals(clientId)))
+                .filter(l -> l.getStatus() == LessonStatus.FINISHED)
                 .toList();
     }
 
@@ -108,4 +115,6 @@ public class LessonService {
 
         lessonRegistry.addAll(Arrays.asList(lesson1, lesson2, lesson3, lesson4, lesson5, lesson6, lesson7, lesson8, lesson9));
     }
+
+
 }
