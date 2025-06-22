@@ -7,6 +7,18 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
+/**
+ * Represents a ski resort that contains multiple {@link Track}s and employs staff through {@link Employment} contracts.
+ * <p>
+ * A {@code Resort} aggregates operational information such as opening and closing hours and maintains two
+ * bidirectional associations:
+ * <ul>
+ *   <li>{@link #employments} – links to every employment contract involving the resort.</li>
+ *   <li>{@link #tracks} – the set of ski/snowboard tracks available at the resort.</li>
+ * </ul>
+ * Each resort is uniquely identified by an immutable {@link UUID} generated at construction time.
+ * </p>
+ */
 public class Resort implements Serializable {
     private static final long serialVersionUID = 1L;
     private final UUID id = UUID.randomUUID();
@@ -18,6 +30,12 @@ public class Resort implements Serializable {
     private final Set<Employment> employments = new HashSet<>();
     private final Set<Track> tracks = new HashSet<>();
 
+    /**
+     * Constructs a {@code Resort} with the given name and location.
+     *
+     * @param name     resort name
+     * @param location geographic location or address
+     */
     public Resort(String name, String location) {
         this.name = name;
         this.location = location;

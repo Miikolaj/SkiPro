@@ -6,6 +6,14 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+/**
+ * Represents a single equipment rental transaction between a {@link Client} and the resort.
+ * <p>
+ * A {@code Rental} captures the equipment item, the renting client, the rental period, its current
+ * {@link RentalStatus}, and the rental cost charged. Each rental is uniquely identified by a
+ * random immutable {@link UUID} generated at creation time.
+ * </p>
+ */
 public class Rental implements Serializable {
     private static final long serialVersionUID = 1L;
     private final UUID ID = UUID.randomUUID();
@@ -16,6 +24,13 @@ public class Rental implements Serializable {
     private RentalStatus status;
     private int rentalCost;
 
+    /**
+     * Creates a new <strong>active</strong> rental for the given equipment and client.
+     * The equipment is assumed to be available; its {@code inUse} flag must be set by callers.
+     *
+     * @param equipment the equipment item being rented (non-null)
+     * @param client    the client renting the equipment (non-null)
+     */
     public Rental(Equipment equipment, Client client) {
         this.equipment = equipment;
         this.client = client;

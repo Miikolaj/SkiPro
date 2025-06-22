@@ -8,6 +8,15 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
+/**
+ * Represents a ski or snowboard track (run) within a {@link Resort}.
+ * <p>
+ * Each {@code Track} is uniquely identified by an immutable {@link UUID}, has a human-readable
+ * {@link #name}, a {@link #difficulty} rating, and a measurable {@link #lengthKm}. A track is
+ * permanently associated with exactly one resort and can have zero or more {@link RescueTeam}s
+ * assigned to it.
+ * </p>
+ */
 public class Track implements Serializable {
     private static final long serialVersionUID = 1L;
     private final UUID id = UUID.randomUUID();
@@ -18,6 +27,15 @@ public class Track implements Serializable {
 
     private final Set<RescueTeam> rescueTeams = new HashSet<>();
 
+    /**
+     * Constructs a {@code Track} and registers it with the given resort.
+     *
+     * @param name       track name
+     * @param difficulty difficulty rating
+     * @param lengthKm   length in kilometres (must be &gt; 0.1 and ≤ 10)
+     * @param resort     owning resort (non-null)
+     * @throws IllegalArgumentException if {@code resort} is {@code null} or {@code lengthKm} is out of range
+     */
     public Track(String name, TrackDifficulty difficulty, double lenghtKm, Resort resort) {
         if (resort == null) {
             throw new IllegalArgumentException("Truck must be associated with a resort.");

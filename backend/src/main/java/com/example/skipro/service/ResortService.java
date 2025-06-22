@@ -1,11 +1,9 @@
 package com.example.skipro.service;
 
-import com.example.skipro.model.RescueWorker;
 import com.example.skipro.model.Resort;
 
 import java.io.*;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 /**

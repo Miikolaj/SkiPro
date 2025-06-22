@@ -8,10 +8,15 @@ import com.example.skipro.model.enums.TrackDifficulty;
 import java.io.*;
 import java.util.*;
 
+/**
+ * Service responsible for managing ski tracks and persisting them to a file.
+ */
 public class TrackService {
-    private Set<Track> tracks = new HashSet<>();
-    private static final String FILE_NAME = "src/main/java/com/example/skipro/data/tracks.ser";
-
+    private Set<Track> tracks = new HashSet<>(); //Set containing all tracks.
+    private static final String FILE_NAME = "src/main/java/com/example/skipro/data/tracks.ser"; //Name of the file used for saving tracks.
+    /**
+     * Constructs a TrackService and loads tracks from file.
+     */
     public TrackService() {
         try {
             loadTracksFromFile();
@@ -19,7 +24,11 @@ public class TrackService {
             System.err.println("Error loading tracks: " + e.getMessage());
         }
     }
-
+    /**
+     * Adds a track and saves the updated set to file.
+     *
+     * @param track the track to add
+     */
     public void addTrack(Track track) {
         tracks.add(track);
         try {
@@ -28,11 +37,19 @@ public class TrackService {
             System.err.println("Error saving tracks: " + e.getMessage());
         }
     }
-
+    /**
+     * Returns all tracks.
+     *
+     * @return the set of tracks
+     */
     public Set<Track> getTracks() {
         return tracks;
     }
-
+    /**
+     * Saves the set of tracks to a file.
+     *
+     * @throws IOException if an I/O error occurs during writing
+     */
     public void saveTracksToFile() throws IOException {
         File file = new File(FILE_NAME);
         file.getParentFile().mkdirs();

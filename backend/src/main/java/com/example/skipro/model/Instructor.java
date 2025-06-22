@@ -4,6 +4,14 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.*;
 
+/**
+ * Represents a ski instructor employed by the resort.
+ * <p>
+ * An {@code Instructor} extends {@link Employee} with instructor-specific data such as
+ * a qualification level, aggregated customer ratings, and the set of {@link Lesson}s
+ * they conduct. Each instructor is uniquely identified by an immutable {@link UUID}.
+ * </p>
+ */
 public class Instructor extends Employee implements Serializable {
     private static final long serialVersionUID = 1L;
     private  UUID id = UUID.randomUUID();
@@ -11,6 +19,15 @@ public class Instructor extends Employee implements Serializable {
     private  List<Integer> ratings = new ArrayList<>();
     private Set<Lesson> lessons = new HashSet<>();
 
+    /**
+     * Constructs an {@code Instructor} with the provided personal data, experience, and qualification.
+     *
+     * @param yearsOfExperience total years of teaching or skiing experience
+     * @param birthDate         date of birth
+     * @param lastName          instructor’s last name
+     * @param firstName         instructor’s first name
+     * @param qualificationLevel certification/qualification level string
+     */
     public Instructor(int yearsOfExperience, LocalDate birthDate, String lastName, String firstName, String qualificationLevel) {
         super(yearsOfExperience, birthDate, lastName, firstName);
         this.qualificationLevel = qualificationLevel;

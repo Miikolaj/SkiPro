@@ -5,24 +5,46 @@ import java.io.Serializable;
 import java.util.*;
 
 /**
- * Represents a ski resort client (customer) who can participate in lessons.
+ * Represents a ski‑resort client (customer) who can participate in lessons, rent equipment,
+ * and authenticate within the system.
+ * <p>
+ * Each client is uniquely identified by an immutable {@link UUID} generated at construction time.
+ * The personal data—first name, last name, and age—together with the client’s skiing
+ * {@link Experience} level are used by various services (pricing, eligibility checks, etc.).
+ * </p>
+ * <p>
+ * The class also keeps two bidirectional associations:
+ * <ul>
+ *   <li>{@code lessons} — all {@link Lesson} instances the client is enrolled in.</li>
+ *   <li>{@code rentals} — all {@link Rental} transactions made by the client.</li>
+ * </ul>
+ * Only basic state is stored here; business logic is delegated to service classes.
+ * </p>
  */
 public class Client implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    private final UUID id = UUID.randomUUID();
-    private final String firstName;
-    private final String lastName;
-    private final int age;
-    private final Experience experience;
-    private String password; // Assuming password is needed for authentication
+    private final UUID id = UUID.randomUUID(); /** Unique, immutable identifier for the client. */
+    private final String firstName;  /** Client’s first name. */
+    private final String lastName;  /** Client’s last name. */
+    private final int age;  /** Client’s age in years. */
+    private final Experience experience; /** Self‑declared skiing experience level. */
+    private String password;   /** Plain‑text password used for authentication */
 
-    /**
-     * Association: 0..* Lessons the client is enrolled in
-     */
+    /** Association: 0..* lessons the client is enrolled in. */
     private final Set<Lesson> lessons = new HashSet<>();
+    /** Association: 0..* equipment rentals linked to this client. */
     private final Set<Rental> rentals = new HashSet<>();
 
+    /**
+     * Constructs a new {@code Client} with the given personal details and experience level.
+     *
+     * @param firstName  client’s first name
+     * @param lastName   client’s last name
+     * @param age        client’s age in years
+     * @param experience client’s skiing experience level
+     * @param password   plain‑text password for authentication
+     */
     public Client(String firstName, String lastName, int age, Experience experience, String password) {
         this.firstName = firstName;
         this.lastName = lastName;

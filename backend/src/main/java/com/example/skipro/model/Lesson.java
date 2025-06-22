@@ -10,7 +10,11 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 /**
- * Represents a ski lesson between one instructor and many clients.
+ * Represents a ski lesson conducted by a single {@link Instructor} and attended by zero or more {@link Client}s.
+ * <p>
+ * Each lesson has a unique immutable {@link UUID}, a scheduled start {@link #dateTime}, a {@link #duration},
+ * and a mutable {@link #status}. The attending clients are stored in an internal {@link Set} to avoid duplicates.
+ * </p>
  */
 public class Lesson implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -21,6 +25,16 @@ public class Lesson implements Serializable {
     private final Instructor instructor;
     private final Set<Client> clients = new HashSet<>();
 
+    /**
+     * Constructs a new {@code Lesson} with the specified schedule, duration, and instructor.
+     * The lesson is initially in the {@link LessonStatus#PLANNED} state and automatically
+     * registers itself with the instructor.
+     *
+     * @param dateTime   lesson start date and time (non-null)
+     * @param duration   lesson duration (non-null)
+     * @param instructor instructor conducting the lesson (non-null)
+     * @throws IllegalArgumentException if any argument is {@code null}
+     */
     public Lesson(LocalDateTime dateTime, Duration duration, Instructor instructor) {
         if (dateTime == null || duration == null || instructor == null) {
             throw new IllegalArgumentException("Lesson data and instructor must not be null");

@@ -10,14 +10,30 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Service responsible for managing equipment rentals and persisting them to a file.
+ */
 public class RentalService {
-    private List<Rental> allRentals = new ArrayList<>();
-    private static final String FILE_NAME = "src/main/java/com/example/skipro/data/rentals.ser";
+    private List<Rental> allRentals = new ArrayList<>(); //List containing all rentals.
+    private static final String FILE_NAME = "src/main/java/com/example/skipro/data/rentals.ser"; //Name of the file used for saving rentals.
 
+    /**
+     * Constructs a RentalService and loads rentals from file.
+     */
     public RentalService() {
         load();
     }
 
+    /**
+     * Rents the specified equipment to the given client.
+     * A new {@link Rental} is created, the equipment is marked as "in use",
+     * and the rental is persisted to the internal list and file.
+     *
+     * @param client    the client renting the equipment
+     * @param equipment the equipment to rent
+     * @return the newly created rental
+     * @throws IllegalStateException if the equipment is already in use
+     */
     public Rental rentEquipment(Client client, Equipment equipment) {
         if(equipment.isInUse()) {
             throw new IllegalStateException("Equipment is already rented out.");
@@ -31,10 +47,21 @@ public class RentalService {
         return rental;
     }
 
+    /**
+     * Processes the return of rented equipment and updates persistence.
+     *
+     * @param rental the rental to be returned
+     */
     public void returnEquipment(Rental rental) {
         rental.returnEquipment();
     }
 
+    /**
+     * Retrieves all active rentals for the specified client.
+     *
+     * @param client the client whose rentals should be queried
+     * @return list of active rentals for the provided client
+     */
     public List<Rental> getActiveRentalsForClient(Client client) {
         return allRentals.stream()
                 .filter(r -> r.getClient().equals(client))
@@ -42,6 +69,10 @@ public class RentalService {
                 .toList();
     }
 
+    /**
+     * Loads rentals from the persistent file into memory. If the file does not
+     * exist, the method returns silently.
+     */
     private void load() {
         File file = new File(FILE_NAME);
         if (!file.exists()) return;
@@ -52,6 +83,10 @@ public class RentalService {
         }
     }
 
+    /**
+     * Saves the current list of rentals to a file. Necessary directories are
+     * created automatically.
+     */
     private void save() {
         File file = new File(FILE_NAME);
         File dir = file.getParentFile();

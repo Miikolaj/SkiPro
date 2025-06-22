@@ -5,6 +5,15 @@ import com.example.skipro.model.enums.Status;
 import java.io.Serializable;
 import java.util.*;
 
+/**
+ * Represents a specialised team of {@link RescueWorker}s assigned to a particular ski {@link Track}.
+ * <p>
+ * A {@code RescueTeam} has a unique immutable {@link UUID} and stores operational metadata such as
+ * the radio/voice {@link #communicationChannel}, a list of {@link #specialEquipment} carried, and the current
+ * operational {@link #status}. Team membership is maintained in an internal {@link Set} to avoid duplicates;
+ * helper methods ensure referential integrity by updating the {@code RescueWorker}'s back-reference.
+ * </p>
+ */
 public class RescueTeam implements Serializable {
     private static final long serialVersionUID = 1L;
     private final UUID id = UUID.randomUUID();
@@ -15,6 +24,17 @@ public class RescueTeam implements Serializable {
     private List<String> specialEquipment = new ArrayList<>();
     private Status status = Status.PENDING;
 
+    /**
+     * Constructs a new {@code RescueTeam} linked to the specified track.
+     * The team automatically registers itself with the track via {@link Track#addRescueTeam(RescueTeam)}.
+     *
+     * @param name               team name or call-sign
+     * @param track              track the team is responsible for (non-null)
+     * @param communicationChannel primary communication channel (e.g., radio frequency)
+     * @param specialEquipment   initial list of special equipment (may be {@code null})
+     * @param status             initial {@link Status} (defaults to {@link Status#PENDING} if {@code null})
+     * @throws IllegalArgumentException if {@code track} is {@code null}
+     */
     public RescueTeam(String name, Track track, String communicationChannel, List<String> specialEquipment, Status status) {
         if (track == null) {
             throw new IllegalArgumentException("Rescue team must be assigned to a track.");
