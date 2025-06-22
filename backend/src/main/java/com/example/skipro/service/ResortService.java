@@ -1,79 +1,77 @@
 package com.example.skipro.service;
 
-import com.example.skipro.model.Employee;
-import com.example.skipro.model.Employment;
 import com.example.skipro.model.Resort;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.io.*;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
- * Service responsible for managing ski resorts and employment relations.
+ * Service responsible for managing resorts and persisting them to a file.
  */
 public class ResortService {
-    private final List<Resort> resorts = new ArrayList<>();
-    private final List<Employment> employments = new ArrayList<>();
+    /**
+     * Set containing all resorts.
+     */
+    private Set<Resort> resorts = new HashSet<>();
+    /**
+     * Name of the file used for saving resorts.
+     */
+    private static final String FILE_NAME = "/data/resorts.ser";
 
     /**
-     * Creates a new resort.
+     * Constructs a ResortService and loads resorts from file.
      */
-    public Resort createResort(String name, String location) {
-        Resort resort = new Resort(name, location);
-        resorts.add(resort);
-        return resort;
+    public ResortService() {
+        try {
+            loadResortsFromFile();
+        } catch (IOException | ClassNotFoundException e) {
+            System.err.println("Error loading resorts: " + e.getMessage());
+        }
+    }
+
+    public void addMockData() {
+        addResort(new Resort("Alpine Valley", "Switzerland"));
+        addResort(new Resort("Snowy Peaks", "Austria"));
+        addResort(new Resort("Frosty Hills", "France"));
     }
 
     /**
-     * Employs a person in the specified resort.
+     * Adds a resort and saves the updated set to file.
      */
-    public Employment employPerson(Resort resort, Employee employee, LocalDate startDate) {
-        Employment employment = new Employment(resort, employee, startDate);
-        employments.add(employment);
-        return employment;
+    public void addResort(Resort resort) {
+        resorts.add(resort);
+        try {
+            saveResortsToFile();
+        } catch (IOException e) {
+            System.err.println("Error saving resorts: " + e.getMessage());
+        }
     }
 
     /**
      * Returns all resorts.
      */
-    public List<Resort> getAllResorts() {
-        return Collections.unmodifiableList(resorts);
+    public Set<Resort> getResorts() {
+        return resorts;
     }
 
     /**
-     * Finds resort by name.
+     * Saves the set of resorts to a file.
      */
-    public Optional<Resort> findResortByName(String name) {
-        return resorts.stream()
-                .filter(r -> r.getName().equalsIgnoreCase(name))
-                .findFirst();
+    public void saveResortsToFile() throws IOException {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(FILE_NAME))) {
+            oos.writeObject(resorts);
+        }
     }
 
     /**
-     * Returns all employments in the system.
+     * Loads the set of resorts from a file if it exists.
      */
-    public List<Employment> getAllEmployments() {
-        return Collections.unmodifiableList(employments);
-    }
-
-    /**
-     * Returns employments for a given employee.
-     */
-    public List<Employment> getEmploymentsForEmployee(Employee employee) {
-        return employments.stream()
-                .filter(e -> e.getEmployee().equals(employee))
-                .toList();
-    }
-
-    /**
-     * Returns employees employed at a given resort.
-     */
-    public List<Employee> getEmployeesInResort(Resort resort) {
-        return employments.stream()
-                .filter(e -> e.getResort().equals(resort))
-                .map(Employment::getEmployee)
-                .toList();
+    public void loadResortsFromFile() throws IOException, ClassNotFoundException {
+        File file = new File(FILE_NAME);
+        if (!file.exists()) return;
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(FILE_NAME))) {
+            resorts = (Set<Resort>) ois.readObject();
+        }
     }
 }

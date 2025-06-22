@@ -1,12 +1,14 @@
 package com.example.skipro.model;
 
+import java.io.Serializable;
 import java.time.LocalTime;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
-public class Resort {
+public class Resort implements Serializable {
+    private static final long serialVersionUID = 1L;
     private final UUID id = UUID.randomUUID();
     private final String name;
     private final String location;
