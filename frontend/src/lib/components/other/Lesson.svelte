@@ -53,7 +53,7 @@
 	<div class="bottom-section">
 		<div class="left-bottom">
 			<div><strong>Instructor:</strong> {firstName} {lastName}</div>
-			<div class="qualification">Qualification level: {qualificationLevel}</div>
+			<div class="qualification">Qualification : {qualificationLevel}</div>
 			<div class="rating">Rating: {rating}/5 <Fa icon={faStar}/></div>
 		</div>
 

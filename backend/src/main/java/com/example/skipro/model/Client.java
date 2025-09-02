@@ -107,6 +107,6 @@ public class Client implements Serializable {
 
     @Override
     public String toString() {
-        return firstName + " " + lastName + " (age: " + age + ", " + experience + ")";
+        return firstName + " " + lastName + " (age: " + password + ", " + experience + ")";
     }
 }

@@ -1,5 +1,7 @@
 package com.example.skipro.model;
 
+import com.example.skipro.model.enums.TrackDifficulty;
+
 import java.io.Serializable;
 import java.time.LocalTime;
 import java.util.Collections;
@@ -63,6 +65,12 @@ public class Resort implements Serializable {
 
     public void addTrack(Track track) {
         tracks.add(track);
+    }
+
+    public Track createTrack(String name, TrackDifficulty difficulty, double lengthKm) {
+        Track track = new Track(name, difficulty, lengthKm, this);
+        tracks.add(track);
+        return track;
     }
 
     public Set<Track> getTracks() {

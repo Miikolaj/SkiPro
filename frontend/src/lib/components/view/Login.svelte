@@ -1,11 +1,11 @@
 <script lang="ts">
 	import { Button } from '$lib/components';
-	import {OathRepository} from '$lib/repositories/oath.repository';
+	import {AuthRepository} from '$lib/repositories/auth.repository';
 
 	let fullName = '';
 	let password = '';
 
-	const oathRepository = new OathRepository();
+	const oathRepository = new AuthRepository();
 
 	const handleSubmit = async () => {
 		try {

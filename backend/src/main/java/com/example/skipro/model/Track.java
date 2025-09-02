@@ -12,7 +12,7 @@ import java.util.UUID;
  * Represents a ski or snowboard track (run) within a {@link Resort}.
  * <p>
  * Each {@code Track} is uniquely identified by an immutable {@link UUID}, has a human-readable
- * {@link #name}, a {@link #difficulty} rating, and a measurable {@link #lengthKm}. A track is
+ * {@link #name}, a {@link #difficulty} rating, and a measurable {@link #lenghtKm}. A track is
  * permanently associated with exactly one resort and can have zero or more {@link RescueTeam}s
  * assigned to it.
  * </p>
@@ -32,11 +32,11 @@ public class Track implements Serializable {
      *
      * @param name       track name
      * @param difficulty difficulty rating
-     * @param lengthKm   length in kilometres (must be &gt; 0.1 and ≤ 10)
+     * @param lenghtKm   length in kilometres (must be &gt; 0.1 and ≤ 10)
      * @param resort     owning resort (non-null)
      * @throws IllegalArgumentException if {@code resort} is {@code null} or {@code lengthKm} is out of range
      */
-    public Track(String name, TrackDifficulty difficulty, double lenghtKm, Resort resort) {
+     Track(String name, TrackDifficulty difficulty, double lenghtKm, Resort resort) {
         if (resort == null) {
             throw new IllegalArgumentException("Truck must be associated with a resort.");
         }
