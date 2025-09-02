@@ -82,6 +82,12 @@ public class LessonService {
         if (lesson == null) return false;
         Client client = clientService.getClientById(clientId);
         if (client == null) return false;
+
+        if (lesson.getClients().stream().anyMatch(c -> c.getId().equals(clientId))) {
+            System.out.println("Client already enrolled in lesson");
+            return false;
+        }
+
         try {
             lesson.enrollClient(client);
             saveLessons();
@@ -154,4 +160,14 @@ public class LessonService {
         }
     }
 
+    public boolean removeClientFromLesson(UUID lessonId, UUID clientId) {
+        Lesson lesson = getLessonById(lessonId);
+        if (lesson == null) return false;
+        Client client = clientService.getClientById(clientId);
+        if (client == null) return false;
+
+        lesson.cancelEnrollment(client);
+        saveLessons();
+        return true;
+    }
 }

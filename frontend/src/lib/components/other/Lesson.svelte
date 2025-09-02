@@ -126,6 +126,7 @@
       flex-direction: column;
       align-items: flex-start;
       gap: 0.5rem;
+			min-width: 145px;
 
 
       .spacer {

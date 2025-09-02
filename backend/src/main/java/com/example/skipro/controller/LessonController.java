@@ -1,6 +1,5 @@
 package com.example.skipro.controller;
 
-import com.example.skipro.model.Lesson;
 import com.example.skipro.model.Instructor;
 import com.example.skipro.service.InstructorService;
 import com.example.skipro.service.LessonService;
@@ -23,11 +22,6 @@ public class LessonController {
      */
     private final LessonService lessonService = new LessonService();
     private final InstructorService instructorService = new InstructorService();
-
-    /**
-     * Formatter used to render lesson dates in responses.
-     */
-    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
     /**
      * Returns all <em>planned</em> lessons that the given client is <strong>not</strong> enrolled in.
@@ -77,7 +71,6 @@ public class LessonController {
      */
     @PostMapping("/enroll")
     public ResponseEntity<Void> enrollClientInLesson(@RequestParam String lessonId, @RequestParam String clientId) {
-        System.out.println("Enrolling client " + clientId + " in lesson " + lessonId);
         boolean enrolled = lessonService.enrollClientToLesson(UUID.fromString(lessonId), UUID.fromString(clientId));
         if (enrolled) {
             return ResponseEntity.ok().build();
@@ -97,5 +90,10 @@ public class LessonController {
         );
 
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/remove")
+    public boolean removeClientFromLesson(UUID lessonId, UUID clientId) {
+        return lessonService.removeClientFromLesson(lessonId, clientId);
     }
 }

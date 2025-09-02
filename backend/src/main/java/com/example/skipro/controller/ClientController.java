@@ -32,6 +32,17 @@ public class ClientController {
         return clientService.authenticate(fullName, password);
     }
 
+    /**
+     * Registers a new client in the system.
+     * <p>
+     * The client must provide their details in the request body, including
+     * their {@code firstName}, {@code lastName}, {@code email}, and {@code password}.
+     * On success, a confirmation message or token is returned; on failure, an
+     * appropriate error response is generated.
+     *
+     * @param client the client object containing registration details
+     * @return a confirmation message or token if registration succeeds
+     */
     @PostMapping("/register")
     public String register(@RequestBody Client client) {
         return clientService.register(client);
