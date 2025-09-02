@@ -95,6 +95,7 @@
 					qualificationLevel={lesson.instructor.qualificationLevel}
 					rating={lesson.instructor.rating}
 					section={activeSection}
+					clients={lesson.clients}
 				/>
 			{/each}
 		{:else}

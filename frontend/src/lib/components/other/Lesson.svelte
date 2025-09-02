@@ -7,6 +7,7 @@
 
 	const lessonRepository = new LessonRepository();
 
+	export let clients: { firstName: string; lastName: string; id: string }[] = [];
 	export let currentUser: string = 'placeholder';
 	export let date: string = 'placeholder';
 	export let duration: string = 'placeholder';
@@ -27,6 +28,8 @@
 		}, 100);
 	}
 
+	$: uniqueClients = Array.from(new Map(clients.map(c => [c.id, c])).values());
+	$: console.log(uniqueClients);
 	$: progress = `${enrolledClients}/${maxClients}`;
 	$: buttonLabel =
 		section === 'available'
@@ -54,14 +57,26 @@
 		<div class="left-bottom">
 			<div><strong>Instructor:</strong> {firstName} {lastName}</div>
 			<div class="qualification">Qualification : {qualificationLevel}</div>
-			<div class="rating">Rating: {rating}/5 <Fa icon={faStar}/></div>
+			<div class="rating">Rating: {rating}/5
+				<Fa icon={faStar} />
+			</div>
 		</div>
 
 		<div class="right-bottom">
-			<div class="count">{progress}</div>
+			<div class="count">
+				<span class="left">Enrolled Clients: </span>
+				<span class="right">{progress}</span>
+			</div>
+			{#if uniqueClients.length > 0}
+				{#each uniqueClients as c}
+					<div class="client">{c.firstName} {c.lastName}</div>
+				{/each}
+			{/if}
 			<div class="spacer" />
-			<Button type="lesson-tile" on:click={section === 'available' ? handleEnroll : undefined}
-							disabled={section !== 'available'}>{buttonLabel}</Button>
+			<div class="enroll-wrapper">
+				<Button type="lesson-tile" on:click={section === 'available' ? handleEnroll : undefined}
+								disabled={section !== 'available'}>{buttonLabel}</Button>
+			</div>
 		</div>
 	</div>
 </div>
@@ -94,11 +109,11 @@
       gap: 15px
     }
 
-		.icons{
-			display: flex;
-			align-items: center;
-			gap: 5px
-		}
+    .icons {
+      display: flex;
+      align-items: center;
+      gap: 5px
+    }
   }
 
   .bottom-section {
@@ -109,11 +124,25 @@
     .right-bottom {
       display: flex;
       flex-direction: column;
-      align-items: flex-end;
+      align-items: flex-start;
       gap: 0.5rem;
+
 
       .spacer {
         flex: 1;
+      }
+
+      .count {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        width: 100%;
+      }
+
+      .enroll-wrapper {
+        width: 100%;
+        display: flex;
+        justify-content: flex-end; // pushes button to the right
       }
     }
 
@@ -124,5 +153,6 @@
       gap: 10px;
       font-size: 0.875rem;
     }
+
   }
 </style>

@@ -9,7 +9,7 @@
 
 	const handleSubmit = async () => {
 		try {
-			const isAuthenticated = await oathRepository.oath(fullName, password);
+			const isAuthenticated = await oathRepository.auth(fullName, password);
 			if (isAuthenticated) {
 				document.cookie = `token=${isAuthenticated}; path=/;`;
 				window.location.href = '/dashboard';

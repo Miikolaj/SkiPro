@@ -1,5 +1,6 @@
 package com.example.skipro.controller;
 
+import com.example.skipro.model.Client;
 import org.springframework.web.bind.annotation.*;
 import com.example.skipro.service.ClientService;
 
@@ -29,5 +30,10 @@ public class ClientController {
     @PostMapping("/login")
     public String login(@RequestParam String fullName, @RequestParam String password) {
         return clientService.authenticate(fullName, password);
+    }
+
+    @PostMapping("/register")
+    public String register(@RequestBody Client client) {
+        return clientService.register(client);
     }
 }

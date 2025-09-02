@@ -20,6 +20,11 @@ public class InstructorService {
         loadInstructors();
     }
 
+    public void addInstructor(Instructor instructor) {
+        instructorRegistry.add(instructor);
+        saveInstructors();
+    }
+
     /**
      * Returns a copyof the list of all instructors.
      *

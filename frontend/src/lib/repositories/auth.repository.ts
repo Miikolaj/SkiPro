@@ -1,7 +1,7 @@
 import apiClient from '$lib/config/axios.config';
 
 export class AuthRepository {
-	async oath(fullName: string, password: string): Promise<string> {
+	async auth(fullName: string, password: string): Promise<string> {
 		try {
 			const response = await apiClient.post('/auth/login',null, {
 				params: { fullName, password }

@@ -118,4 +118,9 @@ public class ClientService {
             e.printStackTrace();
         }
     }
+
+    public String register(Client client) {
+        addClient(client);
+        return generateToken(client);
+    }
 }
