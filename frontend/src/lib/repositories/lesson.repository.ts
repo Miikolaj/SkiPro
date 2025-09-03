@@ -47,4 +47,21 @@ export class LessonRepository {
 			throw 'An error occurred while enrolling in the lesson';
 		}
 	}
+
+	async cancelEnrollment(lessonId: string, clientId: string) {
+		try {
+			await apiClient.post('/lessons/remove', null, {
+				params: {
+					lessonId,
+					clientId
+				}
+			})
+			return true;
+		} catch (error: any){
+			if(error.response?.status === 404){
+				throw 'Lesson or client not found';
+			}
+			throw 'An error occurred while canceling the enrollment';
+		}
+	}
 }

@@ -2,7 +2,6 @@
 	import { Button } from '$lib/components';
 	import { faStopwatch, faCalendarDays, faStar } from '@fortawesome/free-solid-svg-icons';
 	import { Fa } from 'svelte-fa';
-	import { successModal } from '$lib/stores/successModal';
 	import { LessonRepository } from '$lib/repositories/lesson.repository';
 
 	const lessonRepository = new LessonRepository();
@@ -23,6 +22,14 @@
 	function handleEnroll() {
 		lessonRepository.enrollLesson(id, currentUser);
 		localStorage.setItem('showSuccessModal', id.slice(-3));
+		setTimeout(() => {
+			location.reload();
+		}, 100);
+	}
+
+	function handleCancel() {
+		lessonRepository.cancelEnrollment(id, currentUser);
+		localStorage.setItem('showCancelModal', id.slice(-3));
 		setTimeout(() => {
 			location.reload();
 		}, 100);
@@ -74,7 +81,7 @@
 			{/if}
 			<div class="spacer" />
 			<div class="enroll-wrapper">
-				<Button type="lesson-tile" on:click={section === 'available' ? handleEnroll : undefined}
+				<Button type="lesson-tile" on:click={section === 'available' ? handleEnroll : section === 'enrolled' ? handleCancel : handleEnroll}
 								disabled={section !== 'available'}>{buttonLabel}</Button>
 			</div>
 		</div>

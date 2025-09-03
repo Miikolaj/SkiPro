@@ -4,7 +4,7 @@
 	import { successModal } from '$lib/stores/successModal';
 	import { onDestroy, onMount } from 'svelte';
 
-	let modalState: { visible: boolean; lessonNumber?: string | number } | null = null;
+	let modalState: { visible: boolean; lessonNumber?: string | number, message?: string | null } | null = null;
 	let modalTimeout: ReturnType<typeof setTimeout> | null = null;
 
 	const unsubscribe = successModal.subscribe(value => {
@@ -21,9 +21,13 @@
 
 	onMount(() => {
 		const lessonNumber = localStorage.getItem('showSuccessModal');
+		const lessonCancel = localStorage.getItem('showCancelModal');
 		if (lessonNumber) {
-			successModal.set({ visible: true, lessonNumber });
+			successModal.set({ visible: true, lessonNumber, message: 'Successfully enrolled for Lesson' });
 			localStorage.removeItem('showSuccessModal');
+		} else if (lessonCancel) {
+			successModal.set({ visible: true, lessonNumber: lessonCancel, message: 'Successfully canceled enrollment for Lesson' });
+			localStorage.removeItem('showCancelModal');
 		}
 	});
 
@@ -43,7 +47,7 @@
 	</div>
 	{#if modalState?.visible}
 		<div class="modal-overlay">
-			<Modal lessonNumber={modalState.lessonNumber} />
+			<Modal lessonNumber={modalState.lessonNumber} message={modalState.message} />
 		</div>
 	{/if}
 	<div class="dashboard">

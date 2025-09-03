@@ -93,7 +93,9 @@ public class LessonController {
     }
 
     @PostMapping("/remove")
-    public boolean removeClientFromLesson(UUID lessonId, UUID clientId) {
-        return lessonService.removeClientFromLesson(lessonId, clientId);
+    public boolean removeClientFromLesson(@RequestParam String lessonId, @RequestParam String clientId) {
+        UUID uuid = UUID.fromString(lessonId);
+        UUID uuid2 = UUID.fromString(clientId);
+        return lessonService.removeClientFromLesson(uuid, uuid2);
     }
 }
