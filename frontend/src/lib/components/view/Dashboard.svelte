@@ -25,9 +25,6 @@
 		enrolledLessons = normalizeLessons(await lessonRepository.getLessonsForClient(clientId));
 		plannedLessons = normalizeLessons(await lessonRepository.getLessons(clientId));
 		finishedLessons = normalizeLessons(await lessonRepository.getFinishedLessons(clientId));
-		console.log(enrolledLessons);
-		console.log(plannedLessons);
-		console.log(finishedLessons);
 		loading = false;
 	});
 

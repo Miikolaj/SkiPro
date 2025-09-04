@@ -36,7 +36,6 @@
 	}
 
 	$: uniqueClients = Array.from(new Map(clients.map(c => [c.id, c])).values());
-	$: console.log(uniqueClients);
 	$: progress = `${enrolledClients}/${maxClients}`;
 	$: buttonLabel =
 		section === 'available'
@@ -62,10 +61,18 @@
 	</div>
 	<div class="bottom-section">
 		<div class="left-bottom">
-			<div>Instructor: {firstName} {lastName}</div>
-			<div class="qualification">Qualification : {qualificationLevel}</div>
-			<div class="rating">Rating: {rating}/5
-				<Fa icon={faStar} />
+			<div class="instructor-wrapper">
+				<div>Instructor: {firstName} {lastName}</div>
+				<div class="qualification">Qualification : {qualificationLevel}</div>
+				<div class="rating">Rating: {rating}/5
+					<Fa icon={faStar} />
+				</div>
+				<div class="spacer" />
+			</div>
+			<div class="enroll-wrapper">
+				<Button
+					type={`lesson-tile${section === 'enrolled' ? ' inactive' : ''}${(uniqueClients.length === 5 && section==='available')? ' dimmed' : ''}`}
+					on:click={section === 'available' ? handleEnroll : section === 'enrolled' ? handleCancel : handleEnroll}>{buttonLabel}</Button>
 			</div>
 		</div>
 
@@ -79,11 +86,6 @@
 					<div class="client{c.id === currentUser ? ' highlighted' : ''}">{c.firstName} {c.lastName}</div>
 				{/each}
 			{/if}
-			<div class="spacer" />
-			<div class="enroll-wrapper">
-				<Button type={`lesson-tile${section === 'enrolled' ? ' inactive' : ''}${(uniqueClients.length === 5 && section==='available')? ' dimmed' : ''}`} on:click={section === 'available' ? handleEnroll : section === 'enrolled' ? handleCancel : handleEnroll}
-								disabled={section !== 'available'}>{buttonLabel}</Button>
-			</div>
 		</div>
 	</div>
 </div>
@@ -138,7 +140,7 @@
       flex-direction: column;
       align-items: flex-start;
       gap: 10px;
-			min-width: 145px;
+      min-width: 145px;
       font-size: 0.875rem;
 
       .spacer {
@@ -151,20 +153,25 @@
         justify-content: space-between;
         width: 100%;
       }
-
-      .enroll-wrapper {
-        width: 100%;
-        display: flex;
-        justify-content: flex-end;
-      }
     }
 
     .left-bottom {
       display: flex;
       flex-direction: column;
+      height: 100%;
+    }
+
+    .enroll-wrapper {
+      margin-top: auto;
+      display: flex;
+      justify-content: flex-start;
+    }
+
+    .instructor-wrapper {
+      display: flex;
+      flex-direction: column;
       gap: 10px;
       font-size: 0.875rem;
     }
-
   }
 </style>
