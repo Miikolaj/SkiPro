@@ -4,6 +4,7 @@ import com.example.skipro.model.RescueWorker;
 import com.example.skipro.model.Resort;
 import com.example.skipro.model.Track;
 import com.example.skipro.model.enums.TrackDifficulty;
+import org.springframework.stereotype.Service;
 
 import java.io.*;
 import java.util.*;
@@ -11,6 +12,7 @@ import java.util.*;
 /**
  * Service responsible for managing ski tracks and persisting them to a file.
  */
+@Service
 public class TrackService {
     private Set<Track> tracks = new HashSet<>(); //Set containing all tracks.
     private static final String FILE_NAME = "src/main/java/com/example/skipro/data/tracks.ser"; //Name of the file used for saving tracks.

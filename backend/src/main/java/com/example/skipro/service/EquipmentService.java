@@ -1,6 +1,7 @@
 package com.example.skipro.service;
 
 import com.example.skipro.model.Equipment;
+import org.springframework.stereotype.Service;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -10,6 +11,7 @@ import java.util.List;
 /**
  * Service responsible for managing equipment and persisting it to a file.
  */
+@Service
 public class EquipmentService {
     private final List<Equipment> equipmentList = new ArrayList<>(); // List containing all equipment.
     private static final String FILE_NAME = "src/main/java/com/example/skipro/data/equipment.ser"; // Name of the file used for saving equipment.

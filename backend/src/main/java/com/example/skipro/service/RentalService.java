@@ -5,6 +5,7 @@ import com.example.skipro.model.Equipment;
 import com.example.skipro.model.Rental;
 import com.example.skipro.model.enums.Experience;
 import com.example.skipro.model.enums.RentalStatus;
+import org.springframework.stereotype.Service;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ import java.util.List;
 /**
  * Service responsible for managing equipment rentals and persisting them to a file.
  */
+@Service
 public class RentalService {
     private List<Rental> allRentals = new ArrayList<>(); //List containing all rentals.
     private static final String FILE_NAME = "src/main/java/com/example/skipro/data/rentals.ser"; //Name of the file used for saving rentals.

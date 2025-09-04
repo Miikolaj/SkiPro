@@ -4,6 +4,7 @@ import com.example.skipro.model.Client;
 import com.example.skipro.model.Instructor;
 import com.example.skipro.model.Lesson;
 import com.example.skipro.model.enums.LessonStatus;
+import org.springframework.stereotype.Service;
 
 import java.io.*;
 import java.time.LocalDateTime;
@@ -13,6 +14,7 @@ import java.time.Duration;
 /**
  * Service responsible for creating, managing, and persisting ski lessons.
  */
+@Service
 public class LessonService {
     /**
      * Name of the file used for saving lessons.

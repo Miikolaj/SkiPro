@@ -4,6 +4,7 @@ import com.example.skipro.model.Client;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
 import java.io.*;
@@ -15,6 +16,7 @@ import java.util.UUID;
 /**
  * Service responsible for managing clients, authentication, and token generation.
  */
+@Service
 public class ClientService {
     private static final String FILE_NAME = "src/main/java/com/example/skipro/data/clients.ser"; // Name of the file used for saving clients.
     private List<Client> clients = new ArrayList<>(); // List containing all registered clients.

@@ -1,6 +1,7 @@
 package com.example.skipro.service;
 
 import com.example.skipro.model.RescueWorker;
+import org.springframework.stereotype.Service;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -9,6 +10,7 @@ import java.util.List;
 /**
  * Service responsible for managing rescue workers and persisting them to a file.
  */
+@Service
 public class RescueWorkerService {
     private static final String FILE_NAME = "src/main/java/com/example/skipro/data/rescue_workers.ser"; //Name of the file used for saving rescue workers.
     private final List<RescueWorker> rescueWorkers = new ArrayList<>(); //List containing all rescue workers.

@@ -1,6 +1,8 @@
 package com.example.skipro.service;
 
 import com.example.skipro.model.*;
+import org.springframework.stereotype.Service;
+
 import java.io.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -9,6 +11,7 @@ import java.util.List;
 /**
  * Service responsible for managing employments and persisting them to a file.
  */
+@Service
 public class EmploymentService {
     private static final String FILE_NAME = "src/main/java/com/example/skipro/data/employments.ser"; // Name of the file used for saving employments.
     private List<Employment> allEmployments = new ArrayList<>(); // List containing all employments.

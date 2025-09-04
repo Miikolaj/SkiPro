@@ -1,6 +1,7 @@
 package com.example.skipro.service;
 
 import com.example.skipro.model.RentalClerk;
+import org.springframework.stereotype.Service;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -9,6 +10,7 @@ import java.util.List;
 /**
  * Service responsible for managing rental clerks and persisting them to a file.
  */
+@Service
 public class RentalClerkService {
     private static final String FILE_NAME = "src/main/java/com/example/skipro/data/rentalclerks.ser"; // Name of the file used for saving rental clerks.
     private List<RentalClerk> allRentalClerks = new ArrayList<>(); // List containing all rental clerks.

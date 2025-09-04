@@ -1,6 +1,7 @@
 package com.example.skipro.service;
 
 import com.example.skipro.model.Instructor;
+import org.springframework.stereotype.Service;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -9,6 +10,7 @@ import java.util.List;
 /**
  * Service responsible for managing instructors and persisting them to a file.
  */
+@Service
 public class InstructorService {
     private static final String INSTRUCTORS_FILE = "src/main/java/com/example/skipro/data/instructors.ser"; //Name of the file used for saving instructors.
     private final List<Instructor> instructorRegistry = new ArrayList<>(); // Registry containing all instructors.

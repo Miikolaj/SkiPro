@@ -1,6 +1,7 @@
 package com.example.skipro.service;
 
 import com.example.skipro.model.Resort;
+import org.springframework.stereotype.Service;
 
 import java.io.*;
 import java.util.HashSet;
@@ -9,6 +10,7 @@ import java.util.Set;
 /**
  * Service responsible for managing resorts and persisting them to a file.
  */
+@Service
 public class ResortService {
     /**
      * Set containing all resorts.

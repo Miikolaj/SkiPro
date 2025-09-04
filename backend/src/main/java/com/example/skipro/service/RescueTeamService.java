@@ -4,6 +4,7 @@ import com.example.skipro.model.Rental;
 import com.example.skipro.model.RescueTeam;
 import com.example.skipro.model.RescueWorker;
 import com.example.skipro.model.Track;
+import org.springframework.stereotype.Service;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -14,6 +15,7 @@ import java.util.Optional;
 /**
  * Service responsible for managing rescue teams and persisting them to a file.
  */
+@Service
 public class RescueTeamService {
     private static final String FILE_NAME = "src/main/java/com/example/skipro/data/rescue_team.ser"; //Name of the file used for saving rescue teams.
     private  List<RescueTeam> rescueTeams = new ArrayList<>(); //List containing all rescue teams.
