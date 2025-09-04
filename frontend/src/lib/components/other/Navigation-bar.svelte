@@ -47,7 +47,7 @@
     align-items: center;
     gap: 10px;
     padding: 6px 10px;
-    background: rgba(58.46, 155.88, 197.62, 0.50);
+    background: $navbar-color;
     border-radius: 5px;
   }
 

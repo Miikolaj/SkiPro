@@ -62,7 +62,7 @@
 	</div>
 	<div class="bottom-section">
 		<div class="left-bottom">
-			<div><strong>Instructor:</strong> {firstName} {lastName}</div>
+			<div>Instructor: {firstName} {lastName}</div>
 			<div class="qualification">Qualification : {qualificationLevel}</div>
 			<div class="rating">Rating: {rating}/5
 				<Fa icon={faStar} />
@@ -76,7 +76,7 @@
 			</div>
 			{#if uniqueClients.length > 0}
 				{#each uniqueClients as c}
-					<div class="client">{c.firstName} {c.lastName}</div>
+					<div class="client{c.id === currentUser ? ' highlighted' : ''}">{c.firstName} {c.lastName}</div>
 				{/each}
 			{/if}
 			<div class="spacer" />
@@ -97,6 +97,11 @@
     border: 1px solid #000;
     border-radius: 5px;
     font-weight: 300;
+  }
+
+  .client.highlighted {
+    font-weight: bold;
+    color: #1976d2;
   }
 
   .top-section {
