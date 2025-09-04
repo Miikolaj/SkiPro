@@ -14,11 +14,26 @@ import java.util.UUID;
  */
 public class Employment implements Serializable {
     private static final long serialVersionUID = 1L;
-    private final UUID id = UUID.randomUUID(); /** Unique, immutable identifier for the employment contract. */
-    private final Resort resort; /** Resort where the employee works. */
-    private final Employee employee; /** Employee involved in this contract. */
-    private final LocalDate startDate; /** Contract start date (inclusive). */
-    private LocalDate endDate; /** Contract end date (inclusive); {@code null} while the employment is ongoing. */
+    private final UUID id = UUID.randomUUID();
+    /**
+     * Unique, immutable identifier for the employment contract.
+     */
+    private final Resort resort;
+    /**
+     * Resort where the employee works.
+     */
+    private final Employee employee;
+    /**
+     * Employee involved in this contract.
+     */
+    private final LocalDate startDate;
+    /**
+     * Contract start date (inclusive).
+     */
+    private LocalDate endDate;
+    /**
+     * Contract end date (inclusive); {@code null} while the employment is ongoing.
+     */
     private Employment employment; /** Self-reference placeholder  */
 
     /**

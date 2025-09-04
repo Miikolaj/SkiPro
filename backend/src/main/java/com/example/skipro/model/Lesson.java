@@ -47,7 +47,9 @@ public class Lesson implements Serializable {
         instructor.addLesson(this);
     }
 
-    /** Enroll a client to the lesson (if not already enrolled) */
+    /**
+     * Enroll a client to the lesson (if not already enrolled)
+     */
     public void enrollClient(Client client) {
         if (status != LessonStatus.PLANNED)
             throw new IllegalStateException("Only planned lessons allow enrollment.");
@@ -56,27 +58,35 @@ public class Lesson implements Serializable {
         }
     }
 
-    /** Remove a client from the lesson */
+    /**
+     * Remove a client from the lesson
+     */
     public void cancelEnrollment(Client client) {
         clients.removeIf(c -> c.getId().equals(client.getId()));
         client.removeLesson(this);
     }
 
-    /** Start the lesson */
+    /**
+     * Start the lesson
+     */
     public void start() {
         if (status != LessonStatus.PLANNED)
             throw new IllegalStateException("Only planned lessons can be started.");
         status = LessonStatus.IN_PROGRESS;
     }
 
-    /** Finish the lesson */
+    /**
+     * Finish the lesson
+     */
     public void finish() {
         if (status != LessonStatus.IN_PROGRESS)
             throw new IllegalStateException("Only lessons in progress can be finished.");
         status = LessonStatus.FINISHED;
     }
 
-    /** Cancel the lesson */
+    /**
+     * Cancel the lesson
+     */
     public void cancel() {
         if (status == LessonStatus.FINISHED)
             throw new IllegalStateException("Finished lessons cannot be cancelled.");

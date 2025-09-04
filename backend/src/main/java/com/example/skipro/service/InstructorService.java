@@ -20,7 +20,7 @@ public class InstructorService {
      * Constructs an InstructorService and loads instructors from file.
      */
     public InstructorService() {
-       instructorRegistry = persistence.load();
+        instructorRegistry = persistence.load();
     }
 
     /**

@@ -28,11 +28,11 @@ public class RescueTeam implements Serializable {
      * Constructs a new {@code RescueTeam} linked to the specified track.
      * The team automatically registers itself with the track via {@link Track#addRescueTeam(RescueTeam)}.
      *
-     * @param name               team name or call-sign
-     * @param track              track the team is responsible for (non-null)
+     * @param name                 team name or call-sign
+     * @param track                track the team is responsible for (non-null)
      * @param communicationChannel primary communication channel (e.g., radio frequency)
-     * @param specialEquipment   initial list of special equipment (may be {@code null})
-     * @param status             initial {@link Status} (defaults to {@link Status#PENDING} if {@code null})
+     * @param specialEquipment     initial list of special equipment (may be {@code null})
+     * @param status               initial {@link Status} (defaults to {@link Status#PENDING} if {@code null})
      * @throws IllegalArgumentException if {@code track} is {@code null}
      */
     public RescueTeam(String name, Track track, String communicationChannel, List<String> specialEquipment, Status status) {

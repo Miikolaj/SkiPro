@@ -23,6 +23,6 @@ public class RescueWorkerService {
      * @throws ClassNotFoundException if the file does not contain a valid List<RescueWorker>
      */
     public RescueWorkerService() {
-       rescueWorkers = persistence.load();
+        rescueWorkers = persistence.load();
     }
 }

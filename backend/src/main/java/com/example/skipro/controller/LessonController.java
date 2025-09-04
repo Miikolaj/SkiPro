@@ -6,6 +6,7 @@ import com.example.skipro.service.LessonService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.example.skipro.util.LessonMapper;
+
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -82,8 +83,8 @@ public class LessonController {
     /**
      * Creates a new lesson with the specified time, duration, and instructor.
      *
-     * @param time ISO_LOCAL_DATE_TIME formatted start time of the lesson
-     * @param duration ISO-8601 formatted duration (e.g., PT1H for 1 hour)
+     * @param time         ISO_LOCAL_DATE_TIME formatted start time of the lesson
+     * @param duration     ISO-8601 formatted duration (e.g., PT1H for 1 hour)
      * @param instructorId the instructor identifier
      * @return HTTP 200 if creation succeeded
      */

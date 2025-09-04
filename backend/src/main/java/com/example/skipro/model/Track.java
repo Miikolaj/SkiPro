@@ -36,7 +36,7 @@ public class Track implements Serializable {
      * @param resort     owning resort (non-null)
      * @throws IllegalArgumentException if {@code resort} is {@code null} or {@code lengthKm} is out of range
      */
-     Track(String name, TrackDifficulty difficulty, double lenghtKm, Resort resort) {
+    Track(String name, TrackDifficulty difficulty, double lenghtKm, Resort resort) {
         if (resort == null) {
             throw new IllegalArgumentException("Truck must be associated with a resort.");
         }

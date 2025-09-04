@@ -18,7 +18,8 @@ public class RescueTeamService {
     private final PersistenceManager<RescueTeam> persistence = new PersistenceManager<>("src/main/java/com/example/skipro/data/rescue_team.ser"); //Name of the file used for saving rescue teams.
     private List<RescueTeam> rescueTeams = new ArrayList<>();
 
-    /** Constructs a RescueTeamService and loads teams from file.
+    /**
+     * Constructs a RescueTeamService and loads teams from file.
      */
     public RescueTeamService() {
         rescueTeams = persistence.load();

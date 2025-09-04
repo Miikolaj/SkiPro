@@ -20,11 +20,26 @@ import java.util.Set;
  * </p>
  */
 public abstract class Employee implements Serializable {
-    protected String firstName; /** Employee first name. */
-    protected String lastName; /** Employee last name. */
-    protected int age; /** Employee age in years (derived from {@link #birthDate}). */
-    protected LocalDate birthDate; /** Date of birth. */
-    protected int yearsOfExperience;  /** Total years of professional experience. */
+    protected String firstName;
+    /**
+     * Employee first name.
+     */
+    protected String lastName;
+    /**
+     * Employee last name.
+     */
+    protected int age;
+    /**
+     * Employee age in years (derived from {@link #birthDate}).
+     */
+    protected LocalDate birthDate;
+    /**
+     * Date of birth.
+     */
+    protected int yearsOfExperience;
+    /**
+     * Total years of professional experience.
+     */
 
     private final Set<Employment> employments = new HashSet<>();
 

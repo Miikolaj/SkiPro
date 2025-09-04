@@ -23,11 +23,11 @@ public class Equipment implements Serializable {
     /**
      * Constructs a new {@code Equipment} instance with the given attributes.
      *
-     * @param name  human‑readable name or model
-     * @param size  size designation (string, to allow units such as "cm" or labels like "L")
-     * @param cost  rental cost in basic currency units
+     * @param name human‑readable name or model
+     * @param size size designation (string, to allow units such as "cm" or labels like "L")
+     * @param cost rental cost in basic currency units
      */
-    public Equipment(String name, String size,int cost) {
+    public Equipment(String name, String size, int cost) {
         this.name = name;
         this.size = size;
         this.cost = cost;

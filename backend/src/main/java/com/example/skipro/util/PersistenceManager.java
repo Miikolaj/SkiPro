@@ -14,9 +14,9 @@ import java.util.Set;
 public class PersistenceManager<T> {
     private final String filePath;
 
-
     /**
      * Constructs a PersistenceManager for the specified file path.
+     *
      * @param filePath the path to the file for persistence
      */
     public PersistenceManager(String filePath) {

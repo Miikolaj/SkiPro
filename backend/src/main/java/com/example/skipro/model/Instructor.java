@@ -14,18 +14,18 @@ import java.util.*;
  */
 public class Instructor extends Employee implements Serializable {
     private static final long serialVersionUID = 1L;
-    private  UUID id = UUID.randomUUID();
-    private  String qualificationLevel;
-    private  List<Integer> ratings = new ArrayList<>();
+    private UUID id = UUID.randomUUID();
+    private String qualificationLevel;
+    private List<Integer> ratings = new ArrayList<>();
     private Set<Lesson> lessons = new HashSet<>();
 
     /**
      * Constructs an {@code Instructor} with the provided personal data, experience, and qualification.
      *
-     * @param yearsOfExperience total years of teaching or skiing experience
-     * @param birthDate         date of birth
-     * @param lastName          instructor’s last name
-     * @param firstName         instructor’s first name
+     * @param yearsOfExperience  total years of teaching or skiing experience
+     * @param birthDate          date of birth
+     * @param lastName           instructor’s last name
+     * @param firstName          instructor’s first name
      * @param qualificationLevel certification/qualification level string
      */
     public Instructor(int yearsOfExperience, LocalDate birthDate, String lastName, String firstName, String qualificationLevel) {

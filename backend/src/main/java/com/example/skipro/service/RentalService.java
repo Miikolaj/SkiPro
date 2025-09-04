@@ -23,7 +23,7 @@ public class RentalService {
      * Constructs a RentalService and loads rentals from file.
      */
     public RentalService() {
-       allRentals = persistence.load();
+        allRentals = persistence.load();
     }
 
     /**
@@ -37,7 +37,7 @@ public class RentalService {
      * @throws IllegalStateException if the equipment is already in use
      */
     public Rental rentEquipment(Client client, Equipment equipment) {
-        if(equipment.isInUse()) {
+        if (equipment.isInUse()) {
             throw new IllegalStateException("Equipment is already rented out.");
         }
 
