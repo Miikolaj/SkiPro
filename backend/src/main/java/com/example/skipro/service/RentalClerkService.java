@@ -1,6 +1,7 @@
 package com.example.skipro.service;
 
 import com.example.skipro.model.RentalClerk;
+import com.example.skipro.util.PersistenceManager;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
@@ -12,14 +13,14 @@ import java.util.List;
  */
 @Service
 public class RentalClerkService {
-    private static final String FILE_NAME = "src/main/java/com/example/skipro/data/rentalclerks.ser"; // Name of the file used for saving rental clerks.
-    private List<RentalClerk> allRentalClerks = new ArrayList<>(); // List containing all rental clerks.
+    private final PersistenceManager<RentalClerk> persistence = new PersistenceManager<>("src/main/java/com/example/skipro/data/rentalclerks.ser"); // Name of the file used for saving rental clerks.
+    private List<RentalClerk> allRentalClerks = new ArrayList<>();
 
     /**
      * Constructs a RentalClerkService and loads clerks from file.
      */
     public RentalClerkService() {
-        load();
+        allRentalClerks = persistence.load();
     }
 
     /**
@@ -29,7 +30,7 @@ public class RentalClerkService {
      */
     public void addRentalClerk(RentalClerk clerk) {
         allRentalClerks.add(clerk);
-        save();
+        persistence.save(allRentalClerks);
     }
 
     /**
@@ -41,34 +42,4 @@ public class RentalClerkService {
         return allRentalClerks;
     }
 
-    /**
-     * Loads rental clerks from the persistent file into memory. If the file does not exist,
-     * the method returns silently.
-     */
-    private void load() {
-        File file = new File(FILE_NAME);
-        if (!file.exists()) return;
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
-            allRentalClerks = (List<RentalClerk>) ois.readObject();
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Saves the current list of rental clerks to a file. Necessary directories are
-     * created automatically.
-     */
-    private void save() {
-        File file = new File(FILE_NAME);
-        File dir = file.getParentFile();
-        if (dir != null && !dir.exists()) {
-            dir.mkdirs();
-        }
-        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file))) {
-            oos.writeObject(allRentalClerks);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 }

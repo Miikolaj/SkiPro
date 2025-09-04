@@ -3,8 +3,8 @@ package com.example.skipro.service;
 import com.example.skipro.model.Client;
 import com.example.skipro.model.Equipment;
 import com.example.skipro.model.Rental;
-import com.example.skipro.model.enums.Experience;
 import com.example.skipro.model.enums.RentalStatus;
+import com.example.skipro.util.PersistenceManager;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
@@ -17,13 +17,13 @@ import java.util.List;
 @Service
 public class RentalService {
     private List<Rental> allRentals = new ArrayList<>(); //List containing all rentals.
-    private static final String FILE_NAME = "src/main/java/com/example/skipro/data/rentals.ser"; //Name of the file used for saving rentals.
+    private final PersistenceManager<Rental> persistence = new PersistenceManager<>("src/main/java/com/example/skipro/data/rentals.ser");
 
     /**
      * Constructs a RentalService and loads rentals from file.
      */
     public RentalService() {
-        load();
+       allRentals = persistence.load();
     }
 
     /**
@@ -45,7 +45,7 @@ public class RentalService {
         equipment.setInUse(true);
         client.addRental(rental);
         allRentals.add(rental);
-        save();
+        persistence.save(allRentals);
         return rental;
     }
 
@@ -56,7 +56,7 @@ public class RentalService {
      */
     public void returnEquipment(Rental rental) {
         rental.returnEquipment();
-        save();
+        persistence.save(allRentals);
     }
 
     /**
@@ -70,36 +70,5 @@ public class RentalService {
                 .filter(r -> r.getClient().equals(client))
                 .filter(r -> r.getStatus() == RentalStatus.ACTIVE)
                 .toList();
-    }
-
-    /**
-     * Loads rentals from the persistent file into memory. If the file does not
-     * exist, the method returns silently.
-     */
-    private void load() {
-        File file = new File(FILE_NAME);
-        if (!file.exists()) return;
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
-            allRentals = (List<Rental>) ois.readObject();
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Saves the current list of rentals to a file. Necessary directories are
-     * created automatically.
-     */
-    private void save() {
-        File file = new File(FILE_NAME);
-        File dir = file.getParentFile();
-        if (dir != null && !dir.exists()) {
-            dir.mkdirs();
-        }
-        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file))) {
-            oos.writeObject(allRentals);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 }

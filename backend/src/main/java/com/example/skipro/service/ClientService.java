@@ -1,6 +1,7 @@
 package com.example.skipro.service;
 
 import com.example.skipro.model.Client;
+import com.example.skipro.util.PersistenceManager;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -18,7 +19,7 @@ import java.util.UUID;
  */
 @Service
 public class ClientService {
-    private static final String FILE_NAME = "src/main/java/com/example/skipro/data/clients.ser"; // Name of the file used for saving clients.
+    private final PersistenceManager<Client> persistence = new PersistenceManager<>("src/main/java/com/example/skipro/data/clients.ser");
     private List<Client> clients = new ArrayList<>(); // List containing all registered clients.
     private static final SecretKey SECRET_KEY = Keys.secretKeyFor(SignatureAlgorithm.HS256); // Secret key used for signing JWT tokens.
 
@@ -26,7 +27,7 @@ public class ClientService {
      * Constructs a ClientService and loads clients from file.
      */
     public ClientService() {
-        load();
+        clients = persistence.load();
     }
 
     /**
@@ -36,7 +37,7 @@ public class ClientService {
      */
     public void addClient(Client client) {
         clients.add(client);
-        save();
+        persistence.save(clients);
     }
 
     /**
@@ -101,34 +102,5 @@ public class ClientService {
                 .setExpiration(new Date(System.currentTimeMillis() + 86400000)) // 1 day
                 .signWith(SECRET_KEY)
                 .compact();
-    }
-
-    /**
-     * Loads clients from the persistent file into memory. If the file does not exist, the method returns silently.
-     */
-    private void load() {
-        File file = new File(FILE_NAME);
-        if (!file.exists()) return;
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
-            clients = (List<Client>) ois.readObject();
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Saves the current list of clients to a file. Necessary directories are created automatically.
-     */
-    private void save() {
-        File file = new File(FILE_NAME);
-        File dir = file.getParentFile();
-        if (dir != null && !dir.exists()) {
-            dir.mkdirs();
-        }
-        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file))) {
-            oos.writeObject(clients);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 }

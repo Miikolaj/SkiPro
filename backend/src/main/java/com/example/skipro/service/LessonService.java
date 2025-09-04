@@ -4,6 +4,7 @@ import com.example.skipro.model.Client;
 import com.example.skipro.model.Instructor;
 import com.example.skipro.model.Lesson;
 import com.example.skipro.model.enums.LessonStatus;
+import com.example.skipro.util.PersistenceManager;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
@@ -19,15 +20,73 @@ public class LessonService {
     /**
      * Name of the file used for saving lessons.
      */
-    private static final String LESSONS_FILE = "src/main/java/com/example/skipro/data/lessons.ser"; //Registry containing all lessons.
-    private final List<Lesson> lessonRegistry = new ArrayList<>(); // Registry containing all lessons.
-    private final ClientService clientService = new ClientService(); // Service used for looking up clients when enrolling them in a lesson.
+    private final PersistenceManager<Lesson> persistence = new PersistenceManager<>("src/main/java/com/example/skipro/data/lessons.ser");
+    private  List<Lesson> lessonRegistry = new ArrayList<>();
+    private final ClientService clientService = new ClientService();
 
     /**
      * Constructs a LessonService and loads lessons from file.
      */
     public LessonService() {
-        loadLessons();
+        lessonRegistry = persistence.load();
+    }
+
+    /**
+     * Enrolls a client in the specified lesson.
+     *
+     * @param lessonId the lesson identifier
+     * @param clientId the client identifier
+     * @return {@code true} if the enrollment succeeded; {@code false} otherwise
+     */
+    public boolean enrollClientToLesson(UUID lessonId, UUID clientId) {
+        Lesson lesson = getLessonById(lessonId);
+        if (lesson == null) return false;
+        Client client = clientService.getClientById(clientId);
+        if (client == null) return false;
+
+        if (lesson.getClients().stream().anyMatch(c -> c.getId().equals(clientId))) {
+            return false;
+        }
+
+        try {
+            lesson.enrollClient(client);
+            persistence.save(lessonRegistry);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    /**
+     * Creates a new lesson, adds it to the registry, persists the change, and returns it.
+     *
+     * @param time       the start time of the lesson
+     * @param dur        the duration of the lesson
+     * @param instructor the instructor leading the lesson
+     */
+    public void createLesson(LocalDateTime time, Duration dur, Instructor instructor) {
+        Lesson l = new Lesson(time, dur, instructor);
+        lessonRegistry.add(l);
+        persistence.save(lessonRegistry);
+    }
+
+    /**
+     * Removes a client from the specified lesson, persists the change, and returns the result.
+     *
+     * @param lessonId the lesson identifier
+     * @param clientId the client identifier
+     * @return {@code true} if the removal succeeded; {@code false} otherwise
+     */
+    public boolean removeClientFromLesson(UUID lessonId, UUID clientId) {
+        System.out.println("Removing client " + clientId + " from lesson " + lessonId);
+        Lesson lesson = getLessonById(lessonId);
+        if (lesson == null) return false;
+        Client client = clientService.getClientById(clientId);
+        if (client == null) return false;
+
+        lesson.cancelEnrollment(client);
+        persistence.save(lessonRegistry);
+        return true;
     }
 
     /**
@@ -73,45 +132,6 @@ public class LessonService {
     }
 
     /**
-     * Enrolls a client in the specified lesson.
-     *
-     * @param lessonId the lesson identifier
-     * @param clientId the client identifier
-     * @return {@code true} if the enrollment succeeded; {@code false} otherwise
-     */
-    public boolean enrollClientToLesson(UUID lessonId, UUID clientId) {
-        Lesson lesson = getLessonById(lessonId);
-        if (lesson == null) return false;
-        Client client = clientService.getClientById(clientId);
-        if (client == null) return false;
-
-        if (lesson.getClients().stream().anyMatch(c -> c.getId().equals(clientId))) {
-            return false;
-        }
-
-        try {
-            lesson.enrollClient(client);
-            saveLessons();
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    /**
-     * Creates a new lesson, adds it to the registry, persists the change, and returns it.
-     *
-     * @param time       the start time of the lesson
-     * @param dur        the duration of the lesson
-     * @param instructor the instructor leading the lesson
-     */
-    public void createLesson(LocalDateTime time, Duration dur, Instructor instructor) {
-        Lesson l = new Lesson(time, dur, instructor);
-        lessonRegistry.add(l);
-        saveLessons();
-    }
-
-    /**
      * Retrieves a lesson by its identifier.
      *
      * @param id the lesson identifier
@@ -122,59 +142,5 @@ public class LessonService {
                 .filter(l -> l.getId().equals(id))
                 .findFirst()
                 .orElse(null);
-    }
-
-    /**
-     * Saves the current lesson registry to a file. Necessary directories are created automatically.
-     */
-    public void saveLessons() {
-        File file = new File(LESSONS_FILE);
-        File dir = file.getParentFile();
-        if (dir != null && !dir.exists()) {
-            dir.mkdirs();
-        }
-        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file))) {
-            oos.writeObject(lessonRegistry);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Loads lessons from the persistent file into memory. If the file does not exist, the method returns silently.
-     */
-    public void loadLessons() {
-        File file = new File(LESSONS_FILE);
-        File dir = file.getParentFile();
-        if (dir != null && !dir.exists()) {
-            dir.mkdirs();
-        }
-        if (!file.exists()) return;
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
-            List<Lesson> loaded = (List<Lesson>) ois.readObject();
-            lessonRegistry.clear();
-            lessonRegistry.addAll(loaded);
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Removes a client from the specified lesson, persists the change, and returns the result.
-     *
-     * @param lessonId the lesson identifier
-     * @param clientId the client identifier
-     * @return {@code true} if the removal succeeded; {@code false} otherwise
-     */
-    public boolean removeClientFromLesson(UUID lessonId, UUID clientId) {
-        System.out.println("Removing client " + clientId + " from lesson " + lessonId);
-        Lesson lesson = getLessonById(lessonId);
-        if (lesson == null) return false;
-        Client client = clientService.getClientById(clientId);
-        if (client == null) return false;
-
-        lesson.cancelEnrollment(client);
-        saveLessons();
-        return true;
     }
 }
