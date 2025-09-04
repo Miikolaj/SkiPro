@@ -3,7 +3,7 @@
 	import { faXmark } from '@fortawesome/free-solid-svg-icons';
 
 	export let lessonNumber: string | number;
-	export let message: string = 'Successfully enrolled for Lesson';
+	export let message: string = 'Placeholder';
 </script>
 
 <div class="modal">

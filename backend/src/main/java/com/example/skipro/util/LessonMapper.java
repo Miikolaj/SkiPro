@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 public class LessonMapper {
-    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd | HH:mm");
 
     public static Map<String, Object> instructorToMap(Instructor instructor) {
         Map<String, Object> map = new HashMap<>();

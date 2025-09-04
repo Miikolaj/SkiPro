@@ -81,7 +81,7 @@
 			{/if}
 			<div class="spacer" />
 			<div class="enroll-wrapper">
-				<Button type="lesson-tile" on:click={section === 'available' ? handleEnroll : section === 'enrolled' ? handleCancel : handleEnroll}
+				<Button type={`lesson-tile${section === 'enrolled' ? ' inactive' : ''}${(uniqueClients.length === 5 && section==='available')? ' dimmed' : ''}`} on:click={section === 'available' ? handleEnroll : section === 'enrolled' ? handleCancel : handleEnroll}
 								disabled={section !== 'available'}>{buttonLabel}</Button>
 			</div>
 		</div>
@@ -92,8 +92,8 @@
   .lesson-card {
     display: flex;
     flex-direction: column;
-    gap: 0.75rem;
-    padding: 10px;
+    gap: 1.5rem;
+    padding: 15px;
     border: 1px solid #000;
     border-radius: 5px;
     font-weight: 300;
@@ -132,9 +132,9 @@
       display: flex;
       flex-direction: column;
       align-items: flex-start;
-      gap: 0.5rem;
+      gap: 10px;
 			min-width: 145px;
-
+      font-size: 0.875rem;
 
       .spacer {
         flex: 1;
@@ -150,14 +150,13 @@
       .enroll-wrapper {
         width: 100%;
         display: flex;
-        justify-content: flex-end; // pushes button to the right
+        justify-content: flex-end;
       }
     }
 
     .left-bottom {
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
       gap: 10px;
       font-size: 0.875rem;
     }

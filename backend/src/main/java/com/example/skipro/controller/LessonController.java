@@ -79,6 +79,14 @@ public class LessonController {
         }
     }
 
+    /**
+     * Creates a new lesson with the specified time, duration, and instructor.
+     *
+     * @param time ISO_LOCAL_DATE_TIME formatted start time of the lesson
+     * @param duration ISO-8601 formatted duration (e.g., PT1H for 1 hour)
+     * @param instructorId the instructor identifier
+     * @return HTTP 200 if creation succeeded
+     */
     @PostMapping("/create")
     public ResponseEntity<Void> create(@RequestParam String time, @RequestParam String duration, @RequestParam String instructorId) {
         Instructor instructor = instructorService.getInstructorById(instructorId);
@@ -92,6 +100,13 @@ public class LessonController {
         return ResponseEntity.ok().build();
     }
 
+    /**
+     * Removes the specified client from the given lesson.
+     *
+     * @param lessonId the lesson identifier
+     * @param clientId the client identifier
+     * @return true if removal succeeded; false otherwise
+     */
     @PostMapping("/remove")
     public boolean removeClientFromLesson(@RequestParam String lessonId, @RequestParam String clientId) {
         UUID uuid = UUID.fromString(lessonId);

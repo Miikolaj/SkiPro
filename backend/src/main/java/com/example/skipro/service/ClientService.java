@@ -38,6 +38,17 @@ public class ClientService {
     }
 
     /**
+     * Registers a new client, persists the change, and returns a signed JWT token.
+     *
+     * @param client the client to register
+     * @return signed JWT token string
+     */
+    public String register(Client client) {
+        addClient(client);
+        return generateToken(client);
+    }
+
+    /**
      * Retrieves a client by identifier.
      *
      * @param id the client identifier
@@ -117,10 +128,5 @@ public class ClientService {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public String register(Client client) {
-        addClient(client);
-        return generateToken(client);
     }
 }

@@ -84,7 +84,6 @@ public class LessonService {
         if (client == null) return false;
 
         if (lesson.getClients().stream().anyMatch(c -> c.getId().equals(clientId))) {
-            System.out.println("Client already enrolled in lesson");
             return false;
         }
 
@@ -103,13 +102,11 @@ public class LessonService {
      * @param time       the start time of the lesson
      * @param dur        the duration of the lesson
      * @param instructor the instructor leading the lesson
-     * @return the newly created lesson
      */
-    public Lesson createLesson(LocalDateTime time, Duration dur, Instructor instructor) {
+    public void createLesson(LocalDateTime time, Duration dur, Instructor instructor) {
         Lesson l = new Lesson(time, dur, instructor);
         lessonRegistry.add(l);
         saveLessons();
-        return l;
     }
 
     /**
@@ -160,7 +157,15 @@ public class LessonService {
         }
     }
 
+    /**
+     * Removes a client from the specified lesson, persists the change, and returns the result.
+     *
+     * @param lessonId the lesson identifier
+     * @param clientId the client identifier
+     * @return {@code true} if the removal succeeded; {@code false} otherwise
+     */
     public boolean removeClientFromLesson(UUID lessonId, UUID clientId) {
+        System.out.println("Removing client " + clientId + " from lesson " + lessonId);
         Lesson lesson = getLessonById(lessonId);
         if (lesson == null) return false;
         Client client = clientService.getClientById(clientId);

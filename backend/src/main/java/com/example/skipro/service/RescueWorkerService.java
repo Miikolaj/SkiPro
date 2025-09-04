@@ -20,7 +20,7 @@ public class RescueWorkerService {
      * @throws ClassNotFoundException if the file does not contain a valid List<RescueWorker>
      */
     public RescueWorkerService() throws IOException, ClassNotFoundException {
-        loadRescueWorkersFromFile();
+        load();
     }
 
     /**
@@ -28,11 +28,16 @@ public class RescueWorkerService {
      *
      * @throws IOException if an I/O error occurs during writing
      */
-    public void saveRescueWorkersToFile() throws IOException {
+    public void saveRescueWorkersToFile()  {
         File file = new File(FILE_NAME);
-        file.getParentFile().mkdirs();
+        File dir = file.getParentFile();
+        if (dir != null && !dir.exists()) {
+            dir.mkdirs();
+        }
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file))) {
             oos.writeObject(rescueWorkers);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -42,17 +47,16 @@ public class RescueWorkerService {
      * @throws IOException            if an I/O error occurs during reading
      * @throws ClassNotFoundException if the file does not contain a valid List<RescueWorker>
      */
-    public void loadRescueWorkersFromFile() throws IOException, ClassNotFoundException {
+    public void load() throws IOException, ClassNotFoundException {
         File file = new File(FILE_NAME);
         File dir = file.getParentFile();
         if (dir != null && !dir.exists()) {
             dir.mkdirs();
         }
-        if (!file.exists() || file.length() == 0) return;
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
-            List<RescueWorker> loadedList = (List<RescueWorker>) ois.readObject();
-            rescueWorkers.clear();
-            rescueWorkers.addAll(loadedList);
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file))) {
+            oos.writeObject(rescueWorkers);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

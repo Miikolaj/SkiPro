@@ -71,6 +71,16 @@
     }
 	}
 
+  .dimmed {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  .lesson-tile.inactive {
+    background:  #D32F2F;
+		color: #F5F5F5;
+  }
+
 	.active {
     background: rgba(0, 134, 191, 0.60);
 		padding: 5px;

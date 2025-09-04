@@ -58,11 +58,9 @@ public class Lesson implements Serializable {
 
     /** Remove a client from the lesson */
     public void cancelEnrollment(Client client) {
-        System.out.println("here");
         if (clients.remove(client)) {
             client.removeLesson(this);
         }
-
     }
 
     /** Start the lesson */

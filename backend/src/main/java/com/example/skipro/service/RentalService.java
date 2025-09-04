@@ -54,6 +54,7 @@ public class RentalService {
      */
     public void returnEquipment(Rental rental) {
         rental.returnEquipment();
+        save();
     }
 
     /**

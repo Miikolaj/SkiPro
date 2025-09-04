@@ -1,10 +1,9 @@
 package com.example.skipro.service;
 
+import com.example.skipro.model.Rental;
 import com.example.skipro.model.RescueTeam;
 import com.example.skipro.model.RescueWorker;
-import com.example.skipro.model.Resort;
 import com.example.skipro.model.Track;
-import com.example.skipro.model.enums.TrackDifficulty;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -17,7 +16,7 @@ import java.util.Optional;
  */
 public class RescueTeamService {
     private static final String FILE_NAME = "src/main/java/com/example/skipro/data/rescue_team.ser"; //Name of the file used for saving rescue teams.
-    private final List<RescueTeam> rescueTeams = new ArrayList<>(); //List containing all rescue teams.
+    private  List<RescueTeam> rescueTeams = new ArrayList<>(); //List containing all rescue teams.
 
     /**
      * Creates a new {@link RescueTeam}, registers it in the system, and returns it.
@@ -29,7 +28,12 @@ public class RescueTeamService {
     public RescueTeam createTeam(String name, Track track) {
         RescueTeam team = new RescueTeam(name, track, "default-channel", Collections.emptyList(), null);
         rescueTeams.add(team);
+        save();
         return team;
+    }
+
+    public RescueTeamService() {
+        loadTeamsFromFile();
     }
 
     /**
@@ -43,8 +47,8 @@ public class RescueTeamService {
         if(!rescueTeams.contains(team)){
             throw new IllegalArgumentException("Team is not registered in the system.");
         }
-
         team.addMember(worker);
+        save();
     }
 
     /**
@@ -82,12 +86,17 @@ public class RescueTeamService {
 
     /**
      * Saves the list of rescue teams to a file.
-     *
-     * @throws IOException if an I/O error occurs during writing
      */
-    public void saveTeamsToFile() throws IOException {
-        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(FILE_NAME))) {
+    public void save()  {
+        File file = new File(FILE_NAME);
+        File dir = file.getParentFile();
+        if (dir != null && !dir.exists()) {
+            dir.mkdirs();
+        }
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file))) {
             oos.writeObject(rescueTeams);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -97,17 +106,13 @@ public class RescueTeamService {
      * @throws IOException            if an I/O error occurs during reading
      * @throws ClassNotFoundException if the file does not contain a valid List<RescueTeam>
      */
-    public void loadTeamsFromFile() throws IOException, ClassNotFoundException {
+    public void loadTeamsFromFile()  {
         File file = new File(FILE_NAME);
-        File dir = file.getParentFile();
-        if (dir != null && !dir.exists()) {
-            dir.mkdirs();
-        }
         if (!file.exists()) return;
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
-            List<RescueTeam> loaded = (List<RescueTeam>) ois.readObject();
-            rescueTeams.clear();
-            rescueTeams.addAll(loaded);
+            rescueTeams = (List<RescueTeam>) ois.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
         }
     }
 }

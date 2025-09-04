@@ -20,6 +20,11 @@ public class InstructorService {
         loadInstructors();
     }
 
+    /**
+     * Adds a new instructor to the registry and persists the change to file.
+     *
+     * @param instructor the instructor to add
+     */
     public void addInstructor(Instructor instructor) {
         instructorRegistry.add(instructor);
         saveInstructors();

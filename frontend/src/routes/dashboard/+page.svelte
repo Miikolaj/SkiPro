@@ -4,7 +4,7 @@
 	import { successModal } from '$lib/stores/successModal';
 	import { onDestroy, onMount } from 'svelte';
 
-	let modalState: { visible: boolean; lessonNumber?: string | number, message?: string | null } | null = null;
+	let modalState: { visible: boolean; lessonNumber?: string | number, message: string } | null = null;
 	let modalTimeout: ReturnType<typeof setTimeout> | null = null;
 
 	const unsubscribe = successModal.subscribe(value => {
