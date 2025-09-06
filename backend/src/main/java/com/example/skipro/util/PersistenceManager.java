@@ -1,6 +1,7 @@
 package com.example.skipro.util;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -48,12 +49,12 @@ public class PersistenceManager<T> {
     @SuppressWarnings("unchecked")
     public List<T> load() {
         File file = new File(filePath);
-        if (!file.exists()) return null;
+        if (!file.exists()) return new ArrayList<>();
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
             return (List<T>) ois.readObject();
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
-            return null;
+            return new ArrayList<>();
         }
     }
 
