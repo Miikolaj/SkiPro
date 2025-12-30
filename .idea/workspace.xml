@@ -4,7 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5a7065e9-6a26-409e-a23b-7d558f6776fa" name="Changes" comment="Merged" />
+    <list default="true" id="5a7065e9-6a26-409e-a23b-7d558f6776fa" name="Changes" comment="Merged">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/lib/components/buttons/Button.svelte" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/lib/components/buttons/Button.svelte" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/lib/components/other/Lesson.svelte" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/lib/components/other/Lesson.svelte" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/lib/stores/successModal.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/lib/stores/successModal.ts" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -63,12 +68,15 @@
     &quot;assignee&quot;: &quot;Miikolaj&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/Miikolaj/SkiPro.git&quot;,
-    &quot;accountId&quot;: &quot;b6c047d1-3d89-43fb-a3ef-3cdb27697f5d&quot;
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/Miikolaj/SkiPro.git",
+    "accountId": "7072c96b-42b5-47fc-be30-808789a0d92c"
   }
-}</component>
+}]]></component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="ProjectErrors" />
+  </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 1
 }</component>
@@ -91,9 +99,13 @@
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager": "true",
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
     "git-widget-placeholder": "master",
+    "javascript.preferred.runtime.type.id": "node",
+    "junie.onboarding.icon.badge.shown": "true",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "F:/Projects/IdeaProjects/SkiProV2/src/main/java",
+    "last_opened_file_path": "F:/Projects/IdeaProjects/SkiProV2",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -103,6 +115,7 @@
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.29306722",
     "settings.editor.selected.configurable": "reference.settingsdialog.project.gradle",
+    "to.speed.mode.migration.done": "true",
     "ts.external.directory.path": "F:\\Projects\\IdeaProjects\\SkiProV2\\frontend\\node_modules\\typescript\\lib",
     "vue.rearranger.settings.migration": "true"
   }
@@ -118,7 +131,7 @@
       <recent name="" />
     </key>
   </component>
-  <component name="RunManager" selected="Gradle.SkiProV2 [run]">
+  <component name="RunManager">
     <configuration name="ClientView" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="frontend.ClientView" />
       <module name="SkiProV2.main" />
@@ -202,21 +215,11 @@
       <RunAsTest>false</RunAsTest>
       <method v="2" />
     </configuration>
-    <recent_temporary>
-      <list>
-        <item itemvalue="Gradle.SkiProV2 [run]" />
-        <item itemvalue="Application.frontend.Main" />
-        <item itemvalue="Application.ClientView" />
-        <item itemvalue="Application.Main" />
-        <item itemvalue="Gradle.SkiProV2 [build]" />
-      </list>
-    </recent_temporary>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9823dce3aa75-bf35d07a577b-intellij.indexing.shared.core-IU-252.25557.77" />
-        <option value="bundled-js-predefined-d6986cc7102b-b598e85cdad2-JavaScript-IU-252.25557.77" />
+        <option value="bundled-js-predefined-d6986cc7102b-9b0f141eb926-JavaScript-WS-253.29346.143" />
       </set>
     </attachedChunks>
   </component>
@@ -241,6 +244,7 @@
       <workItem from="1750364050741" duration="37000" />
       <workItem from="1751708463912" duration="7000" />
       <workItem from="1756835507912" duration="264000" />
+      <workItem from="1767129014005" duration="339000" />
     </task>
     <task id="LOCAL-00001" summary="Merged">
       <option name="closed" value="true" />
@@ -270,5 +274,13 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Merged" />
     <option name="LAST_COMMIT_MESSAGE" value="Merged" />
+  </component>
+  <component name="github-copilot-workspace">
+    <instructionFileLocations>
+      <option value=".github/instructions" />
+    </instructionFileLocations>
+    <promptFileLocations>
+      <option value=".github/prompts" />
+    </promptFileLocations>
   </component>
 </project>

@@ -102,6 +102,5 @@
     background: rgba(137.31, 7.26, 9.43, 0.50);
     backdrop-filter: blur(2px);
     border-radius: 5px;
-		font-size: 200;
 	}
 </style>
