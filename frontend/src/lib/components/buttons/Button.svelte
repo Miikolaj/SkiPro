@@ -4,24 +4,49 @@
 
 	export let suffixIcon: IconDefinition | undefined = undefined;
 	export let prefixIcon: IconDefinition | undefined = undefined;
-	export let href: string = '#';
+	// if href is provided (non-empty), render <a>, otherwise render <button>
+	export let href: string | undefined = undefined;
 	export let type: string = '';
 	export let size: IconSize = '1x';
+	export let disabled: string | boolean | undefined = undefined;
+
+	$: isDisabled = disabled === true || disabled === 'true';
+	$: classes = `button ${type}`.trim();
+
+	function handleAnchorClick(event: MouseEvent) {
+		if (isDisabled) {
+			event.preventDefault();
+			event.stopPropagation();
+		}
+	}
 </script>
 
-<a
-	{href}
-	class="button {type}"
-	on:click|preventDefault
->
-	{#if prefixIcon}
-		<Fa icon={prefixIcon} {size} />
-	{/if}
-	<slot />
-	{#if suffixIcon}
-		<Fa icon={suffixIcon} {size} />
-	{/if}
-</a>
+{#if href}
+	<a
+		class={classes}
+		href={href}
+		aria-disabled={isDisabled ? 'true' : undefined}
+		on:click={handleAnchorClick}
+	>
+		{#if prefixIcon}
+			<Fa icon={prefixIcon} {size} />
+		{/if}
+		<slot />
+		{#if suffixIcon}
+			<Fa icon={suffixIcon} {size} />
+		{/if}
+	</a>
+{:else}
+	<button class={classes} on:click disabled={isDisabled}>
+		{#if prefixIcon}
+			<Fa icon={prefixIcon} {size} />
+		{/if}
+		<slot />
+		{#if suffixIcon}
+			<Fa icon={suffixIcon} {size} />
+		{/if}
+	</button>
+{/if}
 
 <style lang="scss">
 	.button{

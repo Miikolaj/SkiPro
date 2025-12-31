@@ -14,17 +14,10 @@
 	export let clientId: string;
 	export let activeUser: string;
 
-	function normalizeLessons(lessons: any[]): any[] {
-		return lessons.map(lesson => ({
-			...lesson,
-			clients: Array.isArray(lesson.clients) ? lesson.clients : []
-		}));
-	}
-
 	onMount(async () => {
-		enrolledLessons = normalizeLessons(await lessonRepository.getLessonsForClient(clientId));
-		plannedLessons = normalizeLessons(await lessonRepository.getLessons(clientId));
-		finishedLessons = normalizeLessons(await lessonRepository.getFinishedLessons(clientId));
+		enrolledLessons = await lessonRepository.getLessonsForClient(clientId);
+		plannedLessons = await lessonRepository.getLessons(clientId);
+		finishedLessons = await lessonRepository.getFinishedLessons(clientId);
 		loading = false;
 	});
 
@@ -92,7 +85,7 @@
 					qualificationLevel={lesson.instructor.qualificationLevel}
 					rating={lesson.instructor.rating}
 					section={activeSection}
-					clients={lesson.clients}
+					clients={[]}
 				/>
 			{/each}
 		{:else}

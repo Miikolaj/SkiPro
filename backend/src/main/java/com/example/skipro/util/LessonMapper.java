@@ -28,7 +28,11 @@ public class LessonMapper {
         return map;
     }
 
-    public static Map<String, Object> lessonToMap(Lesson lesson) {
+    /**
+     * Lightweight representation of a lesson for list views.
+     * Does NOT include the full clients list.
+     */
+    public static Map<String, Object> lessonToTileMap(Lesson lesson) {
         Map<String, Object> lessonMap = new HashMap<>();
         lessonMap.put("id", lesson.getId());
         lessonMap.put("date", lesson.getDateTime().format(DATE_TIME_FORMATTER));
@@ -37,7 +41,14 @@ public class LessonMapper {
         lessonMap.put("instructor", instructorToMap(lesson.getInstructor()));
         int clientsCount = lesson.getClients() == null ? 0 : lesson.getClients().size();
         lessonMap.put("clientsCount", clientsCount);
-        lessonMap.put("clients", lesson.getClients().stream()
+        return lessonMap;
+    }
+
+    public static Map<String, Object> lessonToMap(Lesson lesson) {
+        Map<String, Object> lessonMap = lessonToTileMap(lesson);
+
+        // Keep clients list only for details views / explicit fetches
+        lessonMap.put("clients", (lesson.getClients() == null ? List.<Object>of() : lesson.getClients().stream()
                 .map(c -> {
                     Map<String, Object> clientMap = new HashMap<>();
                     clientMap.put("firstName", c.getFirstName());
@@ -45,7 +56,8 @@ public class LessonMapper {
                     clientMap.put("id", c.getId());
                     return clientMap;
                 })
-                .toList());
+                .toList()));
+
         return lessonMap;
     }
 

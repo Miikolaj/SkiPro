@@ -1,6 +1,7 @@
 package com.example.skipro.controller;
 
 import com.example.skipro.model.Instructor;
+import com.example.skipro.model.Lesson;
 import com.example.skipro.service.InstructorService;
 import com.example.skipro.service.LessonService;
 import org.springframework.http.ResponseEntity;
@@ -33,7 +34,7 @@ public class LessonController {
     @PostMapping("/planned")
     public List<Map<String, Object>> getLessons(@RequestParam String clientId) {
         return lessonService.getPlannedLessonsWithoutClient(UUID.fromString(clientId)).stream()
-                .map(LessonMapper::lessonToMap)
+                .map(LessonMapper::lessonToTileMap)
                 .toList();
     }
 
@@ -46,7 +47,7 @@ public class LessonController {
     @PostMapping
     public List<Map<String, Object>> getEnrolledLessons(@RequestParam String clientId) {
         return lessonService.getPlannedLessonsForClient(UUID.fromString(clientId)).stream()
-                .map(LessonMapper::lessonToMap)
+                .map(LessonMapper::lessonToTileMap)
                 .toList();
     }
 
@@ -59,7 +60,7 @@ public class LessonController {
     @PostMapping("/finished")
     public List<Map<String, Object>> getFinishedLessons(@RequestParam String clientId) {
         return lessonService.getFinishedLessonsForClient(UUID.fromString(clientId)).stream()
-                .map(LessonMapper::lessonToMap)
+                .map(LessonMapper::lessonToTileMap)
                 .toList();
     }
 
@@ -113,5 +114,28 @@ public class LessonController {
         UUID uuid = UUID.fromString(lessonId);
         UUID uuid2 = UUID.fromString(clientId);
         return lessonService.removeClientFromLesson(uuid, uuid2);
+    }
+
+    /**
+     * Lazy-load: returns clients enrolled in a given lesson.
+     */
+    @GetMapping("/{lessonId}/clients")
+    public ResponseEntity<List<Map<String, Object>>> getLessonClients(@PathVariable String lessonId) {
+        Lesson lesson = lessonService.getLessonById(UUID.fromString(lessonId));
+        if (lesson == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        List<Map<String, Object>> clients = (lesson.getClients() == null ? List.<Map<String, Object>>of() : lesson.getClients().stream()
+                .map(c -> {
+                    Map<String, Object> clientMap = new HashMap<>();
+                    clientMap.put("firstName", c.getFirstName());
+                    clientMap.put("lastName", c.getLastName());
+                    clientMap.put("id", c.getId());
+                    return clientMap;
+                })
+                .toList());
+
+        return ResponseEntity.ok(clients);
     }
 }

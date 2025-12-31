@@ -1,36 +1,58 @@
 import apiClient from '$lib/config/axios.config';
 
+type InstructorDTO = {
+	firstName: string;
+	lastName: string;
+	id: string;
+	qualificationLevel: string;
+	rating: number;
+};
+
+type LessonTileDTO = {
+	id: string;
+	date: string;
+	duration: string;
+	status: string;
+	instructor: InstructorDTO;
+	clientsCount: number;
+};
+
+type ClientDTO = { firstName: string; lastName: string; id: string };
+
 export class LessonRepository {
-	async getLessonsForClient(clientId: string): Promise<any[]> {
+	async getLessonsForClient(clientId: string): Promise<LessonTileDTO[]> {
 		try {
 			const response = await apiClient.post('/lessons', null, {
 				params: { clientId }
 			});
-			return response.data as any[];
-		} catch (error: any) {
-			throw error?.response?.data || 'An error occurred while fetching lessons';
+			return response.data as LessonTileDTO[];
+		} catch (error: unknown) {
+			const err = error as { response?: { data?: string } };
+			throw err?.response?.data || 'An error occurred while fetching lessons';
 		}
 	}
 
-	async getLessons(clientId: string) : Promise<any[]> {
+	async getLessons(clientId: string): Promise<LessonTileDTO[]> {
 		try {
-			const response = await apiClient.post('/lessons/planned', null , {
+			const response = await apiClient.post('/lessons/planned', null, {
 				params: { clientId }
 			});
-			return response.data as any[];
-		} catch (error: any) {
-			throw error?.response?.data || 'An error occurred while fetching lessons';
+			return response.data as LessonTileDTO[];
+		} catch (error: unknown) {
+			const err = error as { response?: { data?: string } };
+			throw err?.response?.data || 'An error occurred while fetching lessons';
 		}
 	}
 
-	async getFinishedLessons(clientId: string) : Promise<any[]> {
+	async getFinishedLessons(clientId: string): Promise<LessonTileDTO[]> {
 		try {
-			const response = await apiClient.post('/lessons/finished', null , {
+			const response = await apiClient.post('/lessons/finished', null, {
 				params: { clientId }
 			});
-			return response.data as any[];
-		} catch (error: any) {
-			throw error?.response?.data || 'An error occurred while fetching lessons';
+			return response.data as LessonTileDTO[];
+		} catch (error: unknown) {
+			const err = error as { response?: { data?: string } };
+			throw err?.response?.data || 'An error occurred while fetching lessons';
 		}
 	}
 
@@ -40,8 +62,9 @@ export class LessonRepository {
 				params: { lessonId, clientId }
 			});
 			return true;
-		} catch (error: any) {
-			if (error.response?.status === 404) {
+		} catch (error: unknown) {
+			const err = error as { response?: { status?: number } };
+			if (err.response?.status === 404) {
 				throw 'Lesson or client not found';
 			}
 			throw 'An error occurred while enrolling in the lesson';
@@ -55,13 +78,24 @@ export class LessonRepository {
 					lessonId,
 					clientId
 				}
-			})
+			});
 			return true;
-		} catch (error: any){
-			if(error.response?.status === 404){
+		} catch (error: unknown) {
+			const err = error as { response?: { status?: number } };
+			if (err.response?.status === 404) {
 				throw 'Lesson or client not found';
 			}
 			throw 'An error occurred while canceling the enrollment';
+		}
+	}
+
+	async getLessonClients(lessonId: string): Promise<ClientDTO[]> {
+		try {
+			const response = await apiClient.get(`/lessons/${lessonId}/clients`);
+			return response.data as ClientDTO[];
+		} catch (error: unknown) {
+			const err = error as { response?: { data?: string } };
+			throw err?.response?.data || 'An error occurred while fetching lesson clients';
 		}
 	}
 }

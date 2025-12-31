@@ -21,31 +21,79 @@
 	let maxClients: string = '5';
 	let expanded = false;
 
-	function toggleExpanded() {
+	let clientsLoading = false;
+	let clientsError: string | null = null;
+	let actionLoading = false;
+	let actionError: string | null = null;
+
+	// simple in-memory cache across Lesson components
+	const clientsCache: Map<string, { firstName: string; lastName: string; id: string }[]> = new Map();
+
+	async function toggleExpanded() {
 		expanded = !expanded;
+		if (!expanded) return;
+
+		// if already provided (non-empty) or cached, don't refetch
+		if ((clients && clients.length > 0) || clientsCache.has(id)) {
+			clients = clientsCache.get(id) ?? clients;
+			return;
+		}
+
+		clientsLoading = true;
+		clientsError = null;
+		try {
+			clients = await lessonRepository.getLessonClients(id);
+			clientsCache.set(id, clients);
+		} catch (e: unknown) {
+			clientsError = e instanceof Error ? e.message : typeof e === 'string' ? e : 'Failed to load clients';
+		} finally {
+			clientsLoading = false;
+		}
 	}
 
 	function onActionClick(event: Event) {
 		// Don't toggle the card when clicking the action button.
 		event.stopPropagation();
+		if (actionLoading) return;
 		if (uniqueClients.length === 5 && section === 'available') return;
 		(section === 'available' ? handleEnroll : section === 'enrolled' ? handleCancel : handleEnroll)();
 	}
 
-	function handleEnroll() {
-		lessonRepository.enrollLesson(id, currentUser);
-		localStorage.setItem('showSuccessModal', id.slice(-3));
-		setTimeout(() => {
-			location.reload();
-		}, 100);
+	async function refreshPageNoCache() {
+		// Ensure we don't re-use any cached load/SSR result.
+		const url = new URL(window.location.href);
+		url.searchParams.set('_ts', Date.now().toString());
+		window.location.href = url.toString();
 	}
 
-	function handleCancel() {
-		lessonRepository.cancelEnrollment(id, currentUser);
-		localStorage.setItem('showCancelModal', id.slice(-3));
-		setTimeout(() => {
-			location.reload();
-		}, 100);
+	async function handleEnroll() {
+		actionLoading = true;
+		actionError = null;
+		try {
+			await lessonRepository.enrollLesson(id, currentUser);
+			clientsCache.delete(id);
+			localStorage.setItem('showSuccessModal', id.slice(-3));
+			await refreshPageNoCache();
+		} catch (e: unknown) {
+			actionError = e instanceof Error ? e.message : typeof e === 'string' ? e : 'Failed to enroll';
+		} finally {
+			actionLoading = false;
+		}
+	}
+
+	async function handleCancel() {
+		actionLoading = true;
+		actionError = null;
+		try {
+			await lessonRepository.cancelEnrollment(id, currentUser);
+			clientsCache.delete(id);
+			localStorage.setItem('showCancelModal', id.slice(-3));
+			await refreshPageNoCache();
+		} catch (e: unknown) {
+			actionError = e instanceof Error ? e.message : typeof e === 'string' ? e : 'Failed to cancel enrollment';
+		} finally {
+			actionLoading = false;
+		}
 	}
 
 	$: uniqueClients = Array.from(new Map(clients.map(c => [c.id, c])).values());
@@ -54,9 +102,13 @@
 	$: sectionClass = section === 'available' ? 'available' : section === 'enrolled' ? 'enrolled' : section === 'finished' ? 'finished' : 'default';
 	$: buttonLabel =
 		section === 'available'
-			? 'Enroll'
+			? actionLoading
+				? 'Enrolling...'
+				: 'Enroll'
 			: section === 'enrolled'
-				? 'Cancel Participation'
+				? actionLoading
+					? 'Canceling...'
+					: 'Cancel Participation'
 				: section === 'finished'
 					? 'Rate Instructor'
 					: 'Action';
@@ -98,12 +150,15 @@
 			{#if expanded}
 				<div class="enroll-wrapper">
 					<Button
-						disabled={(isFull && section === 'available').toString()}
+						disabled={(actionLoading || (isFull && section === 'available')).toString()}
 						type={`lesson-tile${section === 'enrolled' ? ' inactive' : ''}${(isFull && section==='available')? ' dimmed' : ''}`}
 						on:click={onActionClick}
 					>
 						{buttonLabel}
 					</Button>
+					{#if actionError}
+						<div class="client">{actionError}</div>
+					{/if}
 				</div>
 			{/if}
 		</div>
@@ -114,10 +169,16 @@
 				<span class="right">{progress}</span>
 			</div>
 			{#if expanded}
-				{#if uniqueClients.length > 0}
-					{#each uniqueClients as c}
-						<div class="client{c.id === currentUser ? ' highlighted' : ''}">{c.firstName} {c.lastName}</div>
-					{/each}
+				{#if clientsLoading}
+					<div class="client">Loading clients...</div>
+				{:else if clientsError}
+					<div class="client">{clientsError}</div>
+				{:else}
+					{#if uniqueClients.length > 0}
+						{#each uniqueClients as c}
+							<div class="client{c.id === currentUser ? ' highlighted' : ''}">{c.firstName} {c.lastName}</div>
+						{/each}
+					{/if}
 				{/if}
 			{/if}
 		</div>
