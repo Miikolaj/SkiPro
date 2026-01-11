@@ -1,39 +1,55 @@
 package com.example.skipro.service;
 
-import com.example.skipro.model.*;
-import com.example.skipro.util.PersistenceManager;
+import com.example.skipro.model.Employment;
+import com.example.skipro.repository.EmploymentRepository;
+import com.example.skipro.repository.InstructorRepository;
+import com.example.skipro.repository.ResortRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.io.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
-/**
- * Service responsible for managing employments and persisting them to a file.
- */
 @Service
 public class EmploymentService {
-    private final PersistenceManager<Employment> persistence = new PersistenceManager<>("src/main/java/com/example/skipro/data/employments.ser"); // Name of the file used for saving employments.
-    private List<Employment> allEmployments = new ArrayList<>(); // List containing all employments.
+    private final EmploymentRepository employmentRepository;
+    private final ResortRepository resortRepository;
+    private final InstructorRepository instructorRepository;
 
-    /**
-     * Constructs an EmploymentService and loads employments from file.
-     */
-    public EmploymentService() {
-        allEmployments = persistence.load();
+    public EmploymentService(
+            EmploymentRepository employmentRepository,
+            ResortRepository resortRepository,
+            InstructorRepository instructorRepository
+    ) {
+        this.employmentRepository = employmentRepository;
+        this.resortRepository = resortRepository;
+        this.instructorRepository = instructorRepository;
     }
 
-    /**
-     * Adds a new employment entry and persists the change.
-     *
-     * @param resort    the resort where the employee works
-     * @param employee  the employee being employed
-     * @param startDate the start date of the employment
-     */
-    public void addEmployment(Resort resort, Employee employee, LocalDate startDate) {
-        Employment employment = new Employment(resort, employee, startDate);
-        allEmployments.add(employment);
-        persistence.save(allEmployments);
+    @Transactional
+    public Employment addEmployment(UUID resortId, UUID instructorId, LocalDate startDate) {
+        var resort = resortRepository.findById(resortId)
+                .orElseThrow(() -> new IllegalArgumentException("Resort not found: " + resortId));
+        var instructor = instructorRepository.findById(instructorId)
+                .orElseThrow(() -> new IllegalArgumentException("Instructor not found: " + instructorId));
+
+        Employment employment = new Employment(resort, instructor, startDate);
+        return employmentRepository.save(employment);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Employment> getAllEmployments() {
+        return employmentRepository.findAll();
+    }
+
+    @Transactional(readOnly = true)
+    public List<Employment> getEmploymentsForResort(UUID resortId) {
+        return employmentRepository.findByResortId(resortId);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Employment> getEmploymentsForInstructor(UUID instructorId) {
+        return employmentRepository.findByInstructorId(instructorId);
     }
 }

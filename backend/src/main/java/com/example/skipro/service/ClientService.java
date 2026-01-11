@@ -1,17 +1,19 @@
 package com.example.skipro.service;
 
+import com.example.skipro.config.AppJwtProperties;
 import com.example.skipro.model.Client;
-import com.example.skipro.util.PersistenceManager;
+import com.example.skipro.repository.ClientRepository;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
-import java.io.*;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -19,77 +21,68 @@ import java.util.UUID;
  */
 @Service
 public class ClientService {
-    private final PersistenceManager<Client> persistence = new PersistenceManager<>("src/main/java/com/example/skipro/data/clients.ser");
-    private List<Client> clients = new ArrayList<>(); // List containing all registered clients.
-    private static final SecretKey SECRET_KEY = Keys.secretKeyFor(SignatureAlgorithm.HS256); // Secret key used for signing JWT tokens.
+    private final ClientRepository clientRepository;
+    private final SecretKey secretKey;
 
-    /**
-     * Constructs a ClientService and loads clients from file.
-     */
-    public ClientService() {
-        clients = persistence.load();
+    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+    public ClientService(ClientRepository clientRepository, AppJwtProperties jwtProperties) {
+        this.clientRepository = clientRepository;
+        this.secretKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtProperties.getSecret()));
     }
 
-    /**
-     * Adds a client to the registry and persists the change.
-     *
-     * @param client the client to add
-     */
     public void addClient(Client client) {
-        clients.add(client);
-        persistence.save(clients);
+        clientRepository.save(client);
     }
 
-    /**
-     * Registers a new client, persists the change, and returns a signed JWT token.
-     *
-     * @param client the client to register
-     * @return signed JWT token string
-     */
     public String register(Client client) {
+        if (client == null || client.getPassword() == null) return null;
+
+        // store hashed password
+        client.setPassword(passwordEncoder.encode(client.getPassword()));
+
         addClient(client);
         return generateToken(client);
     }
 
-    /**
-     * Retrieves a client by identifier.
-     *
-     * @param id the client identifier
-     * @return the client if found; otherwise {@code null}
-     */
     public Client getClientById(UUID id) {
-        return clients.stream()
-                .filter(client -> client.getId().equals(id))
-                .findFirst()
-                .orElse(null);
+        return id == null ? null : clientRepository.findById(id).orElse(null);
     }
 
     /**
      * Authenticates a client and, if successful, returns a signed JWT token.
-     * <p>
      * Authentication matches against the pattern {@code firstName.lastName} (case‑insensitive)
      * and the plain‑text password stored for the client.
-     *
-     * @param fullName the client name in the format {@code firstName.lastName}
-     * @param password the client password
-     * @return a JWT token if authentication succeeds; otherwise {@code null}
      */
     public String authenticate(String fullName, String password) {
-        for (Client client : clients) {
-            String clientFullName = client.getFirstName() + "." + client.getLastName();
-            if (clientFullName.equalsIgnoreCase(fullName) && client.getPassword().equals(password)) {
-                return generateToken(client);
+        if (fullName == null || password == null) return null;
+
+        String[] parts = fullName.split("\\.", 2);
+        if (parts.length != 2) return null;
+
+        Optional<Client> clientOpt = clientRepository.findByFirstNameIgnoreCaseAndLastNameIgnoreCase(parts[0], parts[1]);
+        if (clientOpt.isEmpty()) return null;
+
+        Client client = clientOpt.get();
+        String stored = client.getPassword();
+        if (stored == null) return null;
+
+        // verify hashed password (BCrypt). If legacy plaintext exists, migrate on successful login.
+        boolean ok = passwordEncoder.matches(password, stored);
+        if (!ok) {
+            // fallback: legacy plaintext values stored before hashing was introduced
+            if (password.equals(stored)) {
+                client.setPassword(passwordEncoder.encode(password));
+                clientRepository.save(client);
+                ok = true;
             }
         }
-        return null;
+
+        if (!ok) return null;
+
+        return generateToken(client);
     }
 
-    /**
-     * Generates a JWT token for the given client.
-     *
-     * @param client the client for whom the token is generated
-     * @return signed JWT token string
-     */
     private String generateToken(Client client) {
         return Jwts.builder()
                 .claim("id", client.getId())
@@ -99,8 +92,8 @@ public class ClientService {
                 .claim("experience", client.getExperience().toString())
                 .setSubject(client.getFirstName() + "." + client.getLastName())
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 86400000)) // 1 day
-                .signWith(SECRET_KEY)
+                .setExpiration(new Date(System.currentTimeMillis() + 86400000))
+                .signWith(secretKey)
                 .compact();
     }
 }

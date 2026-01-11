@@ -1,28 +1,40 @@
 package com.example.skipro.model;
 
 import com.example.skipro.model.enums.RentalStatus;
+import jakarta.persistence.*;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-/**
- * Represents a single equipment rental transaction between a {@link Client} and the resort.
- * <p>
- * A {@code Rental} captures the equipment item, the renting client, the rental period, its current
- * {@link RentalStatus}, and the rental cost charged. Each rental is uniquely identified by a
- * random immutable {@link UUID} generated at creation time.
- * </p>
- */
+@Entity
+@Table(name = "rentals")
 public class Rental implements Serializable {
     private static final long serialVersionUID = 1L;
-    private final UUID ID = UUID.randomUUID();
-    private final Equipment equipment;
-    private final Client client;
-    private final LocalDateTime startDate;
+
+    @Id
+    @GeneratedValue
+    private UUID id;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "equipment_id", nullable = false)
+    private Equipment equipment;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "client_id", nullable = false)
+    private Client client;
+
+    private LocalDateTime startDate;
     private LocalDateTime endDate;
+
+    @Enumerated(EnumType.STRING)
     private RentalStatus status;
+
     private int rentalCost;
+
+    protected Rental() {
+        // for JPA
+    }
 
     /**
      * Creates a new <strong>active</strong> rental for the given equipment and client.
@@ -46,6 +58,10 @@ public class Rental implements Serializable {
         this.endDate = LocalDateTime.now();
         this.status = RentalStatus.RETURNED;
         this.equipment.setInUse(false);
+    }
+
+    public UUID getId() {
+        return id;
     }
 
     public Equipment getEquipment() {

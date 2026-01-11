@@ -1,8 +1,8 @@
 package com.example.skipro.model;
 
+import com.example.skipro.config.DurationMinutesConverter;
 import com.example.skipro.model.enums.LessonStatus;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 
 import java.io.Serializable;
 import java.time.Duration;
@@ -16,14 +16,39 @@ import java.util.*;
  * and a mutable {@link #status}. The attending clients are stored in an internal {@link Set} to avoid duplicates.
  * </p>
  */
+@Entity
+@Table(name = "lessons")
 public class Lesson implements Serializable {
     private static final long serialVersionUID = 1L;
-    private final UUID id = UUID.randomUUID();
-    private final LocalDateTime dateTime;
-    private final Duration duration;
+
+    @Id
+    @GeneratedValue
+    private UUID id;
+
+    private LocalDateTime dateTime;
+
+    /** Stored in DB as total minutes via {@link DurationMinutesConverter}. */
+    @Convert(converter = DurationMinutesConverter.class)
+    private Duration duration;
+
+    @Enumerated(EnumType.STRING)
     private LessonStatus status;
-    private final Instructor instructor;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "instructor_id", nullable = false)
+    private Instructor instructor;
+
+    @ManyToMany
+    @JoinTable(
+            name = "lesson_clients",
+            joinColumns = @JoinColumn(name = "lesson_id"),
+            inverseJoinColumns = @JoinColumn(name = "client_id")
+    )
     private final Set<Client> clients = new HashSet<>();
+
+    protected Lesson() {
+        // for JPA
+    }
 
     /**
      * Constructs a new {@code Lesson} with the specified schedule, duration, and instructor.
@@ -48,21 +73,24 @@ public class Lesson implements Serializable {
     }
 
     /**
-     * Enroll a client to the lesson (if not already enrolled)
+     * Enroll a client to the lesson (if not already enrolled).
      */
     public void enrollClient(Client client) {
-        if (status != LessonStatus.PLANNED)
+        if (client == null) return;
+        if (status != LessonStatus.PLANNED) {
             throw new IllegalStateException("Only planned lessons allow enrollment.");
+        }
         if (clients.add(client)) {
             client.addLesson(this);
         }
     }
 
     /**
-     * Remove a client from the lesson
+     * Remove a client from the lesson.
      */
     public void cancelEnrollment(Client client) {
-        clients.removeIf(c -> c.getId().equals(client.getId()));
+        if (client == null) return;
+        clients.removeIf(c -> Objects.equals(c.getId(), client.getId()));
         client.removeLesson(this);
     }
 

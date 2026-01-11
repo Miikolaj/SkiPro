@@ -1,5 +1,7 @@
 package com.example.skipro.model;
 
+import jakarta.persistence.*;
+
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.*;
@@ -12,12 +14,27 @@ import java.util.*;
  * they conduct. Each instructor is uniquely identified by an immutable {@link UUID}.
  * </p>
  */
+@Entity
+@Table(name = "instructors")
 public class Instructor extends Employee implements Serializable {
     private static final long serialVersionUID = 1L;
-    private UUID id = UUID.randomUUID();
+
+    @Id
+    @GeneratedValue
+    private UUID id;
+
     private String qualificationLevel;
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "instructor_ratings", joinColumns = @JoinColumn(name = "instructor_id"))
+    @Column(name = "rating")
     private List<Integer> ratings = new ArrayList<>();
+
+    @OneToMany(mappedBy = "instructor")
     private Set<Lesson> lessons = new HashSet<>();
+
+    @OneToMany(mappedBy = "instructor", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Employment> employments = new HashSet<>();
 
     /**
      * Constructs an {@code Instructor} with the provided personal data, experience, and qualification.
@@ -33,11 +50,8 @@ public class Instructor extends Employee implements Serializable {
         this.qualificationLevel = qualificationLevel;
     }
 
-    public Instructor() {
+    protected Instructor() {
         super();
-        this.id = UUID.randomUUID();
-        this.ratings = new ArrayList<>();
-        this.lessons = new HashSet<>();
     }
 
     public String getQualificationLevel() {
@@ -65,6 +79,16 @@ public class Instructor extends Employee implements Serializable {
 
     public Set<Lesson> getLessons() {
         return Collections.unmodifiableSet(lessons);
+    }
+
+    public void addEmployment(Employment employment) {
+        if (employment == null) return;
+        employments.add(employment);
+        employment.setInstructor(this);
+    }
+
+    public Set<Employment> getEmployments() {
+        return Collections.unmodifiableSet(employments);
     }
 
     public void setQualificationLevel(String qualificationLevel) {

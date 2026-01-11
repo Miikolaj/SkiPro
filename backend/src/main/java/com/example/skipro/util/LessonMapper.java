@@ -39,8 +39,7 @@ public class LessonMapper {
         lessonMap.put("duration", formatDuration(lesson.getDuration()));
         lessonMap.put("status", lesson.getStatus());
         lessonMap.put("instructor", instructorToMap(lesson.getInstructor()));
-        int clientsCount = lesson.getClients() == null ? 0 : lesson.getClients().size();
-        lessonMap.put("clientsCount", clientsCount);
+        // Do NOT touch lesson.getClients() here (lazy collection). Set clientsCount in controller/service.
         return lessonMap;
     }
 

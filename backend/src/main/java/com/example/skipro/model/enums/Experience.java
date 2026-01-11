@@ -1,4 +1,4 @@
 package com.example.skipro.model.enums;
 
-public enum Experience {BEGINNER, EXPERIENCED, ADVANCED}
+public enum Experience {BEGINNER, EXPERIENCED, ADVANCED, INTERMEDIATE}
 

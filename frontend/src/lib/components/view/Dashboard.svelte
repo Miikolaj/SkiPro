@@ -73,7 +73,7 @@
 	</div>
 	<div class="lessons">
 		{#if lessons.length > 0}
-			{#each lessons as lesson}
+			{#each lessons as lesson (`${activeSection}:${lesson.id}`)}
 				<Lesson
 					currentUser={clientId}
 					date={lesson.date}

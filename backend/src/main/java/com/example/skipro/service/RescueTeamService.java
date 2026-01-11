@@ -1,29 +1,21 @@
 package com.example.skipro.service;
 
 import com.example.skipro.model.*;
-import com.example.skipro.util.PersistenceManager;
 import org.springframework.stereotype.Service;
 
-import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 /**
- * Service responsible for managing rescue teams and persisting them to a file.
+ * Service responsible for managing rescue teams.
+ *
+ * NOTE: This service is currently kept in-memory. If rescue teams are part of the final graded data set,
+ * migrate them to JPA entities + repositories.
  */
 @Service
 public class RescueTeamService {
-    private final PersistenceManager<RescueTeam> persistence = new PersistenceManager<>("src/main/java/com/example/skipro/data/rescue_team.ser"); //Name of the file used for saving rescue teams.
-    private List<RescueTeam> rescueTeams = new ArrayList<>();
-
-    /**
-     * Constructs a RescueTeamService and loads teams from file.
-     */
-    public RescueTeamService() {
-        rescueTeams = persistence.load();
-    }
+    private final List<RescueTeam> rescueTeams = new ArrayList<>();
 
     /**
      * Creates a new {@link RescueTeam}, registers it in the system, and returns it.
@@ -35,7 +27,6 @@ public class RescueTeamService {
     public RescueTeam createTeam(String name, Track track) {
         RescueTeam team = new RescueTeam(name, track, "default-channel", Collections.emptyList(), null);
         rescueTeams.add(team);
-        persistence.save(rescueTeams);
         return team;
     }
 
@@ -51,7 +42,6 @@ public class RescueTeamService {
             throw new IllegalArgumentException("Team is not registered in the system.");
         }
         team.addMember(worker);
-        persistence.save(rescueTeams);
     }
 
     /**

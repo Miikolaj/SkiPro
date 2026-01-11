@@ -1,6 +1,8 @@
 package com.example.skipro.model;
 
 import com.example.skipro.model.enums.Experience;
+import jakarta.persistence.*;
+
 import java.io.Serializable;
 import java.util.*;
 
@@ -21,20 +23,31 @@ import java.util.*;
  * Only basic state is stored here; business logic is delegated to service classes.
  * </p>
  */
+@Entity
+@Table(name = "clients")
 public class Client implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    private final UUID id = UUID.randomUUID(); /** Unique, immutable identifier for the client. */
-    private final String firstName;  /** Client’s first name. */
-    private final String lastName;  /** Client’s last name. */
-    private final int age;  /** Client’s age in years. */
-    private final Experience experience; /** Self‑declared skiing experience level. */
-    private String password;   /** Plain‑text password used for authentication */
+    @Id
+    @GeneratedValue
+    private UUID id;
 
-    /** Association: 0..* lessons the client is enrolled in. */
+    private String firstName;
+    private String lastName;
+    private int age;
+
+    @Enumerated(EnumType.STRING)
+    private Experience experience;
+
+    private String password;
+
+    /** Association: 0..* lessons the client is enrolled in (inverse side). */
+    @ManyToMany(mappedBy = "clients")
     private final Set<Lesson> lessons = new HashSet<>();
-    /** Association: 0..* equipment rentals linked to this client. */
-    private final Set<Rental> rentals = new HashSet<>();
+
+    protected Client() {
+        // for JPA
+    }
 
     /**
      * Constructs a new {@code Client} with the given personal details and experience level.
@@ -61,10 +74,6 @@ public class Client implements Serializable {
         lessons.remove(lesson);
     }
 
-    public void addRental(Rental rental) {
-        rentals.add(rental);
-    }
-
     public Set<Lesson> getLessons() {
         return Collections.unmodifiableSet(lessons);
     }
@@ -89,25 +98,20 @@ public class Client implements Serializable {
         return experience;
     }
 
-    public Set<Rental> getRentals() {
-        return Collections.unmodifiableSet(rentals);
-    }
-
     public String getPassword() {
         return password;
     }
 
-    public String setPassword(String password) {
+    public void setPassword(String password) {
         if (password == null || password.isEmpty()) {
             throw new IllegalArgumentException("Password cannot be null or empty");
         }
         this.password = password;
-        return this.password;
     }
 
     @Override
     public String toString() {
-        return firstName + " " + lastName + " (age: " + password + ", " + experience + ")";
+        return firstName + " " + lastName + " (age: " + age + ", " + experience + ")";
     }
 
     @Override

@@ -1,13 +1,11 @@
 package com.example.skipro.model;
 
 import com.example.skipro.model.enums.TrackDifficulty;
+import jakarta.persistence.*;
 
 import java.io.Serializable;
 import java.time.LocalTime;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Represents a ski resort that contains multiple {@link Track}s and employs staff through {@link Employment} contracts.
@@ -21,15 +19,25 @@ import java.util.UUID;
  * Each resort is uniquely identified by an immutable {@link UUID} generated at construction time.
  * </p>
  */
+@Entity
+@Table(name = "resorts")
 public class Resort implements Serializable {
     private static final long serialVersionUID = 1L;
-    private final UUID id = UUID.randomUUID();
-    private final String name;
-    private final String location;
+
+    @Id
+    @GeneratedValue
+    private UUID id;
+
+    private String name;
+    private String location;
+
     private final LocalTime openingHour = LocalTime.of(8, 0);
     private final LocalTime closingHour = LocalTime.of(17, 0);
 
+    @OneToMany(mappedBy = "resort", cascade = CascadeType.ALL, orphanRemoval = true)
     private final Set<Employment> employments = new HashSet<>();
+
+    @OneToMany(mappedBy = "resort", cascade = CascadeType.ALL, orphanRemoval = true)
     private final Set<Track> tracks = new HashSet<>();
 
     /**
@@ -38,6 +46,10 @@ public class Resort implements Serializable {
      * @param name     resort name
      * @param location geographic location or address
      */
+    protected Resort() {
+        // for JPA
+    }
+
     public Resort(String name, String location) {
         this.name = name;
         this.location = location;
@@ -60,10 +72,12 @@ public class Resort implements Serializable {
     }
 
     void addEmployment(Employment e) {
+        if (e == null) return;
         employments.add(e);
+        e.setResort(this);
     }
 
-    public void addTrack(Track track) {
+    void addTrack(Track track) {
         tracks.add(track);
     }
 

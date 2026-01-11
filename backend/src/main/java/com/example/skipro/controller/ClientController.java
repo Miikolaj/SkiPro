@@ -13,7 +13,11 @@ public class ClientController {
     /**
      * Service used for authenticating clients and issuing JWT tokens.
      */
-    private final ClientService clientService = new ClientService();
+    private final ClientService clientService;
+
+    public ClientController(ClientService clientService) {
+        this.clientService = clientService;
+    }
 
     /**
      * Authenticates a client and returns a signed JWT token.

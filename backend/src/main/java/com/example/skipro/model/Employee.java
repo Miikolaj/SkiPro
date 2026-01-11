@@ -1,5 +1,8 @@
 package com.example.skipro.model;
 
+import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.Transient;
+
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Collections;
@@ -19,6 +22,7 @@ import java.util.Set;
  * information and salary computation logic.
  * </p>
  */
+@MappedSuperclass
 public abstract class Employee implements Serializable {
     protected String firstName;
     /**
@@ -41,7 +45,8 @@ public abstract class Employee implements Serializable {
      * Total years of professional experience.
      */
 
-    private final Set<Employment> employments = new HashSet<>();
+    @Transient
+    private Set<Employment> employments = new HashSet<>();
 
     public Employee() {
     }

@@ -1,7 +1,6 @@
 package com.example.skipro.controller;
 
 import com.example.skipro.model.Instructor;
-import com.example.skipro.model.Lesson;
 import com.example.skipro.service.InstructorService;
 import com.example.skipro.service.LessonService;
 import org.springframework.http.ResponseEntity;
@@ -22,8 +21,13 @@ public class LessonController {
     /**
      * Service used to query and modify lesson data.
      */
-    private final LessonService lessonService = new LessonService();
-    private final InstructorService instructorService = new InstructorService();
+    private final LessonService lessonService;
+    private final InstructorService instructorService;
+
+    public LessonController(LessonService lessonService, InstructorService instructorService) {
+        this.lessonService = lessonService;
+        this.instructorService = instructorService;
+    }
 
     /**
      * Returns all <em>planned</em> lessons that the given client is <strong>not</strong> enrolled in.
@@ -34,7 +38,11 @@ public class LessonController {
     @PostMapping("/planned")
     public List<Map<String, Object>> getLessons(@RequestParam String clientId) {
         return lessonService.getPlannedLessonsWithoutClient(UUID.fromString(clientId)).stream()
-                .map(LessonMapper::lessonToTileMap)
+                .map(lesson -> {
+                    Map<String, Object> map = LessonMapper.lessonToTileMap(lesson);
+                    map.put("clientsCount", lessonService.countClients(lesson.getId()));
+                    return map;
+                })
                 .toList();
     }
 
@@ -47,7 +55,11 @@ public class LessonController {
     @PostMapping
     public List<Map<String, Object>> getEnrolledLessons(@RequestParam String clientId) {
         return lessonService.getPlannedLessonsForClient(UUID.fromString(clientId)).stream()
-                .map(LessonMapper::lessonToTileMap)
+                .map(lesson -> {
+                    Map<String, Object> map = LessonMapper.lessonToTileMap(lesson);
+                    map.put("clientsCount", lessonService.countClients(lesson.getId()));
+                    return map;
+                })
                 .toList();
     }
 
@@ -60,7 +72,11 @@ public class LessonController {
     @PostMapping("/finished")
     public List<Map<String, Object>> getFinishedLessons(@RequestParam String clientId) {
         return lessonService.getFinishedLessonsForClient(UUID.fromString(clientId)).stream()
-                .map(LessonMapper::lessonToTileMap)
+                .map(lesson -> {
+                    Map<String, Object> map = LessonMapper.lessonToTileMap(lesson);
+                    map.put("clientsCount", lessonService.countClients(lesson.getId()));
+                    return map;
+                })
                 .toList();
     }
 
@@ -73,12 +89,25 @@ public class LessonController {
      */
     @PostMapping("/enroll")
     public ResponseEntity<Void> enrollClientInLesson(@RequestParam String lessonId, @RequestParam String clientId) {
-        boolean enrolled = lessonService.enrollClientToLesson(UUID.fromString(lessonId), UUID.fromString(clientId));
-        if (enrolled) {
-            return ResponseEntity.ok().build();
-        } else {
-            return ResponseEntity.status(404).build();
+        final UUID lessonUuid;
+        final UUID clientUuid;
+        try {
+            lessonUuid = UUID.fromString(lessonId);
+            clientUuid = UUID.fromString(clientId);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
         }
+
+        // 404 if either resource doesn't exist
+        if (lessonService.getLessonById(lessonUuid) == null) {
+            return ResponseEntity.notFound().build();
+        }
+        if (lessonService.getClientById(clientUuid) == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        boolean enrolled = lessonService.enrollClientToLesson(lessonUuid, clientUuid);
+        return enrolled ? ResponseEntity.ok().build() : ResponseEntity.status(409).build();
     }
 
     /**
@@ -91,13 +120,28 @@ public class LessonController {
      */
     @PostMapping("/create")
     public ResponseEntity<Void> create(@RequestParam String time, @RequestParam String duration, @RequestParam String instructorId) {
-        Instructor instructor = instructorService.getInstructorById(instructorId);
+        final UUID instructorUuid;
+        try {
+            instructorUuid = UUID.fromString(instructorId);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
+        }
 
-        lessonService.createLesson(
-                LocalDateTime.parse(time, DateTimeFormatter.ISO_LOCAL_DATE_TIME),
-                Duration.parse(duration),
-                instructor
-        );
+        Instructor instructor = instructorService.getInstructorById(instructorUuid);
+        if (instructor == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        try {
+            lessonService.createLesson(
+                    LocalDateTime.parse(time, DateTimeFormatter.ISO_LOCAL_DATE_TIME),
+                    Duration.parse(duration),
+                    instructor
+            );
+        } catch (Exception e) {
+            // parsing errors etc.
+            return ResponseEntity.badRequest().build();
+        }
 
         return ResponseEntity.ok().build();
     }
@@ -107,13 +151,29 @@ public class LessonController {
      *
      * @param lessonId the lesson identifier
      * @param clientId the client identifier
-     * @return true if removal succeeded; false otherwise
+     * @return HTTP 200 if removal succeeded; 404 if lesson/client not found; 409 if removal failed
      */
     @PostMapping("/remove")
-    public boolean removeClientFromLesson(@RequestParam String lessonId, @RequestParam String clientId) {
-        UUID uuid = UUID.fromString(lessonId);
-        UUID uuid2 = UUID.fromString(clientId);
-        return lessonService.removeClientFromLesson(uuid, uuid2);
+    public ResponseEntity<Void> removeClientFromLesson(@RequestParam String lessonId, @RequestParam String clientId) {
+        final UUID lessonUuid;
+        final UUID clientUuid;
+        try {
+            lessonUuid = UUID.fromString(lessonId);
+            clientUuid = UUID.fromString(clientId);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        // 404 if either resource doesn't exist
+        if (lessonService.getLessonById(lessonUuid) == null) {
+            return ResponseEntity.notFound().build();
+        }
+        if (lessonService.getClientById(clientUuid) == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        boolean removed = lessonService.removeClientFromLesson(lessonUuid, clientUuid);
+        return removed ? ResponseEntity.ok().build() : ResponseEntity.status(409).build();
     }
 
     /**
@@ -121,12 +181,18 @@ public class LessonController {
      */
     @GetMapping("/{lessonId}/clients")
     public ResponseEntity<List<Map<String, Object>>> getLessonClients(@PathVariable String lessonId) {
-        Lesson lesson = lessonService.getLessonById(UUID.fromString(lessonId));
-        if (lesson == null) {
+        final UUID lessonUuid;
+        try {
+            lessonUuid = UUID.fromString(lessonId);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        if (lessonService.getLessonById(lessonUuid) == null) {
             return ResponseEntity.notFound().build();
         }
 
-        List<Map<String, Object>> clients = (lesson.getClients() == null ? List.<Map<String, Object>>of() : lesson.getClients().stream()
+        List<Map<String, Object>> clients = lessonService.getLessonClients(lessonUuid).stream()
                 .map(c -> {
                     Map<String, Object> clientMap = new HashMap<>();
                     clientMap.put("firstName", c.getFirstName());
@@ -134,7 +200,7 @@ public class LessonController {
                     clientMap.put("id", c.getId());
                     return clientMap;
                 })
-                .toList());
+                .toList();
 
         return ResponseEntity.ok(clients);
     }

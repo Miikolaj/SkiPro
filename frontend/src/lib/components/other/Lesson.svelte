@@ -26,6 +26,16 @@
 	let actionLoading = false;
 	let actionError: string | null = null;
 
+	// Safety: if this component instance ever gets reused for a different lesson/section,
+	// don't keep UI state from the previous render.
+	$: if (id || section) {
+		expanded = false;
+		clientsLoading = false;
+		clientsError = null;
+		actionLoading = false;
+		actionError = null;
+	}
+
 	// simple in-memory cache across Lesson components
 	const clientsCache: Map<string, { firstName: string; lastName: string; id: string }[]> = new Map();
 

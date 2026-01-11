@@ -1,35 +1,31 @@
 package com.example.skipro.service;
 
 import com.example.skipro.model.Track;
-import com.example.skipro.util.PersistenceManager;
+import com.example.skipro.repository.TrackRepository;
 import org.springframework.stereotype.Service;
 
-import java.io.*;
-import java.util.*;
+import java.util.Set;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
- * Service responsible for managing ski tracks and persisting them to a file.
+ * Service responsible for managing ski tracks.
  */
 @Service
 public class TrackService {
-    private Set<Track> tracks = new HashSet<>(); //Set containing all tracks.
-    private final PersistenceManager<Track> persistence = new PersistenceManager<>("src/main/java/com/example/skipro/data/tracks.ser"); //Name of the file used for saving tracks.
+    private final TrackRepository trackRepository;
 
-    /**
-     * Constructs a TrackService and loads tracks from file.
-     */
-    public TrackService() {
-        tracks = persistence.loadSet();
+    public TrackService(TrackRepository trackRepository) {
+        this.trackRepository = trackRepository;
     }
 
     /**
-     * Adds a track and saves the updated set to file.
+     * Adds a track and saves it to the database.
      *
      * @param track the track to add
      */
     public void addTrack(Track track) {
-        tracks.add(track);
-        persistence.saveSet(tracks);
+        trackRepository.save(track);
     }
 
     /**
@@ -38,6 +34,16 @@ public class TrackService {
      * @return the set of tracks
      */
     public Set<Track> getTracks() {
-        return tracks;
+        return trackRepository.findAll().stream().collect(Collectors.toSet());
+    }
+
+    /**
+     * Returns a track by its ID.
+     *
+     * @param id the ID of the track
+     * @return the track with the given ID, or null if not found
+     */
+    public Track getTrackById(UUID id) {
+        return id == null ? null : trackRepository.findById(id).orElse(null);
     }
 }

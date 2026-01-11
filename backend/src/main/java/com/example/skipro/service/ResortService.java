@@ -1,35 +1,41 @@
 package com.example.skipro.service;
 
 import com.example.skipro.model.Resort;
-import com.example.skipro.util.PersistenceManager;
+import com.example.skipro.repository.ResortRepository;
 import org.springframework.stereotype.Service;
 
-import java.io.*;
-import java.util.*;
+import java.util.List;
+import java.util.UUID;
 
 /**
- * Service responsible for managing resorts and persisting them to a file.
+ * Service responsible for managing resorts.
  */
 @Service
 public class ResortService {
-    /**
-     * Set containing all resorts.
-     */
-    private Set<Resort> resorts = new HashSet<>();
-    private final PersistenceManager<Resort> persistence = new PersistenceManager<>("src/main/java/com/example/skipro/data/resorts.ser");
+    private final ResortRepository resortRepository;
 
-    /**
-     * Constructs a ResortService and loads resorts from file.
-     */
-    public ResortService() {
-        resorts = persistence.loadSet();
+    public ResortService(ResortRepository resortRepository) {
+        this.resortRepository = resortRepository;
     }
 
     /**
-     * Adds a resort and saves the updated set to file.
+     * Adds a resort and saves it to the database.
      */
     public void addResort(Resort resort) {
-        resorts.add(resort);
-        persistence.saveSet(resorts);
+        resortRepository.save(resort);
+    }
+
+    /**
+     * Returns a list of all resorts from the database.
+     */
+    public List<Resort> getAllResorts() {
+        return resortRepository.findAll();
+    }
+
+    /**
+     * Returns a resort by its ID.
+     */
+    public Resort getResortById(UUID id) {
+        return id == null ? null : resortRepository.findById(id).orElse(null);
     }
 }

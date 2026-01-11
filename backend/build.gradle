@@ -14,14 +14,29 @@ repositories {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    runtimeOnly 'org.postgresql:postgresql'
+
+    implementation 'org.springframework.security:spring-security-crypto'
+
     implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
     runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
     runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    implementation 'org.apache.pdfbox:pdfbox:2.0.30'
 }
 
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(21)
     }
+}
+
+tasks.register('extractSkiProPdf', JavaExec) {
+    group = 'help'
+    description = 'Extracts SkiPro.pdf to build/SkiPro_extracted.txt using PdfTextExtractor'
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'com.example.skipro.util.PdfTextExtractor'
+    args 'SkiPro.pdf', 'build/SkiPro_extracted.txt'
 }

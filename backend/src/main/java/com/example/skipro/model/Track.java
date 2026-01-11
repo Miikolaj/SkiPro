@@ -1,12 +1,10 @@
 package com.example.skipro.model;
 
 import com.example.skipro.model.enums.TrackDifficulty;
+import jakarta.persistence.*;
 
 import java.io.Serializable;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Represents a ski or snowboard track (run) within a {@link Resort}.
@@ -17,15 +15,32 @@ import java.util.UUID;
  * assigned to it.
  * </p>
  */
+@Entity
+@Table(name = "tracks")
 public class Track implements Serializable {
     private static final long serialVersionUID = 1L;
-    private final UUID id = UUID.randomUUID();
-    private final String name;
-    private final TrackDifficulty difficulty;
-    private final double lenghtKm;  // in kilometers
-    private final Resort resort;
 
+    @Id
+    @GeneratedValue
+    private UUID id;
+
+    private String name;
+
+    @Enumerated(EnumType.STRING)
+    private TrackDifficulty difficulty;
+
+    private double lenghtKm;  // in kilometers
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "resort_id", nullable = false)
+    private Resort resort;
+
+    @Transient
     private final Set<RescueTeam> rescueTeams = new HashSet<>();
+
+    protected Track() {
+        // for JPA
+    }
 
     /**
      * Constructs a {@code Track} and registers it with the given resort.
@@ -38,7 +53,7 @@ public class Track implements Serializable {
      */
     Track(String name, TrackDifficulty difficulty, double lenghtKm, Resort resort) {
         if (resort == null) {
-            throw new IllegalArgumentException("Truck must be associated with a resort.");
+            throw new IllegalArgumentException("Track must be associated with a resort.");
         }
         if (lenghtKm <= 0.1 || lenghtKm > 10) {
             throw new IllegalArgumentException("Track length must be between 0.1 and 10 kilometers.");

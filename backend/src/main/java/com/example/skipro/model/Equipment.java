@@ -1,5 +1,7 @@
 package com.example.skipro.model;
 
+import jakarta.persistence.*;
+
 import java.io.Serializable;
 import java.util.UUID;
 
@@ -11,12 +13,18 @@ import java.util.UUID;
  * flag indicates whether the item is currently rented out.
  * </p>
  */
+@Entity
+@Table(name = "equipment")
 public class Equipment implements Serializable {
     private static final long serialVersionUID = 1L;
-    private final UUID id = UUID.randomUUID();
-    private final String name;
-    private final String size;
-    private final int cost;
+
+    @Id
+    @GeneratedValue
+    private UUID id;
+
+    private String name;
+    private String size;
+    private int cost;
 
     private boolean inUse = false;
 
@@ -27,6 +35,10 @@ public class Equipment implements Serializable {
      * @param size size designation (string, to allow units such as "cm" or labels like "L")
      * @param cost rental cost in basic currency units
      */
+    protected Equipment() {
+        // for JPA
+    }
+
     public Equipment(String name, String size, int cost) {
         this.name = name;
         this.size = size;
