@@ -3,6 +3,8 @@ package com.example.skipro.controller;
 import com.example.skipro.model.Client;
 import org.springframework.web.bind.annotation.*;
 import com.example.skipro.service.ClientService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 /**
  * REST controller exposing client‑authentication endpoints.
@@ -32,8 +34,12 @@ public class ClientController {
      * @return a signed JWT token if authentication succeeds; otherwise {@code null}
      */
     @PostMapping("/login")
-    public String login(@RequestParam String fullName, @RequestParam String password) {
-        return clientService.authenticate(fullName, password);
+    public ResponseEntity<String> login(@RequestParam String fullName, @RequestParam String password) {
+        String token = clientService.authenticate(fullName, password);
+        if (token == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+        return ResponseEntity.ok(token);
     }
 
     /**
@@ -48,7 +54,11 @@ public class ClientController {
      * @return a confirmation message or token if registration succeeds
      */
     @PostMapping("/register")
-    public String register(@RequestBody Client client) {
-        return clientService.register(client);
+    public ResponseEntity<String> register(@RequestBody Client client) {
+        String token = clientService.register(client);
+        if (token == null) {
+            return ResponseEntity.badRequest().body(null);
+        }
+        return ResponseEntity.status(HttpStatus.CREATED).body(token);
     }
 }

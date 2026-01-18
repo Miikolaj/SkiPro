@@ -4,7 +4,6 @@ import com.example.skipro.config.DurationMinutesConverter;
 import com.example.skipro.model.enums.LessonStatus;
 import jakarta.persistence.*;
 
-import java.io.Serializable;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -18,8 +17,7 @@ import java.util.*;
  */
 @Entity
 @Table(name = "lessons")
-public class Lesson implements Serializable {
-    private static final long serialVersionUID = 1L;
+public class Lesson {
 
     @Id
     @GeneratedValue
@@ -44,7 +42,7 @@ public class Lesson implements Serializable {
             joinColumns = @JoinColumn(name = "lesson_id"),
             inverseJoinColumns = @JoinColumn(name = "client_id")
     )
-    private final Set<Client> clients = new HashSet<>();
+    private Set<Client> clients = new HashSet<>();
 
     protected Lesson() {
         // for JPA
@@ -90,8 +88,10 @@ public class Lesson implements Serializable {
      */
     public void cancelEnrollment(Client client) {
         if (client == null) return;
-        clients.removeIf(c -> Objects.equals(c.getId(), client.getId()));
-        client.removeLesson(this);
+        boolean removed = clients.removeIf(c -> Objects.equals(c.getId(), client.getId()));
+        if (removed) {
+            client.removeLesson(this);
+        }
     }
 
     /**

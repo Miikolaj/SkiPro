@@ -2,7 +2,6 @@ package com.example.skipro.model;
 
 import jakarta.persistence.*;
 
-import java.io.Serializable;
 import java.util.UUID;
 
 /**
@@ -15,8 +14,7 @@ import java.util.UUID;
  */
 @Entity
 @Table(name = "equipment")
-public class Equipment implements Serializable {
-    private static final long serialVersionUID = 1L;
+public class Equipment {
 
     @Id
     @GeneratedValue

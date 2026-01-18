@@ -1,7 +1,13 @@
 package com.example.skipro.model;
 
-import java.io.Serializable;
+import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+
 import java.time.LocalDate;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Represents a rental-clerk employee responsible for handling equipment rentals at the resort.
@@ -10,8 +16,21 @@ import java.time.LocalDate;
  * Salary is computed based on a base wage plus a fee per rental handled.
  * </p>
  */
-public class RentalClerk extends Employee implements Serializable {
+@Entity
+@Table(name = "rental_clerks")
+public class RentalClerk extends Employee {
     private int rentalsHandled = 0;
+
+    /**
+     * Rentals processed by this clerk (inverse side of Rental -> RentalClerk).
+     * Not used in current GUI flow, but useful for future screens.
+     */
+    @OneToMany(mappedBy = "rentalClerk")
+    private Set<Rental> rentals = new HashSet<>();
+
+    protected RentalClerk() {
+        // for JPA
+    }
 
     /**
      * Constructs a {@code RentalClerk} with the provided personal information and initial rentals count.
@@ -29,6 +48,10 @@ public class RentalClerk extends Employee implements Serializable {
 
     public int getRentalsHandled() {
         return rentalsHandled;
+    }
+
+    public Set<Rental> getRentals() {
+        return Collections.unmodifiableSet(rentals);
     }
 
     public void incrementRentalsHandled() {

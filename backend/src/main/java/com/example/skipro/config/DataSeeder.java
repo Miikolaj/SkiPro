@@ -9,7 +9,6 @@ import com.example.skipro.repository.InstructorRepository;
 import com.example.skipro.repository.LessonRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -18,12 +17,12 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
- * Inserts a small, deterministic set of sample data on startup.
+ * NOTE: Disabled in favor of {@link SampleDataSeeder}.
  *
- * Since you use spring.jpa.hibernate.ddl-auto=create-drop in dev, the database is recreated
- * each run and this seed guarantees the GUI/API has data to show.
+ * Having two independent seeders causes non-deterministic DB contents at startup
+ * (e.g., sometimes Alex.Kowalski doesn't exist, so /auth/login returns null).
  */
-@Configuration
+// @Configuration
 public class DataSeeder {
 
     @Bean
@@ -80,4 +79,3 @@ public class DataSeeder {
         };
     }
 }
-

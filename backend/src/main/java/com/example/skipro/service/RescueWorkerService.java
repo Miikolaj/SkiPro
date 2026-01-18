@@ -1,25 +1,38 @@
 package com.example.skipro.service;
 
 import com.example.skipro.model.RescueWorker;
+import com.example.skipro.repository.RescueWorkerRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
  * Service responsible for managing rescue workers.
- * NOTE: currently in-memory. If rescue workers are required to be persisted, migrate to JPA.
  */
 @Service
 public class RescueWorkerService {
-    private final List<RescueWorker> rescueWorkers = new ArrayList<>();
+    private final RescueWorkerRepository rescueWorkerRepository;
 
-    public void addRescueWorker(RescueWorker worker) {
-        rescueWorkers.add(worker);
+    public RescueWorkerService(RescueWorkerRepository rescueWorkerRepository) {
+        this.rescueWorkerRepository = rescueWorkerRepository;
     }
 
+    @Transactional
+    public RescueWorker addRescueWorker(RescueWorker worker) {
+        if (worker == null) {
+            throw new IllegalArgumentException("Worker cannot be null");
+        }
+        rescueWorkerRepository.findByLicenseNumber(worker.getLicenseNumber())
+                .ifPresent(existing -> {
+                    throw new IllegalArgumentException("License number already exists: " + worker.getLicenseNumber());
+                });
+
+        return rescueWorkerRepository.save(worker);
+    }
+
+    @Transactional(readOnly = true)
     public List<RescueWorker> getAllRescueWorkers() {
-        return Collections.unmodifiableList(rescueWorkers);
+        return rescueWorkerRepository.findAll();
     }
 }

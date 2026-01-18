@@ -3,7 +3,6 @@ package com.example.skipro.model;
 import com.example.skipro.model.enums.TrackDifficulty;
 import jakarta.persistence.*;
 
-import java.io.Serializable;
 import java.time.LocalTime;
 import java.util.*;
 
@@ -21,8 +20,7 @@ import java.util.*;
  */
 @Entity
 @Table(name = "resorts")
-public class Resort implements Serializable {
-    private static final long serialVersionUID = 1L;
+public class Resort {
 
     @Id
     @GeneratedValue

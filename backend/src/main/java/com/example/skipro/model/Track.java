@@ -3,7 +3,6 @@ package com.example.skipro.model;
 import com.example.skipro.model.enums.TrackDifficulty;
 import jakarta.persistence.*;
 
-import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -17,8 +16,7 @@ import java.util.*;
  */
 @Entity
 @Table(name = "tracks")
-public class Track implements Serializable {
-    private static final long serialVersionUID = 1L;
+public class Track {
 
     @Id
     @GeneratedValue
@@ -35,7 +33,7 @@ public class Track implements Serializable {
     @JoinColumn(name = "resort_id", nullable = false)
     private Resort resort;
 
-    @Transient
+    @OneToMany(mappedBy = "assignedTrack", cascade = CascadeType.ALL, orphanRemoval = true)
     private final Set<RescueTeam> rescueTeams = new HashSet<>();
 
     protected Track() {
@@ -66,6 +64,7 @@ public class Track implements Serializable {
     }
 
     public void addRescueTeam(RescueTeam team) {
+        if (team == null) return;
         rescueTeams.add(team);
     }
 

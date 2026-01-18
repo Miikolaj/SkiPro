@@ -1,7 +1,4 @@
 <script lang="ts">
-	import { Button } from '$components';
-	import { faXmark } from '@fortawesome/free-solid-svg-icons';
-
 	export let lessonNumber: string | number;
 	export let message: string = 'Placeholder';
 </script>
@@ -20,7 +17,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    align-items: center;
     gap: 20px;
     position: relative;
   }

@@ -1,14 +1,12 @@
 package com.example.skipro.model;
 
-import jakarta.persistence.MappedSuperclass;
-import jakarta.persistence.Transient;
+import jakarta.persistence.*;
 
-import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.Collections;
-import java.util.Date;
+import java.time.Period;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 /**
  * Abstract base class for every staff member employed by the ski resort (e.g. instructors, rescue workers).
@@ -22,8 +20,15 @@ import java.util.Set;
  * information and salary computation logic.
  * </p>
  */
-@MappedSuperclass
-public abstract class Employee implements Serializable {
+@Entity
+@Table(name = "employees")
+@Inheritance(strategy = InheritanceType.JOINED)
+public abstract class Employee {
+    // Primary key shared by all Employee subclasses (e.g., Instructor)
+    @Id
+    @GeneratedValue
+    protected UUID id;
+
     protected String firstName;
     /**
      * Employee first name.
@@ -45,8 +50,8 @@ public abstract class Employee implements Serializable {
      * Total years of professional experience.
      */
 
-    @Transient
-    private Set<Employment> employments = new HashSet<>();
+    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, orphanRemoval = true)
+    protected Set<Employment> employments = new HashSet<>();
 
     public Employee() {
     }
@@ -68,12 +73,12 @@ public abstract class Employee implements Serializable {
     }
 
     private int calculateAge() {
-        Date currentDate = new Date();
-        return currentDate.getYear() - birthDate.getYear();
+        if (birthDate == null) return 0;
+        return Period.between(birthDate, LocalDate.now()).getYears();
     }
 
-    public void addEmployment(Employment e) {
-        employments.add(e);
+    public UUID getId() {
+        return id;
     }
 
     public String getFullName() {
@@ -106,7 +111,18 @@ public abstract class Employee implements Serializable {
     }
 
     public Set<Employment> getEmployments() {
-        return Collections.unmodifiableSet(employments);
+        return java.util.Collections.unmodifiableSet(employments);
+    }
+
+    void addEmployment(Employment employment) {
+        if (employment == null) return;
+        employments.add(employment);
+        employment.setEmployee(this);
+    }
+
+    void removeEmployment(Employment employment) {
+        if (employment == null) return;
+        employments.remove(employment);
     }
 
     public abstract String getRole();

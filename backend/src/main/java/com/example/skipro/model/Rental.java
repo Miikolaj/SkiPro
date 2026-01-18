@@ -3,14 +3,12 @@ package com.example.skipro.model;
 import com.example.skipro.model.enums.RentalStatus;
 import jakarta.persistence.*;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
 @Table(name = "rentals")
-public class Rental implements Serializable {
-    private static final long serialVersionUID = 1L;
+public class Rental {
 
     @Id
     @GeneratedValue
@@ -23,6 +21,11 @@ public class Rental implements Serializable {
     @ManyToOne(optional = false)
     @JoinColumn(name = "client_id", nullable = false)
     private Client client;
+
+    /** Which clerk processed this rental (optional for backward compatibility). */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "rental_clerk_id")
+    private RentalClerk rentalClerk;
 
     private LocalDateTime startDate;
     private LocalDateTime endDate;
@@ -43,12 +46,21 @@ public class Rental implements Serializable {
      * @param equipment the equipment item being rented (non-null)
      * @param client    the client renting the equipment (non-null)
      */
-    public Rental(Equipment equipment, Client client) {
+    public Rental(Equipment equipment, Client client, RentalClerk rentalClerk) {
+        if (equipment == null || client == null) {
+            throw new IllegalArgumentException("Equipment and client must not be null");
+        }
         this.equipment = equipment;
         this.client = client;
+        this.rentalClerk = rentalClerk;
         this.startDate = LocalDateTime.now();
         this.status = RentalStatus.ACTIVE;
         this.rentalCost = equipment.getCost();
+    }
+
+    /** Backward-compatible constructor (no clerk assigned). */
+    public Rental(Equipment equipment, Client client) {
+        this(equipment, client, null);
     }
 
     public void returnEquipment() {
@@ -70,6 +82,10 @@ public class Rental implements Serializable {
 
     public Client getClient() {
         return client;
+    }
+
+    public RentalClerk getRentalClerk() {
+        return rentalClerk;
     }
 
     public LocalDateTime getStartDate() {
@@ -94,6 +110,7 @@ public class Rental implements Serializable {
 
     @Override
     public String toString() {
-        return equipment + " rented by " + client.getFirstName() + " " + client.getLastName() + " [" + status + "]";
+        String clerk = rentalClerk == null ? "<no clerk>" : rentalClerk.getFullName();
+        return equipment + " rented by " + client.getFirstName() + " " + client.getLastName() + " (clerk: " + clerk + ") [" + status + "]";
     }
 }

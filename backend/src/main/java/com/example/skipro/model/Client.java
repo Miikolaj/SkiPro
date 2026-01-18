@@ -3,7 +3,6 @@ package com.example.skipro.model;
 import com.example.skipro.model.enums.Experience;
 import jakarta.persistence.*;
 
-import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -25,8 +24,7 @@ import java.util.*;
  */
 @Entity
 @Table(name = "clients")
-public class Client implements Serializable {
-    private static final long serialVersionUID = 1L;
+public class Client {
 
     @Id
     @GeneratedValue
@@ -39,11 +37,12 @@ public class Client implements Serializable {
     @Enumerated(EnumType.STRING)
     private Experience experience;
 
+    /** Stored as BCrypt hash (never store plaintext in production). */
+    @Column(name = "password_hash")
     private String password;
 
-    /** Association: 0..* lessons the client is enrolled in (inverse side). */
     @ManyToMany(mappedBy = "clients")
-    private final Set<Lesson> lessons = new HashSet<>();
+    private Set<Lesson> lessons = new HashSet<>();
 
     protected Client() {
         // for JPA

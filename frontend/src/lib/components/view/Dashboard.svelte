@@ -4,13 +4,26 @@
 	import { faPersonSkiing, faList, faFlagCheckered, faRepeat, faArrowRightFromBracket } from '@fortawesome/free-solid-svg-icons';
 	import { LessonRepository } from '$lib/repositories/lesson.repository';
 
+	type LessonDto = {
+		id: string;
+		date: string;
+		duration: string;
+		clientsCount: string;
+		instructor: {
+			firstName: string;
+			lastName: string;
+			qualificationLevel: string;
+			rating: string;
+		};
+	};
+
 	const lessonRepository = new LessonRepository();
 
 	let loading = true;
 	let activeSection: string = 'available';
-	let enrolledLessons: any[] = [];
-	let plannedLessons: any[] = [];
-	let finishedLessons: any[] = [];
+	let enrolledLessons: LessonDto[] = [];
+	let plannedLessons: LessonDto[] = [];
+	let finishedLessons: LessonDto[] = [];
 	export let clientId: string;
 	export let activeUser: string;
 
@@ -29,15 +42,18 @@
 		{ key: 'signout', icon: faArrowRightFromBracket, label: 'Sign Out', type: 'sign-out' }
 	];
 
-	const lessonsBySection: Record<string, any[]> = {
-		available: [],
-		enrolled: [],
-		finished: []
-	};
-
 	function handleSignOut() {
 		document.cookie = 'token=; Max-Age=0; path=/;';
 		window.location.reload();
+	}
+
+	function setActiveSection(next: string) {
+		if (next === activeSection) return;
+		activeSection = next;
+		// UX safety: when switching tabs, start list at the top so it doesn't feel like a "continued" view.
+		queueMicrotask(() => {
+			document.querySelector<HTMLElement>('.lessons')?.scrollTo({ top: 0 });
+		});
 	}
 
 	$: lessons =
@@ -52,7 +68,12 @@
 
 <div class="dashboard">
 	{#if loading}
-		<div class="loading">Loading...</div>
+		<div class="app-loading" role="status" aria-live="polite" aria-busy="true">
+			<div class="app-loading__content">
+				<div class="app-loading__spinner" aria-hidden="true" />
+				<div class="app-loading__label">Loading lessons…</div>
+			</div>
+		</div>
 	{:else}
 	<div class="options">
 		<div class="title">
@@ -64,37 +85,39 @@
 				<Button
 					prefixIcon={section.icon}
 					type={section.type ? section.type : (activeSection === section.key ? 'active' : 'inactive')}
-					on:click={section.type === 'sign-out' ? handleSignOut : () => !section.type && (activeSection = section.key)}
+					on:click={section.type === 'sign-out' ? handleSignOut : () => !section.type && setActiveSection(section.key)}
 				>
 					{section.label}
 				</Button>
 			{/each}
 		</div>
 	</div>
-	<div class="lessons">
-		{#if lessons.length > 0}
-			{#each lessons as lesson (`${activeSection}:${lesson.id}`)}
-				<Lesson
-					currentUser={clientId}
-					date={lesson.date}
-					duration={lesson.duration}
-					id={lesson.id}
-					enrolledClients={lesson.clientsCount}
-					firstName={lesson.instructor.firstName}
-					lastName={lesson.instructor.lastName}
-					qualificationLevel={lesson.instructor.qualificationLevel}
-					rating={lesson.instructor.rating}
-					section={activeSection}
-					clients={[]}
-				/>
-			{/each}
-		{:else}
-			<div class="no-content">
-				<img src="src/assets/empty.svg" alt="No content" class="svg"/>
-				<p>There isn&#39;t anything here yet.</p>
-			</div>
-		{/if}
-	</div>
+	{#key activeSection}
+		<div class="lessons">
+			{#if lessons.length > 0}
+				{#each lessons as lesson (`${activeSection}:${lesson.id}`)}
+					<Lesson
+						currentUser={clientId}
+						date={lesson.date}
+						duration={lesson.duration}
+						id={lesson.id}
+						enrolledClients={lesson.clientsCount}
+						firstName={lesson.instructor.firstName}
+						lastName={lesson.instructor.lastName}
+						qualificationLevel={lesson.instructor.qualificationLevel}
+						rating={lesson.instructor.rating}
+						section={activeSection}
+						clients={[]}
+					/>
+				{/each}
+			{:else}
+				<div class="no-content">
+					<img src="src/assets/empty.svg" alt="No content" class="svg"/>
+					<p>There isn&#39;t anything here yet.</p>
+				</div>
+			{/if}
+		</div>
+	{/key}
 	{/if}
 </div>
 
@@ -102,6 +125,9 @@
   .dashboard {
     display: flex;
     flex-direction: row;
+		gap: 2.5rem;
+		max-width: 1200px;
+		width: min(1200px, calc(100vw - 3rem));
   }
 
   .title {
@@ -127,14 +153,31 @@
   .lessons {
     display: flex;
     flex-direction: column;
-    gap: 5px;
-    max-width: 600px;
-    min-width: 550px;
-    height: 500px;
-    padding: 10px 0 10px 10px;
+    gap: 0.75rem;
+		flex: 1;
+		min-width: 0;
+		max-width: 780px;
+		padding: 0.5rem 0 0.5rem 1rem;
     border-left: 1px solid #000;
+		max-height: min(64vh, 640px);
     overflow-y: auto;
   }
+
+	@media (max-width: 900px) {
+		.dashboard {
+			flex-direction: column;
+			align-items: stretch;
+			gap: 1.5rem;
+		}
+
+		.lessons {
+			border-left: none;
+			border-top: 1px solid #000;
+			padding-left: 0;
+			padding-top: 1rem;
+			max-width: 100%;
+		}
+	}
 
 	.no-content {
 		display: flex;
@@ -155,4 +198,6 @@
 		width: 150px;
 		height: 150px;
 	}
+
+	/* loading styles are global in src/styles/_main.scss */
 </style>

@@ -1,28 +1,43 @@
 package com.example.skipro.model;
 
 import com.example.skipro.model.enums.Status;
+import jakarta.persistence.*;
 
-import java.io.Serializable;
 import java.util.*;
 
 /**
  * Represents a specialised team of {@link RescueWorker}s assigned to a particular ski {@link Track}.
- * <p>
- * A {@code RescueTeam} has a unique immutable {@link UUID} and stores operational metadata such as
- * the radio/voice {@link #communicationChannel}, a list of {@link #specialEquipment} carried, and the current
- * operational {@link #status}. Team membership is maintained in an internal {@link Set} to avoid duplicates;
- * helper methods ensure referential integrity by updating the {@code RescueWorker}'s back-reference.
- * </p>
  */
-public class RescueTeam implements Serializable {
-    private static final long serialVersionUID = 1L;
-    private final UUID id = UUID.randomUUID();
-    private final String name;
+@Entity
+@Table(name = "rescue_teams")
+public class RescueTeam {
+
+    @Id
+    @GeneratedValue
+    private UUID id;
+
+    private String name;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "track_id", nullable = false)
     private Track assignedTrack;
-    private Set<RescueWorker> members = new HashSet<>();
+
+    @OneToMany(mappedBy = "rescueTeam", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<RescueWorkerTeamAssignment> assignments = new HashSet<>();
+
     private String communicationChannel;
+
+    @ElementCollection
+    @CollectionTable(name = "rescue_team_special_equipment", joinColumns = @JoinColumn(name = "rescue_team_id"))
+    @Column(name = "equipment")
     private List<String> specialEquipment = new ArrayList<>();
+
+    @Enumerated(EnumType.STRING)
     private Status status = Status.PENDING;
+
+    protected RescueTeam() {
+        // for JPA
+    }
 
     /**
      * Constructs a new {@code RescueTeam} linked to the specified track.
@@ -48,6 +63,7 @@ public class RescueTeam implements Serializable {
         if (status != null) {
             this.status = status;
         }
+        // keep in-memory navigation consistent for existing code paths
         track.addRescueTeam(this);
     }
 
@@ -90,24 +106,20 @@ public class RescueTeam implements Serializable {
         this.status = status;
     }
 
-    public void addMember(RescueWorker member) {
-        if (member == null) {
-            throw new IllegalArgumentException("Member cannot be null.");
-        }
-        if (members.contains(member)) {
-            throw new IllegalArgumentException("Member is already part of this rescue team.");
-        }
-        members.add(member);
-        member.setRescueTeam(this);
-    }
-
+    /**
+     * Current members based on active assignments.
+     */
+    @Transient
     public Set<RescueWorker> getMembers() {
-        return Collections.unmodifiableSet(members);
+        return assignments.stream()
+                .filter(RescueWorkerTeamAssignment::isActive)
+                .map(RescueWorkerTeamAssignment::getRescueWorker)
+                .collect(java.util.stream.Collectors.toUnmodifiableSet());
     }
 
     @Override
     public String toString() {
-        return name + " on track " + assignedTrack.getName() +
+        return name + " on track " + (assignedTrack != null ? assignedTrack.getName() : "<track>") +
                 ", channel: " + communicationChannel +
                 ", status: " + status +
                 ", equipment: " + specialEquipment;

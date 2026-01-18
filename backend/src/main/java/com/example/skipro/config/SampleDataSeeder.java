@@ -67,6 +67,17 @@ public class SampleDataSeeder implements ApplicationRunner {
         Lesson l2 = new Lesson(LocalDateTime.now().plusDays(2).withHour(12).withMinute(0).withSecond(0).withNano(0), Duration.ofMinutes(90), i2);
         Lesson l3 = new Lesson(LocalDateTime.now().plusDays(3).withHour(9).withMinute(30).withSecond(0).withNano(0), Duration.ofMinutes(120), i3);
 
+        // finished lessons for Alex so "Finished Lessons" view has data
+        Lesson l4 = new Lesson(LocalDateTime.now().minusDays(3).withHour(11).withMinute(0).withSecond(0).withNano(0), Duration.ofMinutes(60), i1);
+        l4.enrollClient(c1);
+        l4.start();
+        l4.finish();
+
+        Lesson l5 = new Lesson(LocalDateTime.now().minusDays(1).withHour(14).withMinute(0).withSecond(0).withNano(0), Duration.ofMinutes(90), i2);
+        l5.enrollClient(c1);
+        l5.start();
+        l5.finish();
+
         // pre-enroll some clients so GUI has all 3 lists meaningful
         l1.enrollClient(c1);
         l2.enrollClient(c2);
@@ -74,5 +85,7 @@ public class SampleDataSeeder implements ApplicationRunner {
         lessonRepository.save(l1);
         lessonRepository.save(l2);
         lessonRepository.save(l3);
+        lessonRepository.save(l4);
+        lessonRepository.save(l5);
     }
 }

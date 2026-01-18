@@ -1,67 +1,56 @@
 package com.example.skipro.service;
 
-import com.example.skipro.model.*;
+import com.example.skipro.model.RescueTeam;
+import com.example.skipro.model.Track;
+import com.example.skipro.repository.RescueTeamRepository;
+import com.example.skipro.repository.TrackRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Service responsible for managing rescue teams.
- *
- * NOTE: This service is currently kept in-memory. If rescue teams are part of the final graded data set,
- * migrate them to JPA entities + repositories.
  */
 @Service
 public class RescueTeamService {
-    private final List<RescueTeam> rescueTeams = new ArrayList<>();
 
-    /**
-     * Creates a new {@link RescueTeam}, registers it in the system, and returns it.
-     *
-     * @param name  the team name
-     * @param track the track the team is responsible for
-     * @return the newly created team
-     */
-    public RescueTeam createTeam(String name, Track track) {
-        RescueTeam team = new RescueTeam(name, track, "default-channel", Collections.emptyList(), null);
-        rescueTeams.add(team);
-        return team;
+    private final RescueTeamRepository rescueTeamRepository;
+    private final TrackRepository trackRepository;
+
+    public RescueTeamService(
+            RescueTeamRepository rescueTeamRepository,
+            TrackRepository trackRepository
+    ) {
+        this.rescueTeamRepository = rescueTeamRepository;
+        this.trackRepository = trackRepository;
     }
 
-    /**
-     * Adds a rescue worker to the specified team.
-     *
-     * @param team   the team to which the worker will be added (must already be registered)
-     * @param worker the worker to add
-     * @throws IllegalArgumentException if the team is not registered in the system
-     */
-    public void addMemberToTeam(RescueTeam team, RescueWorker worker) {
-        if (!rescueTeams.contains(team)) {
-            throw new IllegalArgumentException("Team is not registered in the system.");
-        }
-        team.addMember(worker);
+    @Transactional
+    public RescueTeam createTeam(String name, UUID trackId) {
+        Track track = trackRepository.findById(trackId)
+                .orElseThrow(() -> new IllegalArgumentException("Track not found: " + trackId));
+
+        RescueTeam team = new RescueTeam(name, track, "default-channel", List.of(), null);
+        return rescueTeamRepository.save(team);
     }
 
-    /**
-     * Returns all teams assigned to a specific track.
-     *
-     * @param track the track
-     * @return list of teams responsible for the provided track
-     */
-    public List<RescueTeam> getTeamsForTrack(Track track) {
-        return rescueTeams.stream()
-                .filter(team -> team.getAssignedTrack().equals(track))
+    // Membership is handled by RescueWorkerTeamAssignmentService (history-preserving assignments)
+
+    @Transactional(readOnly = true)
+    public List<RescueTeam> getTeamsForTrack(UUID trackId) {
+        Track track = trackRepository.findById(trackId)
+                .orElseThrow(() -> new IllegalArgumentException("Track not found: " + trackId));
+
+        // no custom SQL: filter in-memory, but still based on persisted entities
+        return rescueTeamRepository.findAll().stream()
+                .filter(t -> t.getAssignedTrack().getId().equals(track.getId()))
                 .toList();
     }
 
-    /**
-     * Returns an unmodifiable list of all teams.
-     *
-     * @return list of all registered teams
-     */
+    @Transactional(readOnly = true)
     public List<RescueTeam> getAllTeams() {
-        return Collections.unmodifiableList(rescueTeams);
+        return rescueTeamRepository.findAll();
     }
 }

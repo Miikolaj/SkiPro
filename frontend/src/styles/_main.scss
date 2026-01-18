@@ -9,12 +9,67 @@ $background-color: #F8F8F8;
 $navbar-color: #3a9cc680;
 $font-color: #080D0C;
 
+:global(html) {
+  /* Slightly larger + responsive base for better readability on desktop and mobile. */
+  font-size: clamp(16px, 0.75vw + 14px, 18px);
+}
+
 :global(body) {
   font-family: $font-primary;
   background-color: $background-color;
   color: $font-color;
-  font-size: 16px;
+  font-size: 1rem;
+  line-height: 1.5;
   margin: 0;
+}
+
+:global(button),
+:global(input),
+:global(textarea),
+:global(select) {
+  font: inherit;
+}
+
+/* ---------- Global loading UI ---------- */
+:global(.app-loading) {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: rgba(248, 248, 248, 0.75);
+  backdrop-filter: blur(2px);
+  z-index: 9999;
+}
+
+:global(.app-loading__content) {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.9rem 1.1rem;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.10);
+}
+
+:global(.app-loading__spinner) {
+  width: 20px;
+  height: 20px;
+  border-radius: 999px;
+  border: 3px solid rgba(25, 118, 210, 0.22);
+  border-top-color: rgba(25, 118, 210, 0.95);
+  animation: app-spin 0.8s linear infinite;
+}
+
+:global(.app-loading__label) {
+  font-weight: 600;
+  color: #0f172a;
+}
+
+@keyframes app-spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 :global(::-webkit-scrollbar) {

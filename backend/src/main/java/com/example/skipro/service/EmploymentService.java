@@ -2,7 +2,7 @@ package com.example.skipro.service;
 
 import com.example.skipro.model.Employment;
 import com.example.skipro.repository.EmploymentRepository;
-import com.example.skipro.repository.InstructorRepository;
+import com.example.skipro.repository.EmployeeRepository;
 import com.example.skipro.repository.ResortRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,26 +15,26 @@ import java.util.UUID;
 public class EmploymentService {
     private final EmploymentRepository employmentRepository;
     private final ResortRepository resortRepository;
-    private final InstructorRepository instructorRepository;
+    private final EmployeeRepository employeeRepository;
 
     public EmploymentService(
             EmploymentRepository employmentRepository,
             ResortRepository resortRepository,
-            InstructorRepository instructorRepository
+            EmployeeRepository employeeRepository
     ) {
         this.employmentRepository = employmentRepository;
         this.resortRepository = resortRepository;
-        this.instructorRepository = instructorRepository;
+        this.employeeRepository = employeeRepository;
     }
 
     @Transactional
-    public Employment addEmployment(UUID resortId, UUID instructorId, LocalDate startDate) {
+    public Employment addEmployment(UUID resortId, UUID employeeId, LocalDate startDate) {
         var resort = resortRepository.findById(resortId)
                 .orElseThrow(() -> new IllegalArgumentException("Resort not found: " + resortId));
-        var instructor = instructorRepository.findById(instructorId)
-                .orElseThrow(() -> new IllegalArgumentException("Instructor not found: " + instructorId));
+        var employee = employeeRepository.findById(employeeId)
+                .orElseThrow(() -> new IllegalArgumentException("Employee not found: " + employeeId));
 
-        Employment employment = new Employment(resort, instructor, startDate);
+        Employment employment = new Employment(resort, employee, startDate);
         return employmentRepository.save(employment);
     }
 
@@ -49,7 +49,7 @@ public class EmploymentService {
     }
 
     @Transactional(readOnly = true)
-    public List<Employment> getEmploymentsForInstructor(UUID instructorId) {
-        return employmentRepository.findByInstructorId(instructorId);
+    public List<Employment> getEmploymentsForEmployee(UUID employeeId) {
+        return employmentRepository.findByEmployeeId(employeeId);
     }
 }

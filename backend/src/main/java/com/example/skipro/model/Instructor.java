@@ -2,7 +2,6 @@ package com.example.skipro.model;
 
 import jakarta.persistence.*;
 
-import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -16,12 +15,7 @@ import java.util.*;
  */
 @Entity
 @Table(name = "instructors")
-public class Instructor extends Employee implements Serializable {
-    private static final long serialVersionUID = 1L;
-
-    @Id
-    @GeneratedValue
-    private UUID id;
+public class Instructor extends Employee {
 
     private String qualificationLevel;
 
@@ -32,9 +26,6 @@ public class Instructor extends Employee implements Serializable {
 
     @OneToMany(mappedBy = "instructor")
     private Set<Lesson> lessons = new HashSet<>();
-
-    @OneToMany(mappedBy = "instructor", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Employment> employments = new HashSet<>();
 
     /**
      * Constructs an {@code Instructor} with the provided personal data, experience, and qualification.
@@ -52,6 +43,10 @@ public class Instructor extends Employee implements Serializable {
 
     protected Instructor() {
         super();
+    }
+
+    public UUID getId() {
+        return id;
     }
 
     public String getQualificationLevel() {
@@ -81,15 +76,7 @@ public class Instructor extends Employee implements Serializable {
         return Collections.unmodifiableSet(lessons);
     }
 
-    public void addEmployment(Employment employment) {
-        if (employment == null) return;
-        employments.add(employment);
-        employment.setInstructor(this);
-    }
-
-    public Set<Employment> getEmployments() {
-        return Collections.unmodifiableSet(employments);
-    }
+    // Employments are inherited from Employee
 
     public void setQualificationLevel(String qualificationLevel) {
         this.qualificationLevel = qualificationLevel;
@@ -103,9 +90,6 @@ public class Instructor extends Employee implements Serializable {
         this.lessons = lessons == null ? new HashSet<>() : lessons;
     }
 
-    public UUID getId() {
-        return id;
-    }
 
     @Override
     public String getRole() {
