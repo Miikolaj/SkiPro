@@ -67,7 +67,8 @@ public final class DtoMapper {
                 formatDuration(lesson.getDuration()),
                 lesson.getStatus() == null ? null : lesson.getStatus().name(),
                 toInstructorDto(lesson.getInstructor()),
-                clientsCount
+                clientsCount,
+                lesson.getCapacity()
         );
     }
 

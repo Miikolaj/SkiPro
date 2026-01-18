@@ -106,14 +106,24 @@ public class LessonController {
      * @param time         ISO_LOCAL_DATE_TIME formatted start time of the lesson
      * @param duration     ISO-8601 formatted duration (e.g., PT1H for 1 hour)
      * @param instructorId the instructor identifier
+     * @param capacity     optional max number of clients (must be >= 1)
      * @return HTTP 200 if creation succeeded
      */
     @PostMapping("/create")
-    public ResponseEntity<Void> create(@RequestParam String time, @RequestParam String duration, @RequestParam String instructorId) {
+    public ResponseEntity<Void> create(
+            @RequestParam String time,
+            @RequestParam String duration,
+            @RequestParam String instructorId,
+            @RequestParam(required = false) Integer capacity
+    ) {
         final UUID instructorUuid;
         try {
             instructorUuid = UUID.fromString(instructorId);
         } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        if (capacity != null && capacity < 1) {
             return ResponseEntity.badRequest().build();
         }
 
@@ -126,7 +136,8 @@ public class LessonController {
             lessonService.createLesson(
                     LocalDateTime.parse(time, DateTimeFormatter.ISO_LOCAL_DATE_TIME),
                     Duration.parse(duration),
-                    instructor
+                    instructor,
+                    capacity
             );
         } catch (Exception e) {
             // parsing errors etc.

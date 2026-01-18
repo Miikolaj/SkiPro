@@ -11,7 +11,7 @@ public record LessonTileDto(
         String duration,
         String status,
         InstructorDto instructor,
-        long clientsCount
+        long clientsCount,
+        int capacity
 ) {
 }
-

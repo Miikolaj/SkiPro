@@ -67,6 +67,16 @@ public class SampleDataSeeder implements ApplicationRunner {
         Lesson l2 = new Lesson(LocalDateTime.now().plusDays(2).withHour(12).withMinute(0).withSecond(0).withNano(0), Duration.ofMinutes(90), i2);
         Lesson l3 = new Lesson(LocalDateTime.now().plusDays(3).withHour(9).withMinute(30).withSecond(0).withNano(0), Duration.ofMinutes(120), i3);
 
+        // Capacity variants for testing
+        Lesson lCap2 = new Lesson(LocalDateTime.now().plusDays(4).withHour(9).withMinute(0).withSecond(0).withNano(0), Duration.ofMinutes(60), i1, 2);
+        Lesson lCap4 = new Lesson(LocalDateTime.now().plusDays(4).withHour(13).withMinute(0).withSecond(0).withNano(0), Duration.ofMinutes(90), i2, 4);
+
+        // A "full" lesson for testing enrollment failures (capacity=1) -> will be filled to full
+        Lesson lFull = new Lesson(LocalDateTime.now().plusDays(4).withHour(16).withMinute(0).withSecond(0).withNano(0), Duration.ofMinutes(60), i3, 1);
+
+        // Another full lesson (capacity=2) -> will be filled to full
+        Lesson lFull2 = new Lesson(LocalDateTime.now().plusDays(5).withHour(11).withMinute(0).withSecond(0).withNano(0), Duration.ofMinutes(60), i3, 2);
+
         // finished lessons for Alex so "Finished Lessons" view has data
         Lesson l4 = new Lesson(LocalDateTime.now().minusDays(3).withHour(11).withMinute(0).withSecond(0).withNano(0), Duration.ofMinutes(60), i1);
         l4.enrollClient(c1);
@@ -82,9 +92,23 @@ public class SampleDataSeeder implements ApplicationRunner {
         l1.enrollClient(c1);
         l2.enrollClient(c2);
 
+        // Fill the limited-capacity lessons to full
+        lFull.enrollClient(c2);            // capacity=1 -> FULL
+        lFull2.enrollClient(c2);           // capacity=2
+        lFull2.enrollClient(c3);           // capacity=2 -> FULL
+
+        // Partially fill some other capacity variants
+        lCap2.enrollClient(c3);            // 1/2
+        lCap4.enrollClient(c1);            // 1/4
+        lCap4.enrollClient(c2);            // 2/4
+
         lessonRepository.save(l1);
         lessonRepository.save(l2);
         lessonRepository.save(l3);
+        lessonRepository.save(lCap2);
+        lessonRepository.save(lCap4);
+        lessonRepository.save(lFull);
+        lessonRepository.save(lFull2);
         lessonRepository.save(l4);
         lessonRepository.save(l5);
     }

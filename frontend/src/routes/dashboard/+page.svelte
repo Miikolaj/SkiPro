@@ -4,18 +4,18 @@
 	import { successModal } from '$lib/stores/successModal';
 	import { onDestroy, onMount } from 'svelte';
 
-	let modalState: { visible: boolean; lessonNumber?: string | number, message: string } | null = null;
+	let modalState: { visible: boolean; lessonNumber?: string | number; message?: string } | null = null;
 	let modalTimeout: ReturnType<typeof setTimeout> | null = null;
 
 	const unsubscribe = successModal.subscribe(value => {
 		modalState = value;
 		if (modalState?.visible) {
-			clearTimeout(modalTimeout!);
+			if (modalTimeout) clearTimeout(modalTimeout);
 			modalTimeout = setTimeout(() => {
-				successModal.set({ visible: false, lessonNumber: undefined });
+				successModal.set({ visible: false, lessonNumber: undefined, message: undefined });
 			}, 5000);
 		} else {
-			clearTimeout(modalTimeout!);
+			if (modalTimeout) clearTimeout(modalTimeout);
 		}
 	});
 
@@ -23,10 +23,10 @@
 		const lessonNumber = localStorage.getItem('showSuccessModal');
 		const lessonCancel = localStorage.getItem('showCancelModal');
 		if (lessonNumber) {
-			successModal.set({ visible: true, lessonNumber, message: 'Successfully enrolled for Lesson' });
+			successModal.set({ visible: true, lessonNumber, message: 'You are enrolled in lesson' });
 			localStorage.removeItem('showSuccessModal');
 		} else if (lessonCancel) {
-			successModal.set({ visible: true, lessonNumber: lessonCancel, message: 'Successfully canceled enrollment for Lesson' });
+			successModal.set({ visible: true, lessonNumber: lessonCancel, message: 'Enrollment canceled for lesson' });
 			localStorage.removeItem('showCancelModal');
 		}
 	});
@@ -37,8 +37,10 @@
 	});
 
 	export let data: PageData;
-	$: activeUser = data.activeUser;
-	$: clientId = data.clientId;
+	let activeUser: string = '';
+	let clientId: string = '';
+	$: activeUser = String(data.activeUser ?? '');
+	$: clientId = String(data.clientId ?? '');
 </script>
 
 <div class="main">
@@ -47,7 +49,7 @@
 	</div>
 	{#if modalState?.visible}
 		<div class="modal-overlay">
-			<Modal lessonNumber={modalState.lessonNumber} message={modalState.message} />
+			<Modal lessonNumber={modalState.lessonNumber ?? ''} message={modalState.message ?? ''} />
 		</div>
 	{/if}
 	<div class="dashboard">

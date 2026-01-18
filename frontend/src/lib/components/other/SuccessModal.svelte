@@ -1,11 +1,11 @@
 <script lang="ts">
-	export let lessonNumber: string | number;
+	export let lessonNumber: string | number | undefined;
 	export let message: string = 'Placeholder';
 </script>
 
 <div class="modal">
 	<div>
-		<span class="modal-message">{message} #{lessonNumber}</span>
+		<span class="modal-message">{message}{#if lessonNumber !== undefined && lessonNumber !== ''} #{lessonNumber}{/if}</span>
 	</div>
 </div>
 

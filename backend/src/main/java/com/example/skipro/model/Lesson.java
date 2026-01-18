@@ -32,6 +32,12 @@ public class Lesson {
     @Enumerated(EnumType.STRING)
     private LessonStatus status;
 
+    /**
+     * Maximum number of clients that can be enrolled in this lesson.
+     * Used to support the business rule: a lesson can become "full".
+     */
+    private int capacity = 5;
+
     @ManyToOne(optional = false)
     @JoinColumn(name = "instructor_id", nullable = false)
     private Instructor instructor;
@@ -71,6 +77,17 @@ public class Lesson {
     }
 
     /**
+     * Constructs a lesson with a specific capacity (number of allowed participants).
+     */
+    public Lesson(LocalDateTime dateTime, Duration duration, Instructor instructor, int capacity) {
+        this(dateTime, duration, instructor);
+        if (capacity < 1) {
+            throw new IllegalArgumentException("Capacity must be >= 1");
+        }
+        this.capacity = capacity;
+    }
+
+    /**
      * Enroll a client to the lesson (if not already enrolled).
      */
     public void enrollClient(Client client) {
@@ -78,6 +95,12 @@ public class Lesson {
         if (status != LessonStatus.PLANNED) {
             throw new IllegalStateException("Only planned lessons allow enrollment.");
         }
+        // capacity check (don't block if the same client is re-submitted)
+        boolean alreadyEnrolled = clients.stream().anyMatch(c -> Objects.equals(c.getId(), client.getId()));
+        if (!alreadyEnrolled && clients.size() >= capacity) {
+            throw new IllegalStateException("Lesson is full.");
+        }
+
         if (clients.add(client)) {
             client.addLesson(this);
         }
@@ -145,6 +168,20 @@ public class Lesson {
         return Collections.unmodifiableSet(clients);
     }
 
+    public int getCapacity() {
+        return capacity;
+    }
+
+    public void setCapacity(int capacity) {
+        if (capacity < 1) {
+            throw new IllegalArgumentException("Capacity must be >= 1");
+        }
+        if (capacity < clients.size()) {
+            throw new IllegalStateException("Capacity cannot be less than current number of enrolled clients.");
+        }
+        this.capacity = capacity;
+    }
+
     @Override
     public String toString() {
         return "Lesson{" +
@@ -157,3 +194,4 @@ public class Lesson {
                 '}';
     }
 }
+

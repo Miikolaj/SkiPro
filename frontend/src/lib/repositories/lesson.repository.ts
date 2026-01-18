@@ -1,6 +1,7 @@
+import type { AxiosError } from 'axios';
 import apiClient from '$lib/config/axios.config';
 
-type InstructorDTO = {
+export type InstructorDTO = {
 	firstName: string;
 	lastName: string;
 	id: string;
@@ -8,84 +9,110 @@ type InstructorDTO = {
 	rating: number;
 };
 
-type LessonTileDTO = {
+export type LessonTileDTO = {
 	id: string;
 	date: string;
 	duration: string;
 	status: string;
 	instructor: InstructorDTO;
 	clientsCount: number;
+	capacity: number; // <-- nowy field z backendu
 };
 
-type ClientDTO = { firstName: string; lastName: string; id: string };
+export type ClientDTO = {
+	firstName: string;
+	lastName: string;
+	id: string;
+};
+
+// Spring często zwraca { message: "..."} albo "..."
+type SpringErrorBody =
+	| string
+	| {
+	message?: string;
+	error?: string;
+	status?: number;
+	path?: string;
+	timestamp?: string;
+};
+
+function getErrorMessage(error: unknown, fallback: string): string {
+	const err = error as AxiosError<SpringErrorBody> | undefined;
+
+	// brak odpowiedzi (np. network/CORS)
+	if (!err?.response) return fallback;
+
+	const data = err.response.data;
+
+	if (typeof data === 'string' && data.trim().length > 0) return data;
+
+	if (data && typeof data === 'object') {
+		// preferuj message
+		if (typeof data.message === 'string' && data.message.trim().length > 0) return data.message;
+		// fallback do error
+		if (typeof data.error === 'string' && data.error.trim().length > 0) return data.error;
+	}
+
+	// fallback na podstawie statusu
+	switch (err.response.status) {
+		case 400:
+			return 'Bad request';
+		case 401:
+			return 'Unauthorized';
+		case 403:
+			return 'Forbidden';
+		case 404:
+			return 'Not found';
+		case 409:
+			return 'Conflict';
+		case 500:
+			return 'Server error';
+		default:
+			return fallback;
+	}
+}
 
 export class LessonRepository {
 	async getLessonsForClient(clientId: string): Promise<LessonTileDTO[]> {
 		try {
-			const response = await apiClient.post('/lessons', null, {
-				params: { clientId }
-			});
+			const response = await apiClient.post('/lessons', null, { params: { clientId } });
 			return response.data as LessonTileDTO[];
 		} catch (error: unknown) {
-			const err = error as { response?: { data?: string } };
-			throw err?.response?.data || 'An error occurred while fetching lessons';
+			throw getErrorMessage(error, 'An error occurred while fetching enrolled lessons');
 		}
 	}
 
 	async getLessons(clientId: string): Promise<LessonTileDTO[]> {
 		try {
-			const response = await apiClient.post('/lessons/planned', null, {
-				params: { clientId }
-			});
+			const response = await apiClient.post('/lessons/planned', null, { params: { clientId } });
 			return response.data as LessonTileDTO[];
 		} catch (error: unknown) {
-			const err = error as { response?: { data?: string } };
-			throw err?.response?.data || 'An error occurred while fetching lessons';
+			throw getErrorMessage(error, 'An error occurred while fetching available lessons');
 		}
 	}
 
 	async getFinishedLessons(clientId: string): Promise<LessonTileDTO[]> {
 		try {
-			const response = await apiClient.post('/lessons/finished', null, {
-				params: { clientId }
-			});
+			const response = await apiClient.post('/lessons/finished', null, { params: { clientId } });
 			return response.data as LessonTileDTO[];
 		} catch (error: unknown) {
-			const err = error as { response?: { data?: string } };
-			throw err?.response?.data || 'An error occurred while fetching lessons';
+			throw getErrorMessage(error, 'An error occurred while fetching finished lessons');
 		}
 	}
 
-	async enrollLesson(lessonId: string, clientId: string): Promise<boolean> {
+	async enrollLesson(lessonId: string, clientId: string): Promise<void> {
 		try {
-			await apiClient.post('/lessons/enroll', null, {
-				params: { lessonId, clientId }
-			});
-			return true;
+			await apiClient.post('/lessons/enroll', null, { params: { lessonId, clientId } });
 		} catch (error: unknown) {
-			const err = error as { response?: { status?: number } };
-			if (err.response?.status === 404) {
-				throw 'Lesson or client not found';
-			}
-			throw 'An error occurred while enrolling in the lesson';
+			throw getErrorMessage(error, 'An error occurred while enrolling in the lesson');
 		}
 	}
 
-	async cancelEnrollment(lessonId: string, clientId: string) {
+	async cancelEnrollment(lessonId: string, clientId: string): Promise<void> {
 		try {
-			await apiClient.post('/lessons/remove', null, {
-				params: {
-					lessonId,
-					clientId
-				}
-			});
-			return true;
+			await apiClient.post('/lessons/remove', null, { params: { lessonId, clientId } });
 		} catch (error: unknown) {
-			const err = error as { response?: { status?: number } };
-			if (err.response?.status === 404) {
-				throw 'Lesson or client not found';
-			}
-			throw 'An error occurred while canceling the enrollment';
+			throw getErrorMessage(error, 'An error occurred while canceling the enrollment');
 		}
 	}
 
@@ -94,8 +121,7 @@ export class LessonRepository {
 			const response = await apiClient.get(`/lessons/${lessonId}/clients`);
 			return response.data as ClientDTO[];
 		} catch (error: unknown) {
-			const err = error as { response?: { data?: string } };
-			throw err?.response?.data || 'An error occurred while fetching lesson clients';
+			throw getErrorMessage(error, 'An error occurred while fetching lesson clients');
 		}
 	}
 }

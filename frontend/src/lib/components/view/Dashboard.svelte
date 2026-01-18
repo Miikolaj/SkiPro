@@ -2,30 +2,18 @@
 	import { onMount } from 'svelte';
 	import { Button, Lesson } from '$components';
 	import { faPersonSkiing, faList, faFlagCheckered, faRepeat, faArrowRightFromBracket } from '@fortawesome/free-solid-svg-icons';
-	import { LessonRepository } from '$lib/repositories/lesson.repository';
-
-	type LessonDto = {
-		id: string;
-		date: string;
-		duration: string;
-		clientsCount: string;
-		instructor: {
-			firstName: string;
-			lastName: string;
-			qualificationLevel: string;
-			rating: string;
-		};
-	};
+	import { LessonRepository, type LessonTileDTO } from '$lib/repositories/lesson.repository';
 
 	const lessonRepository = new LessonRepository();
 
 	let loading = true;
 	let activeSection: string = 'available';
-	let enrolledLessons: LessonDto[] = [];
-	let plannedLessons: LessonDto[] = [];
-	let finishedLessons: LessonDto[] = [];
-	export let clientId: string;
-	export let activeUser: string;
+	let enrolledLessons: LessonTileDTO[] = [];
+	let plannedLessons: LessonTileDTO[] = [];
+	let finishedLessons: LessonTileDTO[] = [];
+	// Make sure Dashboard props participate in Svelte typing as strings.
+	export let clientId: string = '';
+	export let activeUser: string = '';
 
 	onMount(async () => {
 		enrolledLessons = await lessonRepository.getLessonsForClient(clientId);
@@ -102,6 +90,7 @@
 						duration={lesson.duration}
 						id={lesson.id}
 						enrolledClients={lesson.clientsCount}
+						capacity={lesson.capacity}
 						firstName={lesson.instructor.firstName}
 						lastName={lesson.instructor.lastName}
 						qualificationLevel={lesson.instructor.qualificationLevel}

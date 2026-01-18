@@ -3,22 +3,22 @@
 	import { faStopwatch, faCalendarDays, faStar } from '@fortawesome/free-solid-svg-icons';
 	import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 	import { Fa } from 'svelte-fa';
-	import { LessonRepository } from '$lib/repositories/lesson.repository';
+	import { LessonRepository, type ClientDTO } from '$lib/repositories/lesson.repository';
 
 	const lessonRepository = new LessonRepository();
 
-	export let clients: { firstName: string; lastName: string; id: string }[] = [];
+	export let clients: ClientDTO[] = [];
 	export let currentUser: string = 'placeholder';
 	export let date: string = 'placeholder';
 	export let duration: string = 'placeholder';
 	export let id: string = 'placeholder';
-	export let enrolledClients: string = 'placeholder';
+	export let enrolledClients: number = 0;
+	export let capacity: number = 0;
 	export let firstName: string = 'placeholder';
 	export let lastName: string = 'placeholder';
 	export let qualificationLevel: string = 'placeholder';
-	export let rating: string = 'placeholder';
+	export let rating: number = 0;
 	export let section: string = 'available';
-	let maxClients: string = '5';
 	let expanded = false;
 
 	let clientsLoading = false;
@@ -72,7 +72,7 @@
 		// Don't toggle the card when clicking the action button.
 		event.stopPropagation();
 		if (actionLoading) return;
-		if (uniqueClients.length === 5 && section === 'available') return;
+		if (isFull && section === 'available') return;
 		(section === 'available' ? handleEnroll : section === 'enrolled' ? handleCancel : handleEnroll)();
 	}
 
@@ -114,20 +114,27 @@
 	}
 
 	$: uniqueClients = Array.from(new Map(clients.map(c => [c.id, c])).values());
-	$: progress = `${enrolledClients}/${maxClients}`;
-	$: isFull = uniqueClients.length === Number(maxClients);
+
+	$: safeCapacity = Number.isFinite(Number(capacity)) && Number(capacity) > 0 ? Number(capacity) : 0;
+	$: safeEnrolled = Number.isFinite(Number(enrolledClients)) && Number(enrolledClients) >= 0 ? Number(enrolledClients) : 0;
+	$: progress = safeCapacity > 0 ? `${safeEnrolled}/${safeCapacity}` : `${safeEnrolled}`;
+	$: isFull = safeCapacity > 0 ? safeEnrolled >= safeCapacity : false;
+	$: fullLabel = isFull ? 'Full' : '';
+
 	$: sectionClass = section === 'available' ? 'available' : section === 'enrolled' ? 'enrolled' : section === 'finished' ? 'finished' : 'default';
 	$: buttonLabel =
 		section === 'available'
 			? actionLoading
 				? 'Enrolling...'
-				: 'Enroll'
+				: isFull
+					? 'Lesson full'
+					: 'Enroll'
 			: section === 'enrolled'
 				? actionLoading
 					? 'Canceling...'
-					: 'Cancel Participation'
+					: 'Cancel enrollment'
 				: section === 'finished'
-					? 'Rate Instructor'
+					? 'Rate instructor'
 					: 'Action';
 </script>
 
@@ -182,19 +189,26 @@
 
 		<div class="right-bottom">
 			<div class="count">
-				<span class="left">Enrolled Clients: </span>
-				<span class="right">{progress}</span>
+				<span class="left">Enrolled clients:</span>
+				<span class="right">{progress}{#if fullLabel}<span class="full-pill">{fullLabel}</span>{/if}</span>
 			</div>
 			{#if expanded}
 				{#if clientsLoading}
-					<div class="client">Loading clients...</div>
+					<div class="client">Loading enrolled clients...</div>
 				{:else if clientsError}
-					<div class="client">{clientsError}</div>
+					<div class="client error">{clientsError}</div>
 				{:else}
 					{#if uniqueClients.length > 0}
 						{#each uniqueClients as c}
-							<div class="client{c.id === currentUser ? ' highlighted' : ''}">{c.firstName} {c.lastName}</div>
+							<div class="client">
+								{c.firstName} {c.lastName}
+								{#if c.id === currentUser}
+									<span class="you-tag">&nbsp;(You)</span>
+								{/if}
+							</div>
 						{/each}
+					{:else}
+						<div class="client">No enrolled clients yet.</div>
 					{/if}
 				{/if}
 			{/if}
@@ -244,11 +258,6 @@
 	.lesson-card.finished {
 		border-left: 4px solid #6d4c41;
 	}
-
-  .client.highlighted {
-    font-weight: bold;
-    color: #1976d2;
-  }
 
   .top-section {
     display: flex;
@@ -384,5 +393,25 @@
 	}
 	.chevron.open {
 		transform: rotate(180deg);
+	}
+
+	.full-pill {
+		margin-left: 0.5rem;
+		font-size: 0.75rem;
+		font-weight: 800;
+		padding: 1px 8px;
+		border-radius: 999px;
+		background: rgba(244, 67, 54, 0.10);
+		border: 1px solid rgba(244, 67, 54, 0.25);
+		color: #b71c1c;
+	}
+
+	.client.error {
+		color: #b71c1c;
+		font-weight: 600;
+	}
+
+	.you-tag {
+		font-weight: 500;
 	}
 </style>

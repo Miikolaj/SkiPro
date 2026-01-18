@@ -61,6 +61,16 @@ public class LessonService {
     }
 
     @Transactional
+    public void createLesson(LocalDateTime time, Duration dur, Instructor instructor, Integer capacity) {
+        if (capacity == null) {
+            createLesson(time, dur, instructor);
+            return;
+        }
+        Lesson l = new Lesson(time, dur, instructor, capacity);
+        lessonRepository.save(l);
+    }
+
+    @Transactional
     public boolean removeClientFromLesson(UUID lessonId, UUID clientId) {
         if (lessonId == null || clientId == null) return false;
 
