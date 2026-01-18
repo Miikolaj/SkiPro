@@ -4,7 +4,6 @@ import com.example.skipro.config.AppJwtProperties;
 import com.example.skipro.model.Client;
 import com.example.skipro.repository.ClientRepository;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -13,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
-import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -60,10 +58,19 @@ public class ClientService {
         String[] parts = fullName.split("\\.", 2);
         if (parts.length != 2) return null;
 
-        Optional<Client> clientOpt = clientRepository.findByFirstNameIgnoreCaseAndLastNameIgnoreCase(parts[0], parts[1]);
-        if (clientOpt.isEmpty()) return null;
+        String firstName = parts[0].trim();
+        String lastName = parts[1].trim();
+        if (firstName.isEmpty() || lastName.isEmpty()) return null;
 
-        Client client = clientOpt.get();
+        Client client = clientRepository.findAll().stream()
+                .filter(c -> c.getFirstName() != null && c.getLastName() != null)
+                .filter(c -> c.getFirstName().equalsIgnoreCase(firstName)
+                        && c.getLastName().equalsIgnoreCase(lastName))
+                .findFirst()
+                .orElse(null);
+
+        if (client == null) return null;
+
         String stored = client.getPassword();
         if (stored == null) return null;
 

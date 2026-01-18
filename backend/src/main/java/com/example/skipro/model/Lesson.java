@@ -68,6 +68,9 @@ public class Lesson {
         if (dateTime == null || duration == null || instructor == null) {
             throw new IllegalArgumentException("Lesson data and instructor must not be null");
         }
+        if (duration.isZero() || duration.isNegative()) {
+            throw new IllegalArgumentException("Lesson duration must be positive");
+        }
         this.dateTime = dateTime;
         this.duration = duration;
         this.instructor = instructor;
@@ -197,4 +200,3 @@ public class Lesson {
                 '}';
     }
 }
-

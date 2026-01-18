@@ -5,6 +5,7 @@ import com.example.skipro.model.enums.Experience;
 import com.example.skipro.model.enums.Status;
 import com.example.skipro.model.enums.TrackDifficulty;
 import com.example.skipro.repository.*;
+import com.example.skipro.service.RatingService;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -32,6 +33,7 @@ public class SampleDataSeeder implements ApplicationRunner {
     private final EquipmentRepository equipmentRepository;
     private final RentalClerkRepository rentalClerkRepository;
     private final RentalRepository rentalRepository;
+    private final RatingService ratingService;
 
     public SampleDataSeeder(
             ClientRepository clientRepository,
@@ -45,7 +47,8 @@ public class SampleDataSeeder implements ApplicationRunner {
             EmploymentRepository employmentRepository,
             EquipmentRepository equipmentRepository,
             RentalClerkRepository rentalClerkRepository,
-            RentalRepository rentalRepository
+            RentalRepository rentalRepository,
+            RatingService ratingService
     ) {
         this.clientRepository = clientRepository;
         this.instructorRepository = instructorRepository;
@@ -59,6 +62,7 @@ public class SampleDataSeeder implements ApplicationRunner {
         this.equipmentRepository = equipmentRepository;
         this.rentalClerkRepository = rentalClerkRepository;
         this.rentalRepository = rentalRepository;
+        this.ratingService = ratingService;
     }
 
     @Override
@@ -233,5 +237,12 @@ public class SampleDataSeeder implements ApplicationRunner {
         lessonRepository.save(lFull2);
         lessonRepository.save(l4);
         lessonRepository.save(l5);
+
+        // --- Ratings demo (only after FINISHED, only participant, only once) ---
+        // Alex rates instructor from finished lesson l4
+        ratingService.rateInstructor(l4.getId(), c1.getId(), 5);
+
+        // second attempt should be rejected (kept commented as a reminder)
+        // ratingService.rateInstructor(l4.getId(), c1.getId(), 4);
     }
 }

@@ -45,6 +45,11 @@ public class LessonService {
             return false;
         }
 
+        // prevent time collisions: client cannot be enrolled in overlapping lessons
+        if (hasClientTimeCollision(client, lesson)) {
+            return false;
+        }
+
         try {
             lesson.enrollClient(client);
             lessonRepository.save(lesson);
@@ -52,6 +57,29 @@ public class LessonService {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    private boolean hasClientTimeCollision(Client client, Lesson target) {
+        if (client == null || target == null) return false;
+
+        LocalDateTime targetStart = target.getDateTime();
+        Duration targetDuration = target.getDuration();
+        if (targetStart == null || targetDuration == null) return false;
+        LocalDateTime targetEnd = targetStart.plus(targetDuration);
+
+        return client.getLessons().stream()
+                // ignore the same lesson (defensive)
+                .filter(l -> l.getId() != null && !l.getId().equals(target.getId()))
+                // consider only active/planned lessons
+                .filter(l -> l.getStatus() == LessonStatus.PLANNED || l.getStatus() == LessonStatus.IN_PROGRESS)
+                .anyMatch(existing -> {
+                    LocalDateTime start = existing.getDateTime();
+                    Duration dur = existing.getDuration();
+                    if (start == null || dur == null) return false;
+                    LocalDateTime end = start.plus(dur);
+                    // overlap check: [start,end) intersects [targetStart,targetEnd)
+                    return start.isBefore(targetEnd) && targetStart.isBefore(end);
+                });
     }
 
     @Transactional
