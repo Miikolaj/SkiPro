@@ -26,6 +26,10 @@ public class Equipment {
 
     private boolean inUse = false;
 
+    /** PDF: technical condition (e.g., NEW/GOOD/USED/DAMAGED). */
+    @Column(nullable = false)
+    private String technicalCondition = "GOOD";
+
     /**
      * Constructs a new {@code Equipment} instance with the given attributes.
      *
@@ -38,8 +42,25 @@ public class Equipment {
     }
 
     public Equipment(String name, String size, int cost) {
+        this(name, size, "GOOD", cost);
+    }
+
+    public Equipment(String name, String size, String technicalCondition, int cost) {
+        if (name == null || name.isBlank()) {
+            throw new IllegalArgumentException("Equipment name cannot be null/blank");
+        }
+        if (size == null || size.isBlank()) {
+            throw new IllegalArgumentException("Equipment size cannot be null/blank");
+        }
+        if (technicalCondition == null || technicalCondition.isBlank()) {
+            throw new IllegalArgumentException("technicalCondition cannot be null/blank");
+        }
+        if (cost < 0) {
+            throw new IllegalArgumentException("cost cannot be negative");
+        }
         this.name = name;
         this.size = size;
+        this.technicalCondition = technicalCondition;
         this.cost = cost;
     }
 
@@ -65,6 +86,17 @@ public class Equipment {
 
     public int getCost() {
         return cost;
+    }
+
+    public String getTechnicalCondition() {
+        return technicalCondition;
+    }
+
+    public void setTechnicalCondition(String technicalCondition) {
+        if (technicalCondition == null || technicalCondition.isBlank()) {
+            throw new IllegalArgumentException("technicalCondition cannot be null/blank");
+        }
+        this.technicalCondition = technicalCondition;
     }
 
     @Override

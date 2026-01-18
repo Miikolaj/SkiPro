@@ -28,6 +28,11 @@ public class Rental {
     private RentalClerk rentalClerk;
 
     private LocalDateTime startDate;
+
+    /** PDF: planned return date. */
+    private LocalDateTime plannedReturnDate;
+
+    /** Actual return date/time (nullable until returned). */
     private LocalDateTime endDate;
 
     @Enumerated(EnumType.STRING)
@@ -54,6 +59,8 @@ public class Rental {
         this.client = client;
         this.rentalClerk = rentalClerk;
         this.startDate = LocalDateTime.now();
+        // simple default: planned return next day (can be overridden by service)
+        this.plannedReturnDate = this.startDate.plusDays(1);
         this.status = RentalStatus.ACTIVE;
         this.rentalCost = equipment.getCost();
     }
@@ -70,6 +77,16 @@ public class Rental {
         this.endDate = LocalDateTime.now();
         this.status = RentalStatus.RETURNED;
         this.equipment.setInUse(false);
+    }
+
+    public void setPlannedReturnDate(LocalDateTime plannedReturnDate) {
+        if (plannedReturnDate == null) {
+            throw new IllegalArgumentException("plannedReturnDate cannot be null");
+        }
+        if (plannedReturnDate.isBefore(startDate)) {
+            throw new IllegalArgumentException("plannedReturnDate cannot be before startDate");
+        }
+        this.plannedReturnDate = plannedReturnDate;
     }
 
     public UUID getId() {
@@ -90,6 +107,10 @@ public class Rental {
 
     public LocalDateTime getStartDate() {
         return startDate;
+    }
+
+    public LocalDateTime getPlannedReturnDate() {
+        return plannedReturnDate;
     }
 
     public LocalDateTime getEndDate() {

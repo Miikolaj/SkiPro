@@ -19,14 +19,21 @@ import java.util.*;
  * </p>
  */
 @Entity
-@Table(name = "resorts")
+@Table(name = "resorts",
+        uniqueConstraints = {
+                @UniqueConstraint(name = "uk_resort_name", columnNames = {"name"})
+        }
+)
 public class Resort {
 
     @Id
     @GeneratedValue
     private UUID id;
 
+    @Column(nullable = false, unique = true)
     private String name;
+
+    @Column(nullable = false)
     private String location;
 
     private final LocalTime openingHour = LocalTime.of(8, 0);
@@ -49,6 +56,12 @@ public class Resort {
     }
 
     public Resort(String name, String location) {
+        if (name == null || name.isBlank()) {
+            throw new IllegalArgumentException("Resort name cannot be null/blank");
+        }
+        if (location == null || location.isBlank()) {
+            throw new IllegalArgumentException("Resort location cannot be null/blank");
+        }
         this.name = name;
         this.location = location;
     }

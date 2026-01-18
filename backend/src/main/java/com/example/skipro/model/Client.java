@@ -3,6 +3,8 @@ package com.example.skipro.model;
 import com.example.skipro.model.enums.Experience;
 import jakarta.persistence.*;
 
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.*;
 
 /**
@@ -32,37 +34,61 @@ public class Client {
 
     private String firstName;
     private String lastName;
+
+    @Column(nullable = false)
+    private LocalDate birthDate;
+
+    /** Age is derived from {@link #birthDate}. Kept as convenience value (not persisted). */
+    @Transient
     private int age;
 
     @Enumerated(EnumType.STRING)
     private Experience experience;
 
     /** Stored as BCrypt hash (never store plaintext in production). */
-    @Column(name = "password_hash")
+    @Column(name = "password_hash", nullable = false)
     private String password;
 
     @ManyToMany(mappedBy = "clients")
     private Set<Lesson> lessons = new HashSet<>();
+
+    /** Client rental history (PDF point 8). */
+    @OneToMany(mappedBy = "client")
+    private Set<Rental> rentals = new HashSet<>();
 
     protected Client() {
         // for JPA
     }
 
     /**
-     * Constructs a new {@code Client} with the given personal details and experience level.
-     *
-     * @param firstName  client’s first name
-     * @param lastName   client’s last name
-     * @param age        client’s age in years
-     * @param experience client’s skiing experience level
-     * @param password   plain‑text password for authentication
+     * Preferred constructor (PDF-compliant): birthDate -> age derived.
      */
-    public Client(String firstName, String lastName, int age, Experience experience, String password) {
+    public Client(String firstName, String lastName, LocalDate birthDate, Experience experience, String password) {
         this.firstName = firstName;
         this.lastName = lastName;
-        this.age = age;
+        this.birthDate = birthDate;
         this.experience = experience;
         this.password = password;
+        this.age = calculateAge();
+    }
+
+    /**
+     * Backward-compatible constructor (kept so existing code compiles)  it approximates birthDate.
+     */
+    public Client(String firstName, String lastName, int age, Experience experience, String password) {
+        this(firstName, lastName, LocalDate.now().minusYears(age), experience, password);
+    }
+
+    @PostLoad
+    @PostPersist
+    @PostUpdate
+    void updateDerivedFields() {
+        this.age = calculateAge();
+    }
+
+    private int calculateAge() {
+        if (birthDate == null) return 0;
+        return Period.between(birthDate, LocalDate.now()).getYears();
     }
 
     void addLesson(Lesson lesson) {
@@ -89,12 +115,20 @@ public class Client {
         return lastName;
     }
 
+    public LocalDate getBirthDate() {
+        return birthDate;
+    }
+
     public int getAge() {
         return age;
     }
 
     public Experience getExperience() {
         return experience;
+    }
+
+    public Set<Rental> getRentals() {
+        return Collections.unmodifiableSet(rentals);
     }
 
     public String getPassword() {

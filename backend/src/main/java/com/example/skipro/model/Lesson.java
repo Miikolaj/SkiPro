@@ -123,6 +123,9 @@ public class Lesson {
     public void start() {
         if (status != LessonStatus.PLANNED)
             throw new IllegalStateException("Only planned lessons can be started.");
+        if (clients == null || clients.isEmpty()) {
+            throw new IllegalStateException("Lesson cannot be started without at least one client enrolled.");
+        }
         status = LessonStatus.IN_PROGRESS;
     }
 

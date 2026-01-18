@@ -11,6 +11,7 @@ import com.example.skipro.util.DtoMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -39,7 +40,8 @@ public class RentalController {
     public ResponseEntity<UUID> create(
             @RequestParam String clientId,
             @RequestParam String equipmentId,
-            @RequestParam String rentalClerkId
+            @RequestParam String rentalClerkId,
+            @RequestParam(required = false) String plannedReturnDate
     ) {
         UUID cId;
         UUID eId;
@@ -49,6 +51,15 @@ public class RentalController {
             eId = UUID.fromString(equipmentId);
             rcId = UUID.fromString(rentalClerkId);
         } catch (IllegalArgumentException ex) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        LocalDateTime planned;
+        try {
+            planned = plannedReturnDate == null || plannedReturnDate.isBlank()
+                    ? LocalDateTime.now().plusDays(1)
+                    : LocalDateTime.parse(plannedReturnDate);
+        } catch (Exception ex) {
             return ResponseEntity.badRequest().build();
         }
 
@@ -62,7 +73,7 @@ public class RentalController {
         }
 
         try {
-            Rental rental = rentalService.rentEquipment(client, equipment, rcId);
+            Rental rental = rentalService.rentEquipment(client, equipment, planned, rcId);
             return ResponseEntity.ok(rental.getId());
         } catch (IllegalArgumentException | IllegalStateException ex) {
             return ResponseEntity.badRequest().build();

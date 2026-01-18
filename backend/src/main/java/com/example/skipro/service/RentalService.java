@@ -34,11 +34,15 @@ public class RentalService {
 
     /**
      * Rents the specified equipment to the given client and records which clerk processed it.
+     * PDF-compliant: caller provides plannedReturnDate ("planowana data zwrotu").
      */
     @Transactional
-    public Rental rentEquipment(Client client, Equipment equipment, UUID rentalClerkId) {
+    public Rental rentEquipment(Client client, Equipment equipment, java.time.LocalDateTime plannedReturnDate, UUID rentalClerkId) {
         if (client == null || equipment == null) {
             throw new IllegalArgumentException("Client and equipment must not be null");
+        }
+        if (plannedReturnDate == null) {
+            throw new IllegalArgumentException("plannedReturnDate must not be null");
         }
         if (rentalClerkId == null) {
             throw new IllegalArgumentException("rentalClerkId must not be null");
@@ -53,6 +57,8 @@ public class RentalService {
         }
 
         Rental rental = new Rental(equipment, client, clerk);
+        rental.setPlannedReturnDate(plannedReturnDate);
+
         equipment.setInUse(true);
         equipmentRepository.save(equipment);
 

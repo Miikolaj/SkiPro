@@ -15,16 +15,22 @@ import java.util.*;
  * </p>
  */
 @Entity
-@Table(name = "tracks")
+@Table(name = "tracks",
+        uniqueConstraints = {
+                @UniqueConstraint(name = "uk_track_resort_name", columnNames = {"resort_id", "name"})
+        }
+)
 public class Track {
 
     @Id
     @GeneratedValue
     private UUID id;
 
+    @Column(nullable = false)
     private String name;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private TrackDifficulty difficulty;
 
     private double lenghtKm;  // in kilometers
@@ -53,7 +59,14 @@ public class Track {
         if (resort == null) {
             throw new IllegalArgumentException("Track must be associated with a resort.");
         }
-        if (lenghtKm <= 0.1 || lenghtKm > 10) {
+        if (name == null || name.isBlank()) {
+            throw new IllegalArgumentException("Track name cannot be null/blank");
+        }
+        if (difficulty == null) {
+            throw new IllegalArgumentException("Track difficulty cannot be null");
+        }
+        // PDF: 0.1 km  10 km (inclusive)
+        if (lenghtKm < 0.1 || lenghtKm > 10) {
             throw new IllegalArgumentException("Track length must be between 0.1 and 10 kilometers.");
         }
         this.name = name;
