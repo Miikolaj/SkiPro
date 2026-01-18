@@ -1,11 +1,13 @@
 package com.example.skipro.controller;
 
+import com.example.skipro.dto.ClientDto;
+import com.example.skipro.dto.LessonTileDto;
 import com.example.skipro.model.Instructor;
 import com.example.skipro.service.InstructorService;
 import com.example.skipro.service.LessonService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import com.example.skipro.util.LessonMapper;
+import com.example.skipro.util.DtoMapper;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -36,13 +38,9 @@ public class LessonController {
      * @return list of lessons represented as maps suitable for JSON serialization
      */
     @PostMapping("/planned")
-    public List<Map<String, Object>> getLessons(@RequestParam String clientId) {
+    public List<LessonTileDto> getLessons(@RequestParam String clientId) {
         return lessonService.getPlannedLessonsWithoutClient(UUID.fromString(clientId)).stream()
-                .map(lesson -> {
-                    Map<String, Object> map = LessonMapper.lessonToTileMap(lesson);
-                    map.put("clientsCount", lessonService.countClients(lesson.getId()));
-                    return map;
-                })
+                .map(lesson -> DtoMapper.toLessonTileDto(lesson, lessonService.countClients(lesson.getId())))
                 .toList();
     }
 
@@ -53,13 +51,9 @@ public class LessonController {
      * @return list of enrolled lessons represented as maps
      */
     @PostMapping
-    public List<Map<String, Object>> getEnrolledLessons(@RequestParam String clientId) {
+    public List<LessonTileDto> getEnrolledLessons(@RequestParam String clientId) {
         return lessonService.getPlannedLessonsForClient(UUID.fromString(clientId)).stream()
-                .map(lesson -> {
-                    Map<String, Object> map = LessonMapper.lessonToTileMap(lesson);
-                    map.put("clientsCount", lessonService.countClients(lesson.getId()));
-                    return map;
-                })
+                .map(lesson -> DtoMapper.toLessonTileDto(lesson, lessonService.countClients(lesson.getId())))
                 .toList();
     }
 
@@ -70,13 +64,9 @@ public class LessonController {
      * @return list of finished lessons represented as maps
      */
     @PostMapping("/finished")
-    public List<Map<String, Object>> getFinishedLessons(@RequestParam String clientId) {
+    public List<LessonTileDto> getFinishedLessons(@RequestParam String clientId) {
         return lessonService.getFinishedLessonsForClient(UUID.fromString(clientId)).stream()
-                .map(lesson -> {
-                    Map<String, Object> map = LessonMapper.lessonToTileMap(lesson);
-                    map.put("clientsCount", lessonService.countClients(lesson.getId()));
-                    return map;
-                })
+                .map(lesson -> DtoMapper.toLessonTileDto(lesson, lessonService.countClients(lesson.getId())))
                 .toList();
     }
 
@@ -180,7 +170,7 @@ public class LessonController {
      * Lazy-load: returns clients enrolled in a given lesson.
      */
     @GetMapping("/{lessonId}/clients")
-    public ResponseEntity<List<Map<String, Object>>> getLessonClients(@PathVariable String lessonId) {
+    public ResponseEntity<List<ClientDto>> getLessonClients(@PathVariable String lessonId) {
         final UUID lessonUuid;
         try {
             lessonUuid = UUID.fromString(lessonId);
@@ -192,14 +182,8 @@ public class LessonController {
             return ResponseEntity.notFound().build();
         }
 
-        List<Map<String, Object>> clients = lessonService.getLessonClients(lessonUuid).stream()
-                .map(c -> {
-                    Map<String, Object> clientMap = new HashMap<>();
-                    clientMap.put("firstName", c.getFirstName());
-                    clientMap.put("lastName", c.getLastName());
-                    clientMap.put("id", c.getId());
-                    return clientMap;
-                })
+        List<ClientDto> clients = lessonService.getLessonClients(lessonUuid).stream()
+                .map(DtoMapper::toClientDto)
                 .toList();
 
         return ResponseEntity.ok(clients);

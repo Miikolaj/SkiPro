@@ -108,4 +108,9 @@ public class RentalService {
     public Rental getRentalById(UUID id) {
         return id == null ? null : rentalRepository.findById(id).orElse(null);
     }
+
+    @Transactional(readOnly = true)
+    public List<Rental> getAllRentals() {
+        return rentalRepository.findAll();
+    }
 }

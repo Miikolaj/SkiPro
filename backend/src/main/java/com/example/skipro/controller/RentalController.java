@@ -1,14 +1,17 @@
 package com.example.skipro.controller;
 
+import com.example.skipro.dto.RentalDto;
 import com.example.skipro.model.Client;
 import com.example.skipro.model.Equipment;
 import com.example.skipro.model.Rental;
 import com.example.skipro.service.ClientService;
 import com.example.skipro.service.EquipmentService;
 import com.example.skipro.service.RentalService;
+import com.example.skipro.util.DtoMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -85,5 +88,12 @@ public class RentalController {
         } catch (IllegalStateException ex) {
             return ResponseEntity.badRequest().build();
         }
+    }
+
+    @GetMapping
+    public List<RentalDto> getAll() {
+        return rentalService.getAllRentals().stream()
+                .map(DtoMapper::toRentalDto)
+                .toList();
     }
 }

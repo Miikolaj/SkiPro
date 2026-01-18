@@ -5,43 +5,23 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5a7065e9-6a26-409e-a23b-7d558f6776fa" name="Changes" comment="Saving CHanges">
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/example/skipro/controller/EmploymentController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/example/skipro/controller/RentalClerkController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/example/skipro/controller/RentalController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/example/skipro/controller/RescueAssignmentsController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/example/skipro/model/RescueWorkerTeamAssignment.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/example/skipro/repository/EmployeeRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/example/skipro/repository/RentalClerkRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/example/skipro/repository/RescueTeamRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/example/skipro/repository/RescueWorkerRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/example/skipro/repository/RescueWorkerTeamAssignmentRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/example/skipro/service/RescueWorkerTeamAssignmentService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/example/skipro/config/DataSeeder.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/example/skipro/config/DataSeeder.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/example/skipro/config/SampleDataSeeder.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/example/skipro/config/SampleDataSeeder.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/example/skipro/controller/ClientController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/example/skipro/controller/ClientController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/example/skipro/model/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/example/skipro/model/Client.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/example/skipro/model/Employee.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/example/skipro/model/Employee.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/example/skipro/model/Employment.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/example/skipro/model/Employment.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/example/skipro/model/Equipment.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/example/skipro/model/Equipment.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/example/skipro/model/Instructor.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/example/skipro/model/Instructor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/example/skipro/model/Lesson.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/example/skipro/model/Lesson.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/example/skipro/model/Rental.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/example/skipro/model/Rental.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/example/skipro/model/RentalClerk.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/example/skipro/model/RentalClerk.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/example/skipro/model/RescueTeam.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/example/skipro/model/RescueTeam.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/example/skipro/model/RescueWorker.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/example/skipro/model/RescueWorker.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/example/skipro/model/Resort.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/example/skipro/model/Resort.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/example/skipro/model/Track.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/example/skipro/model/Track.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/example/skipro/repository/EmploymentRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/example/skipro/repository/EmploymentRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/example/skipro/service/EmploymentService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/example/skipro/service/EmploymentService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/example/skipro/service/RentalClerkService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/example/skipro/service/RentalClerkService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/example/skipro/controller/EmployeeController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/example/skipro/controller/EquipmentController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/example/skipro/controller/InstructorController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/example/skipro/controller/RescueTeamController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/example/skipro/controller/RescueWorkerController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/example/skipro/controller/ResortController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/example/skipro/controller/TrackController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/example/skipro/dto/ClientDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/example/skipro/dto/EquipmentDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/example/skipro/dto/InstructorDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/example/skipro/dto/LessonDetailsDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/example/skipro/dto/LessonTileDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/example/skipro/service/EmployeeService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/example/skipro/util/DtoMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/example/skipro/controller/LessonController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/example/skipro/controller/LessonController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/example/skipro/controller/RentalController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/example/skipro/controller/RentalController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/example/skipro/service/RentalService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/example/skipro/service/RentalService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/example/skipro/service/RescueTeamService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/example/skipro/service/RescueTeamService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/example/skipro/service/RescueWorkerService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/example/skipro/service/RescueWorkerService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/lib/components/other/Lesson.svelte" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/lib/components/other/Lesson.svelte" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/lib/components/other/SuccessModal.svelte" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/lib/components/other/SuccessModal.svelte" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/lib/components/view/Dashboard.svelte" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/lib/components/view/Dashboard.svelte" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/styles/_main.scss" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/styles/_main.scss" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -117,43 +97,43 @@
   <component name="ProjectViewState">
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Gradle.SkiProV2 [:backend.Main.main()].executor": "Run",
-    "Gradle.SkiProV2 [:frontend.AppGUI.main()].executor": "Run",
-    "Gradle.SkiProV2 [:frontend.ClientView.main()].executor": "Run",
-    "Gradle.SkiProV2 [:frontend.Main.main()].executor": "Run",
-    "Gradle.SkiProV2 [buildDependents].executor": "Run",
-    "Gradle.SkiProV2 [build].executor": "Run",
-    "Gradle.SkiProV2 [jar].executor": "Run",
-    "Gradle.SkiProV2 [run].executor": "Run",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
-    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
-    "git-widget-placeholder": "master",
-    "javascript.preferred.runtime.type.id": "node",
-    "junie.onboarding.icon.badge.shown": "true",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "F:/Projects/IdeaProjects/SkiProV2",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Global Libraries",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.29306722",
-    "run.code.analysis.last.selected.profile": "pProject Default",
-    "settings.editor.selected.configurable": "reference.settingsdialog.project.gradle",
-    "to.speed.mode.migration.done": "true",
-    "ts.external.directory.path": "C:\\Users\\mkowa\\AppData\\Local\\Programs\\WebStorm\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Gradle.SkiProV2 [:backend.Main.main()].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.SkiProV2 [:frontend.AppGUI.main()].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.SkiProV2 [:frontend.ClientView.main()].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.SkiProV2 [:frontend.Main.main()].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.SkiProV2 [buildDependents].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.SkiProV2 [build].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.SkiProV2 [jar].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.SkiProV2 [run].executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;javascript.preferred.runtime.type.id&quot;: &quot;node&quot;,
+    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;F:/Projects/IdeaProjects/SkiProV2&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Global Libraries&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.29306722&quot;,
+    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settingsdialog.project.gradle&quot;,
+    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;C:\\Users\\mkowa\\AppData\\Local\\Programs\\WebStorm\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CreateClassDialog.RecentsKey">
       <recent name="model" />
@@ -283,6 +263,7 @@
       <workItem from="1768148195391" duration="4317000" />
       <workItem from="1768299160126" duration="10000" />
       <workItem from="1768678513653" duration="3686000" />
+      <workItem from="1768744022123" duration="605000" />
     </task>
     <task id="LOCAL-00001" summary="Merged">
       <option name="closed" value="true" />

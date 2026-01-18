@@ -1,7 +1,9 @@
 package com.example.skipro.controller;
 
+import com.example.skipro.dto.RentalClerkDto;
 import com.example.skipro.model.RentalClerk;
 import com.example.skipro.service.RentalClerkService;
+import com.example.skipro.util.DtoMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -58,8 +60,10 @@ public class RentalClerkController {
      * Returns all rental clerks.
      */
     @GetMapping
-    public List<RentalClerk> getAll() {
-        return rentalClerkService.getAllRentalClerks();
+    public List<RentalClerkDto> getAll() {
+        return rentalClerkService.getAllRentalClerks().stream()
+                .map(DtoMapper::toRentalClerkDto)
+                .toList();
     }
 
     /**
