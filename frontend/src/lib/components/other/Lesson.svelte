@@ -112,10 +112,10 @@
 
 	$: uniqueClients = Array.from(new Map(clients.map(c => [c.id, c])).values());
 
-	$: safeCapacity = Number.isFinite(Number(capacity)) && Number(capacity) > 0 ? Number(capacity) : 0;
-	$: safeEnrolled = Number.isFinite(Number(enrolledClients)) && Number(enrolledClients) >= 0 ? Number(enrolledClients) : 0;
+	$: safeCapacity = Math.max(0, capacity);
+	$: safeEnrolled = Math.max(0, enrolledClients);
 	$: progress = safeCapacity > 0 ? `${safeEnrolled}/${safeCapacity}` : `${safeEnrolled}`;
-	$: isFull = safeCapacity > 0 ? safeEnrolled >= safeCapacity : false;
+	$: isFull = safeCapacity > 0 && safeEnrolled >= safeCapacity;
 	$: fullLabel = isFull ? 'Full' : '';
 
 	$: sectionClass = section === 'available' ? 'available' : section === 'enrolled' ? 'enrolled' : section === 'finished' ? 'finished' : 'default';
@@ -187,7 +187,8 @@
 		<div class="right-bottom">
 			<div class="count">
 				<span class="left">Enrolled clients:</span>
-				<span class="right">{progress}{#if fullLabel}<span class="full-pill">{fullLabel}</span>{/if}</span>
+				<span class="right">{progress}
+					{#if fullLabel}<span class="full-pill">{fullLabel}</span>{/if}</span>
 			</div>
 			{#if expanded}
 				{#if clientsLoading}
@@ -225,36 +226,36 @@
     flex-direction: column;
     gap: 1.5rem;
     padding: 15px;
-		margin-right: 20px;
+    margin-right: 20px;
     border: 1px solid #000;
     border-radius: 5px;
     font-weight: 300;
-		cursor: pointer;
-		background: #fff;
-		transition: transform 120ms ease, box-shadow 120ms ease, background-color 120ms ease;
+    cursor: pointer;
+    background: #fff;
+    transition: transform 120ms ease, box-shadow 120ms ease, background-color 120ms ease;
   }
 
-	.lesson-card:hover {
-		transform: translateY(-1px);
-		box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
-		background: #fafcff;
-	}
+  .lesson-card:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+    background: #fafcff;
+  }
 
-	.lesson-card.expanded {
-		background: #f7fbff;
-	}
+  .lesson-card.expanded {
+    background: #f7fbff;
+  }
 
-	.lesson-card.available {
-		border-left: 4px solid #1976d2;
-	}
+  .lesson-card.available {
+    border-left: 4px solid #1976d2;
+  }
 
-	.lesson-card.enrolled {
-		border-left: 4px solid #2e7d32;
-	}
+  .lesson-card.enrolled {
+    border-left: 4px solid #2e7d32;
+  }
 
-	.lesson-card.finished {
-		border-left: 4px solid #6d4c41;
-	}
+  .lesson-card.finished {
+    border-left: 4px solid #6d4c41;
+  }
 
   .top-section {
     display: flex;
@@ -279,8 +280,8 @@
       display: flex;
       align-items: center;
       gap: 5px;
-			color: #475569;
-			font-weight: 400;
+      color: #475569;
+      font-weight: 400;
     }
   }
 
@@ -306,21 +307,22 @@
         flex-direction: row;
         justify-content: space-between;
         width: 100%;
-			align-items: center;
-			gap: 10px;
+        align-items: center;
+        gap: 10px;
 
-			.left {
-				color: #334155;
-				font-weight: 600;
-			}
-			.right {
-				font-weight: 800;
-				color: #0f172a;
-				background: rgba(25, 118, 210, 0.10);
-				border: 1px solid rgba(25, 118, 210, 0.25);
-				padding: 2px 8px;
-				border-radius: 999px;
-			}
+        .left {
+          color: #334155;
+          font-weight: 600;
+        }
+
+        .right {
+          font-weight: 800;
+          color: #0f172a;
+          background: rgba(25, 118, 210, 0.10);
+          border: 1px solid rgba(25, 118, 210, 0.25);
+          padding: 2px 8px;
+          border-radius: 999px;
+        }
       }
     }
 
@@ -341,74 +343,76 @@
       flex-direction: column;
       gap: 10px;
       font-size: 0.875rem;
-			color: #334155;
+      color: #334155;
 
-			.label {
-				color: #475569;
-				font-weight: 500;
-				margin-right: 6px;
-			}
-			.value {
-				color: #0f172a;
-				font-weight: 800;
-			}
+      .label {
+        color: #475569;
+        font-weight: 500;
+        margin-right: 6px;
+      }
 
-			.qualification,
-			.rating {
-				color: #334155;
-				font-weight: 500;
-			}
+      .value {
+        color: #0f172a;
+        font-weight: 800;
+      }
+
+      .qualification,
+      .rating {
+        color: #334155;
+        font-weight: 500;
+      }
     }
   }
 
-	.click-hint {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		gap: 10px;
-		margin-top: -10px;
-		color: #5f6b7a;
-		font-size: 0.8rem;
-		user-select: none;
-		font-weight: 600;
-	}
+  .click-hint {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: -10px;
+    color: #5f6b7a;
+    font-size: 0.8rem;
+    user-select: none;
+    font-weight: 600;
+  }
 
-	.click-hint.bottom {
-		margin-top: 0;
-		padding-top: 10px;
-		border-top: 1px solid rgba(0, 0, 0, 0.08);
-	}
+  .click-hint.bottom {
+    margin-top: 0;
+    padding-top: 10px;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+  }
 
-	.hint-text {
-		opacity: 0.9;
-	}
+  .hint-text {
+    opacity: 0.9;
+  }
 
-	.chevron {
-		display: inline-flex;
-		transition: transform 160ms ease;
-		transform: rotate(0deg);
-	}
-	.chevron.open {
-		transform: rotate(180deg);
-	}
+  .chevron {
+    display: inline-flex;
+    transition: transform 160ms ease;
+    transform: rotate(0deg);
+  }
 
-	.full-pill {
-		margin-left: 0.5rem;
-		font-size: 0.75rem;
-		font-weight: 800;
-		padding: 1px 8px;
-		border-radius: 999px;
-		background: rgba(244, 67, 54, 0.10);
-		border: 1px solid rgba(244, 67, 54, 0.25);
-		color: #b71c1c;
-	}
+  .chevron.open {
+    transform: rotate(180deg);
+  }
 
-	.client.error {
-		color: #b71c1c;
-		font-weight: 600;
-	}
+  .full-pill {
+    margin-left: 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 800;
+    padding: 1px 8px;
+    border-radius: 999px;
+    background: rgba(244, 67, 54, 0.10);
+    border: 1px solid rgba(244, 67, 54, 0.25);
+    color: #b71c1c;
+  }
 
-	.you-tag {
-		font-weight: 500;
-	}
+  .client.error {
+    color: #b71c1c;
+    font-weight: 600;
+  }
+
+  .you-tag {
+    font-weight: 500;
+  }
 </style>
