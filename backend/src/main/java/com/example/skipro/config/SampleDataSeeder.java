@@ -135,12 +135,10 @@ public class SampleDataSeeder implements ApplicationRunner {
         rescueTeamRepository.save(teamA);
         rescueTeamRepository.save(teamB);
 
-        // rw1: history - was in teamB, now in teamA
         RescueWorkerTeamAssignment rw1Old = new RescueWorkerTeamAssignment(rw1, teamB, LocalDate.now().minusMonths(6));
         rw1Old.end(LocalDate.now().minusMonths(2));
         RescueWorkerTeamAssignment rw1Current = new RescueWorkerTeamAssignment(rw1, teamA, LocalDate.now().minusMonths(2));
 
-        // rw2: current in teamB
         RescueWorkerTeamAssignment rw2Current = new RescueWorkerTeamAssignment(rw2, teamB, LocalDate.now().minusMonths(1));
 
         rescueWorkerTeamAssignmentRepository.save(rw1Old);
@@ -170,14 +168,12 @@ public class SampleDataSeeder implements ApplicationRunner {
         equipmentRepository.save(eq1);
         equipmentRepository.save(eq2);
 
-        // One active rental (eq1 -> Alex), processed by clerk
         eq1.setInUse(true);
         Rental rental1 = new Rental(eq1, c1, clerk);
         rental1.setPlannedReturnDate(LocalDateTime.now().plusDays(2));
         clerk.incrementRentalsHandled();
         rentalRepository.save(rental1);
 
-        // One returned rental (eq2 -> Maja), processed by clerk
         eq2.setInUse(true);
         Rental rental2 = new Rental(eq2, c2, clerk);
         rental2.setPlannedReturnDate(LocalDateTime.now().plusDays(1));
@@ -194,17 +190,13 @@ public class SampleDataSeeder implements ApplicationRunner {
         Lesson l2 = new Lesson(LocalDateTime.now().plusDays(2).withHour(12).withMinute(0).withSecond(0).withNano(0), Duration.ofMinutes(90), i2);
         Lesson l3 = new Lesson(LocalDateTime.now().plusDays(3).withHour(9).withMinute(30).withSecond(0).withNano(0), Duration.ofMinutes(120), i3);
 
-        // Capacity variants for testing
         Lesson lCap2 = new Lesson(LocalDateTime.now().plusDays(4).withHour(9).withMinute(0).withSecond(0).withNano(0), Duration.ofMinutes(60), i1, 2);
         Lesson lCap4 = new Lesson(LocalDateTime.now().plusDays(4).withHour(13).withMinute(0).withSecond(0).withNano(0), Duration.ofMinutes(90), i2, 4);
 
-        // A "full" lesson for testing enrollment failures (capacity=1) -> will be filled to full
         Lesson lFull = new Lesson(LocalDateTime.now().plusDays(4).withHour(16).withMinute(0).withSecond(0).withNano(0), Duration.ofMinutes(60), i3, 1);
 
-        // Another full lesson (capacity=2) -> will be filled to full
         Lesson lFull2 = new Lesson(LocalDateTime.now().plusDays(5).withHour(11).withMinute(0).withSecond(0).withNano(0), Duration.ofMinutes(60), i3, 2);
 
-        // finished lessons for Alex so "Finished Lessons" view has data
         Lesson l4 = new Lesson(LocalDateTime.now().minusDays(3).withHour(11).withMinute(0).withSecond(0).withNano(0), Duration.ofMinutes(60), i1);
         l4.enrollClient(c1);
         l4.start();
@@ -215,24 +207,17 @@ public class SampleDataSeeder implements ApplicationRunner {
         l5.start();
         l5.finish();
 
-        // pre-enroll some clients so GUI has all 3 lists meaningful
-        // Make l1 have exactly 4 out of default capacity 5
         l1.enrollClient(c1);
         l1.enrollClient(c4);
         l1.enrollClient(c5);
         l1.enrollClient(c6);
-
         l2.enrollClient(c2);
-
-        // Fill the limited-capacity lessons to full
-        lFull.enrollClient(c2);            // capacity=1 -> FULL
-        lFull2.enrollClient(c2);           // capacity=2
-        lFull2.enrollClient(c3);           // capacity=2 -> FULL
-
-        // Partially fill some other capacity variants
-        lCap2.enrollClient(c3);            // 1/2
-        lCap4.enrollClient(c1);            // 1/4
-        lCap4.enrollClient(c2);            // 2/4
+        lFull.enrollClient(c2);
+        lFull2.enrollClient(c2);
+        lFull2.enrollClient(c3);
+        lCap2.enrollClient(c3);
+        lCap4.enrollClient(c1);
+        lCap4.enrollClient(c2);
 
         lessonRepository.save(l1);
         lessonRepository.save(l2);

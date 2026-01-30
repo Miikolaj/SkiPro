@@ -101,7 +101,6 @@ public class LessonController {
         boolean enrolled = lessonService.enrollClientToLesson(lessonUuid, clientUuid);
         return enrolled ? ResponseEntity.ok().build() : ResponseEntity.status(409).build();
     }
-
     /**
      * Creates a new lesson with the specified time, duration, and instructor.
      *
