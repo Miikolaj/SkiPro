@@ -5,7 +5,6 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 import java.time.LocalDate;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -44,14 +43,6 @@ public class RentalClerk extends Employee {
     public RentalClerk(int yearsOfExperience, LocalDate birthDate, String lastName, String firstName, int rentalsHandled) {
         super(yearsOfExperience, birthDate, lastName, firstName);
         this.rentalsHandled = rentalsHandled;
-    }
-
-    public int getRentalsHandled() {
-        return rentalsHandled;
-    }
-
-    public Set<Rental> getRentals() {
-        return Collections.unmodifiableSet(rentals);
     }
 
     public void incrementRentalsHandled() {
