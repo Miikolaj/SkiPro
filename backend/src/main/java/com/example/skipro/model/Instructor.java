@@ -72,8 +72,6 @@ public class Instructor extends Employee {
         return Collections.unmodifiableSet(lessons);
     }
 
-    // Employments are inherited from Employee
-
     public void setQualificationLevel(String qualificationLevel) {
         this.qualificationLevel = qualificationLevel;
     }

@@ -28,11 +28,15 @@ public class RescueWorkerTeamAssignment {
     @JoinColumn(name = "rescue_team_id", nullable = false)
     private RescueTeam rescueTeam;
 
-    /** Assignment start date (inclusive). */
+    /**
+     * Assignment start date (inclusive).
+     */
     @Column(nullable = false)
     private LocalDate startDate;
 
-    /** Assignment end date (inclusive); null means the assignment is currently active. */
+    /**
+     * Assignment end date (inclusive); null means the assignment is currently active.
+     */
     private LocalDate endDate;
 
     protected RescueWorkerTeamAssignment() {

@@ -98,18 +98,6 @@ public abstract class Employee {
         return lastName;
     }
 
-    public int getAge() {
-        return age;
-    }
-
-    public LocalDate getBirthDate() {
-        return birthDate;
-    }
-
-    public int getYearsOfExperience() {
-        return yearsOfExperience;
-    }
-
     public Set<Employment> getEmployments() {
         return java.util.Collections.unmodifiableSet(employments);
     }

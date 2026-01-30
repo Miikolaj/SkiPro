@@ -36,15 +36,11 @@ public class ClientService {
     public String register(Client client) {
         if (client == null || client.getPassword() == null) return null;
 
-        // store hashed password
+        // storing hashed password
         client.setPassword(passwordEncoder.encode(client.getPassword()));
 
         addClient(client);
         return generateToken(client);
-    }
-
-    public Client getClientById(UUID id) {
-        return id == null ? null : clientRepository.findById(id).orElse(null);
     }
 
     /**

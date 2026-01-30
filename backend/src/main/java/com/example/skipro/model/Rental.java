@@ -22,17 +22,23 @@ public class Rental {
     @JoinColumn(name = "client_id", nullable = false)
     private Client client;
 
-    /** Which clerk processed this rental (optional for backward compatibility). */
+    /**
+     * Which clerk processed this rental
+     */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "rental_clerk_id")
     private RentalClerk rentalClerk;
 
     private LocalDateTime startDate;
 
-    /** PDF: planned return date. */
+    /**
+     * PDF: planned return date.
+     */
     private LocalDateTime plannedReturnDate;
 
-    /** Actual return date/time (nullable until returned). */
+    /**
+     * Actual return date/time (nullable until returned).
+     */
     private LocalDateTime endDate;
 
     @Enumerated(EnumType.STRING)
@@ -63,11 +69,6 @@ public class Rental {
         this.plannedReturnDate = this.startDate.plusDays(1);
         this.status = RentalStatus.ACTIVE;
         this.rentalCost = equipment.getCost();
-    }
-
-    /** Backward-compatible constructor (no clerk assigned). */
-    public Rental(Equipment equipment, Client client) {
-        this(equipment, client, null);
     }
 
     public void returnEquipment() {

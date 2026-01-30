@@ -65,7 +65,7 @@ public class Track {
         if (difficulty == null) {
             throw new IllegalArgumentException("Track difficulty cannot be null");
         }
-        // PDF: 0.1 km  10 km (inclusive)
+
         if (lenghtKm < 0.1 || lenghtKm > 10) {
             throw new IllegalArgumentException("Track length must be between 0.1 and 10 kilometers.");
         }
@@ -81,9 +81,6 @@ public class Track {
         rescueTeams.add(team);
     }
 
-    public UUID getId() {
-        return id;
-    }
 
     public String getName() {
         return name;

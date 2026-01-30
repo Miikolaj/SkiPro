@@ -31,7 +31,9 @@ public class Employment {
     @Column(nullable = false)
     private LocalDate startDate;
 
-    /** Nullable = still employed (termination date not yet set). */
+    /**
+     * Nullable = still employed (termination date not yet set).
+     */
     @Column(nullable = true)
     private LocalDate endDate;
 

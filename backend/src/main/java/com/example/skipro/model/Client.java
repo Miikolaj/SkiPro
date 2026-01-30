@@ -38,21 +38,27 @@ public class Client {
     @Column(nullable = false)
     private LocalDate birthDate;
 
-    /** Age is derived from {@link #birthDate}. Kept as convenience value (not persisted). */
+    /**
+     * Age is derived from {@link #birthDate}. Kept as convenience value (not persisted).
+     */
     @Transient
     private int age;
 
     @Enumerated(EnumType.STRING)
     private Experience experience;
 
-    /** Stored as BCrypt hash (never store plaintext in production). */
+    /**
+     * Stored as BCrypt hash
+     */
     @Column(name = "password_hash", nullable = false)
     private String password;
 
     @ManyToMany(mappedBy = "clients")
     private Set<Lesson> lessons = new HashSet<>();
 
-    /** Client rental history (PDF point 8). */
+    /**
+     * Client rental history (PDF point 8).
+     */
     @OneToMany(mappedBy = "client")
     private Set<Rental> rentals = new HashSet<>();
 
@@ -115,9 +121,6 @@ public class Client {
         return lastName;
     }
 
-    public LocalDate getBirthDate() {
-        return birthDate;
-    }
 
     public int getAge() {
         return age;

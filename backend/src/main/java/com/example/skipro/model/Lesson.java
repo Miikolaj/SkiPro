@@ -25,7 +25,9 @@ public class Lesson {
 
     private LocalDateTime dateTime;
 
-    /** Stored in DB as total minutes via {@link DurationMinutesConverter}. */
+    /**
+     * Stored in DB as total minutes via {@link DurationMinutesConverter}.
+     */
     @Convert(converter = DurationMinutesConverter.class)
     private Duration duration;
 
@@ -98,7 +100,7 @@ public class Lesson {
         if (status != LessonStatus.PLANNED) {
             throw new IllegalStateException("Only planned lessons allow enrollment.");
         }
-        // capacity check (don't block if the same client is re-submitted)
+
         boolean alreadyEnrolled = clients.stream().anyMatch(c -> Objects.equals(c.getId(), client.getId()));
         if (!alreadyEnrolled && clients.size() >= capacity) {
             throw new IllegalStateException("Lesson is full.");

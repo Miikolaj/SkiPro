@@ -26,7 +26,9 @@ public class Equipment {
 
     private boolean inUse = false;
 
-    /** PDF: technical condition (e.g., NEW/GOOD/USED/DAMAGED). */
+    /**
+     * PDF: technical condition (e.g., NEW/GOOD/USED/DAMAGED).
+     */
     @Column(nullable = false)
     private String technicalCondition = "GOOD";
 

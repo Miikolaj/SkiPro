@@ -67,22 +67,6 @@ public class RescueTeam {
         track.addRescueTeam(this);
     }
 
-    public UUID getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public Track getAssignedTrack() {
-        return assignedTrack;
-    }
-
-    public String getCommunicationChannel() {
-        return communicationChannel;
-    }
-
     public void setCommunicationChannel(String communicationChannel) {
         this.communicationChannel = communicationChannel;
     }
@@ -98,14 +82,6 @@ public class RescueTeam {
         specialEquipment.add(equipment);
     }
 
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
-    }
-
     /**
      * Current members based on active assignments.
      */
@@ -115,13 +91,5 @@ public class RescueTeam {
                 .filter(RescueWorkerTeamAssignment::isActive)
                 .map(RescueWorkerTeamAssignment::getRescueWorker)
                 .collect(java.util.stream.Collectors.toUnmodifiableSet());
-    }
-
-    @Override
-    public String toString() {
-        return name + " on track " + (assignedTrack != null ? assignedTrack.getName() : "<track>") +
-                ", channel: " + communicationChannel +
-                ", status: " + status +
-                ", equipment: " + specialEquipment;
     }
 }

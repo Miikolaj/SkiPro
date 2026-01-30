@@ -9,7 +9,7 @@ import java.time.Duration;
  * Stores {@link Duration} as total minutes in the database.
  *
  * PostgreSQL has no native duration type that maps cleanly in JPA without extra setup,
- * so we store it as a numeric value (minutes).
+ * so its stored as a numeric value (minutes).
  */
 @Converter(autoApply = true)
 public class DurationMinutesConverter implements AttributeConverter<Duration, Long> {

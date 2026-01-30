@@ -23,7 +23,6 @@ public class SampleDataSeeder implements ApplicationRunner {
     private final InstructorRepository instructorRepository;
     private final LessonRepository lessonRepository;
 
-    // extra repositories so we can seed every table
     private final ResortRepository resortRepository;
     private final TrackRepository trackRepository;
     private final RescueTeamRepository rescueTeamRepository;
@@ -64,7 +63,6 @@ public class SampleDataSeeder implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) {
-        // Keep it idempotent: only seed if DB is empty
         if (clientRepository.count() > 0
                 || instructorRepository.count() > 0
                 || lessonRepository.count() > 0
