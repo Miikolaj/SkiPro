@@ -8,6 +8,5 @@ import java.util.List;
 import java.util.UUID;
 
 public interface RentalRepository extends JpaRepository<Rental, UUID> {
-    List<Rental> findByClientIdAndStatus(UUID clientId, RentalStatus status);
 }
 

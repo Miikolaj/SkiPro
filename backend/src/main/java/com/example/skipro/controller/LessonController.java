@@ -6,7 +6,6 @@ import com.example.skipro.dto.RateInstructorRequest;
 import com.example.skipro.model.Instructor;
 import com.example.skipro.service.InstructorService;
 import com.example.skipro.service.LessonService;
-import com.example.skipro.service.RatingService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.example.skipro.util.DtoMapper;
@@ -27,19 +26,18 @@ public class LessonController {
      */
     private final LessonService lessonService;
     private final InstructorService instructorService;
-    private final RatingService ratingService;
 
-    public LessonController(LessonService lessonService, InstructorService instructorService, RatingService ratingService) {
+
+    public LessonController(LessonService lessonService, InstructorService instructorService) {
         this.lessonService = lessonService;
         this.instructorService = instructorService;
-        this.ratingService = ratingService;
     }
 
     /**
      * Returns all <em>planned</em> lessons that the given client is <strong>not</strong> enrolled in.
      *
      * @param clientId the client identifier
-     * @return list of lessons represented as maps suitable for JSON serialization
+     * @return list of lessons
      */
     @PostMapping("/planned")
     public List<LessonTileDto> getLessons(@RequestParam String clientId) {
@@ -52,7 +50,7 @@ public class LessonController {
      * Returns all <em>planned</em> lessons that the given client <strong>is</strong> enrolled in.
      *
      * @param clientId the client identifier
-     * @return list of enrolled lessons represented as maps
+     * @return list of enrolled lessons
      */
     @PostMapping
     public List<LessonTileDto> getEnrolledLessons(@RequestParam String clientId) {
@@ -65,7 +63,7 @@ public class LessonController {
      * Returns all <em>finished</em> lessons for the given client.
      *
      * @param clientId the client identifier
-     * @return list of finished lessons represented as maps
+     * @return list of finished lessons
      */
     @PostMapping("/finished")
     public List<LessonTileDto> getFinishedLessons(@RequestParam String clientId) {
@@ -202,29 +200,5 @@ public class LessonController {
                 .toList();
 
         return ResponseEntity.ok(clients);
-    }
-
-    /**
-     * Rates the lesson instructor (allowed only if the lesson is FINISHED and the client participated).
-     * A client can rate a given lesson at most once.
-     *
-     * @return 200 OK if saved, 409 Conflict if already rated, 400/404 if validation fails.
-     */
-    @PostMapping("/rate")
-    public ResponseEntity<Void> rateInstructor(@RequestBody RateInstructorRequest request) {
-        if (request == null || request.lessonId() == null || request.clientId() == null) {
-            return ResponseEntity.badRequest().build();
-        }
-
-        // 404 if either resource doesn't exist
-        if (lessonService.getLessonById(request.lessonId()) == null) {
-            return ResponseEntity.notFound().build();
-        }
-        if (lessonService.getClientById(request.clientId()) == null) {
-            return ResponseEntity.notFound().build();
-        }
-
-        boolean ok = ratingService.rateInstructor(request.lessonId(), request.clientId(), request.rating());
-        return ok ? ResponseEntity.ok().build() : ResponseEntity.status(409).build();
     }
 }

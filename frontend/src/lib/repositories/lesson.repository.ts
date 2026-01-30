@@ -16,7 +16,7 @@ export type LessonTileDTO = {
 	status: string;
 	instructor: InstructorDTO;
 	clientsCount: number;
-	capacity: number; // <-- nowy field z backendu
+	capacity: number;
 };
 
 export type ClientDTO = {
@@ -25,21 +25,19 @@ export type ClientDTO = {
 	id: string;
 };
 
-// Spring często zwraca { message: "..."} albo "..."
 type SpringErrorBody =
 	| string
 	| {
-	message?: string;
-	error?: string;
-	status?: number;
-	path?: string;
-	timestamp?: string;
-};
+			message?: string;
+			error?: string;
+			status?: number;
+			path?: string;
+			timestamp?: string;
+	  };
 
 function getErrorMessage(error: unknown, fallback: string): string {
 	const err = error as AxiosError<SpringErrorBody> | undefined;
 
-	// brak odpowiedzi (np. network/CORS)
 	if (!err?.response) return fallback;
 
 	const data = err.response.data;
@@ -47,13 +45,10 @@ function getErrorMessage(error: unknown, fallback: string): string {
 	if (typeof data === 'string' && data.trim().length > 0) return data;
 
 	if (data && typeof data === 'object') {
-		// preferuj message
 		if (typeof data.message === 'string' && data.message.trim().length > 0) return data.message;
-		// fallback do error
 		if (typeof data.error === 'string' && data.error.trim().length > 0) return data.error;
 	}
 
-	// fallback na podstawie statusu
 	switch (err.response.status) {
 		case 400:
 			return 'Bad request';

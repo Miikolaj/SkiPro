@@ -26,8 +26,6 @@
 	let actionLoading = false;
 	let actionError: string | null = null;
 
-	// Safety: if this component instance ever gets reused for a different lesson/section,
-	// don't keep UI state from the previous render.
 	let lastKey: string | null = null;
 	$: {
 		const nextKey = `${section}:${id}`;
@@ -37,7 +35,6 @@
 			clientsError = null;
 			actionLoading = false;
 			actionError = null;
-			// Prevent showing stale list if parent passes different lesson with same component instance.
 			clients = [];
 		}
 		lastKey = nextKey;

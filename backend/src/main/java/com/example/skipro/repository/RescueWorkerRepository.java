@@ -7,6 +7,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface RescueWorkerRepository extends JpaRepository<RescueWorker, UUID> {
-    Optional<RescueWorker> findByLicenseNumber(String licenseNumber);
+
 }
 

@@ -45,10 +45,6 @@ public class Instructor extends Employee {
         super();
     }
 
-    public UUID getId() {
-        return id;
-    }
-
     public String getQualificationLevel() {
         return qualificationLevel;
     }
@@ -112,7 +108,6 @@ public class Instructor extends Employee {
                 "id=" + id +
                 ", qualificationLevel='" + qualificationLevel + '\'' +
                 ", ratings=" + ratings +
-                // do not include lessons
                 '}';
     }
 }

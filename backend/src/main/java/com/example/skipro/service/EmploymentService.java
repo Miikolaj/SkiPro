@@ -37,19 +37,4 @@ public class EmploymentService {
         Employment employment = new Employment(resort, employee, startDate);
         return employmentRepository.save(employment);
     }
-
-    @Transactional(readOnly = true)
-    public List<Employment> getAllEmployments() {
-        return employmentRepository.findAll();
-    }
-
-    @Transactional(readOnly = true)
-    public List<Employment> getEmploymentsForResort(UUID resortId) {
-        return employmentRepository.findByResortId(resortId);
-    }
-
-    @Transactional(readOnly = true)
-    public List<Employment> getEmploymentsForEmployee(UUID employeeId) {
-        return employmentRepository.findByEmployeeId(employeeId);
-    }
 }

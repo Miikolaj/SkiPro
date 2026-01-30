@@ -6,8 +6,6 @@ import com.example.skipro.dto.EmployeeDto;
 import com.example.skipro.dto.InstructorDto;
 import com.example.skipro.dto.LessonDetailsDto;
 import com.example.skipro.dto.LessonTileDto;
-import com.example.skipro.dto.RentalClerkDto;
-import com.example.skipro.dto.RentalDto;
 import com.example.skipro.model.Client;
 import com.example.skipro.model.Equipment;
 import com.example.skipro.model.Employee;
@@ -109,30 +107,6 @@ public final class DtoMapper {
                 e.getLastName(),
                 e.getClass().getSimpleName(),
                 e.getRole()
-        );
-    }
-
-    public static RentalClerkDto toRentalClerkDto(RentalClerk c) {
-        if (c == null) return null;
-        return new RentalClerkDto(
-                c.getId(),
-                c.getFirstName(),
-                c.getLastName(),
-                c.getRentalsHandled()
-        );
-    }
-
-    public static RentalDto toRentalDto(Rental r) {
-        if (r == null) return null;
-        return new RentalDto(
-                r.getId(),
-                r.getStatus() == null ? null : r.getStatus().name(),
-                r.getRentalCost(),
-                r.getStartDate() == null ? null : r.getStartDate().format(DATE_TIME_WITH_SECONDS),
-                r.getEndDate() == null ? null : r.getEndDate().format(DATE_TIME_WITH_SECONDS),
-                toEquipmentDto(r.getEquipment()),
-                toClientDto(r.getClient()),
-                toRentalClerkDto(r.getRentalClerk())
         );
     }
 

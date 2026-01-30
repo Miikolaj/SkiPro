@@ -74,17 +74,8 @@ public class ClientService {
         String stored = client.getPassword();
         if (stored == null) return null;
 
-        // verify hashed password (BCrypt). If legacy plaintext exists, migrate on successful login.
+        // verify hashed password (BCrypt)
         boolean ok = passwordEncoder.matches(password, stored);
-        if (!ok) {
-            // fallback: legacy plaintext values stored before hashing was introduced
-            if (password.equals(stored)) {
-                client.setPassword(passwordEncoder.encode(password));
-                clientRepository.save(client);
-                ok = true;
-            }
-        }
-
         if (!ok) return null;
 
         return generateToken(client);

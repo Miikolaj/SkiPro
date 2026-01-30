@@ -8,8 +8,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface RescueWorkerTeamAssignmentRepository extends JpaRepository<RescueWorkerTeamAssignment, UUID> {
-    List<RescueWorkerTeamAssignment> findByRescueWorkerIdOrderByStartDateDesc(UUID rescueWorkerId);
 
-    Optional<RescueWorkerTeamAssignment> findFirstByRescueWorkerIdAndEndDateIsNull(UUID rescueWorkerId);
 }
 
