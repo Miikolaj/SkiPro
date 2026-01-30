@@ -30,7 +30,7 @@ public class Equipment {
      * PDF: technical condition (e.g., NEW/GOOD/USED/DAMAGED).
      */
     @Column(nullable = false)
-    private String technicalCondition = "GOOD";
+    private String technicalCondition;
 
 
     protected Equipment() {
