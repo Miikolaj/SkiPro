@@ -153,10 +153,16 @@ public class SampleDataSeeder implements ApplicationRunner {
         Client c1 = new Client("Alex", "Kowalski", LocalDate.of(2003, 1, 10), Experience.BEGINNER, encoder.encode("pass123"));
         Client c2 = new Client("Maja", "Nowak", LocalDate.of(1997, 6, 5), Experience.EXPERIENCED, encoder.encode("pass123"));
         Client c3 = new Client("Ola", "Zielinska", LocalDate.of(1989, 3, 21), Experience.ADVANCED, encoder.encode("pass123"));
+        Client c4 = new Client("Piotr", "Wrobel", LocalDate.of(1993, 11, 3), Experience.EXPERIENCED, encoder.encode("pass123"));
+        Client c5 = new Client("Kasia", "Lis", LocalDate.of(2001, 2, 18), Experience.BEGINNER, encoder.encode("pass123"));
+        Client c6 = new Client("Tomek", "Kaczmarek", LocalDate.of(1990, 7, 7), Experience.ADVANCED, encoder.encode("pass123"));
 
         clientRepository.save(c1);
         clientRepository.save(c2);
         clientRepository.save(c3);
+        clientRepository.save(c4);
+        clientRepository.save(c5);
+        clientRepository.save(c6);
 
         // --- Equipment + Rental (history for client + rentalsHandled for clerk) ---
         Equipment eq1 = new Equipment("Skis", "170cm", "GOOD", 120);
@@ -210,7 +216,12 @@ public class SampleDataSeeder implements ApplicationRunner {
         l5.finish();
 
         // pre-enroll some clients so GUI has all 3 lists meaningful
+        // Make l1 have exactly 4 out of default capacity 5
         l1.enrollClient(c1);
+        l1.enrollClient(c4);
+        l1.enrollClient(c5);
+        l1.enrollClient(c6);
+
         l2.enrollClient(c2);
 
         // Fill the limited-capacity lessons to full

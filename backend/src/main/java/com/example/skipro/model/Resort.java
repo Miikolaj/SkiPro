@@ -45,16 +45,16 @@ public class Resort {
     @OneToMany(mappedBy = "resort", cascade = CascadeType.ALL, orphanRemoval = true)
     private final Set<Track> tracks = new HashSet<>();
 
+    protected Resort() {
+        // for JPA
+    }
+
     /**
      * Constructs a {@code Resort} with the given name and location.
      *
      * @param name     resort name
      * @param location geographic location or address
      */
-    protected Resort() {
-        // for JPA
-    }
-
     public Resort(String name, String location) {
         if (name == null || name.isBlank()) {
             throw new IllegalArgumentException("Resort name cannot be null/blank");

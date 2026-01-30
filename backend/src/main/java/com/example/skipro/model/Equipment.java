@@ -32,21 +32,19 @@ public class Equipment {
     @Column(nullable = false)
     private String technicalCondition = "GOOD";
 
-    /**
-     * Constructs a new {@code Equipment} instance with the given attributes.
-     *
-     * @param name human‑readable name or model
-     * @param size size designation (string, to allow units such as "cm" or labels like "L")
-     * @param cost rental cost in basic currency units
-     */
+
     protected Equipment() {
         // for JPA
     }
 
-    public Equipment(String name, String size, int cost) {
-        this(name, size, "GOOD", cost);
-    }
-
+    /**
+     * Constructs a new {@code Equipment} instance with the given attributes.
+     *
+     * @param name               human‑readable name or model
+     * @param size               size designation (string, to allow units such as "cm" or labels like "L")
+     * @param technicalCondition technical condition (e.g., NEW/GOOD/USED/DAMAGED)
+     * @param cost               rental cost in basic currency units
+     */
     public Equipment(String name, String size, String technicalCondition, int cost) {
         if (name == null || name.isBlank()) {
             throw new IllegalArgumentException("Equipment name cannot be null/blank");
